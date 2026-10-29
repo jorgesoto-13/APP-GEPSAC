@@ -1,0 +1,21 @@
+
+# Android Studio y Gradle
+.gradle/
+**/build/
+local.properties
+
+# Configuraciones locales
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/caches/
+*.iml
+
+# Archivos sensibles
+*.jks
+*.keystore
+*.p12
+*.pem
+
+# Archivos temporales
+.DS_Store
+Thumbs.db

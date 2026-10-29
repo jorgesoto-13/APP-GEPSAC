@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <com.google.android.material.textfield.TextInputLayout style="@style/Campo" android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="0dp" android:hint="Buscar por cliente o N° de pedido">
+        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etBuscar"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="text" android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none">
+        <com.google.android.material.chip.ChipGroup android:id="@+id/chips" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:paddingHorizontal="16dp" app:singleLine="true" />
+    </HorizontalScrollView>
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv" android:layout_width="match_parent"
+            android:layout_height="match_parent" android:paddingTop="4dp" android:paddingBottom="88dp" android:clipToPadding="false" />
+        <TextView android:id="@+id/tvVacio" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_gravity="center" android:text="No hay pedidos para mostrar." android:textColor="@color/muted" android:visibility="gone" />
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton android:id="@+id/fabNuevo"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|end"
+            android:layout_margin="16dp" android:text="Nuevo pedido" android:textColor="@color/white"
+            app:icon="@drawable/ic_add" app:iconTint="@color/white" app:backgroundTint="@color/brown" android:visibility="gone" />
+    </FrameLayout>
+</LinearLayout>

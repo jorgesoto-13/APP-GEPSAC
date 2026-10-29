@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:paddingHorizontal="24dp" android:paddingTop="4dp">
+        <TextView android:id="@+id/tvMonto" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textColor="@color/brown" android:textSize="18sp" android:textStyle="bold" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp"
+            android:text="Método de pago" android:textColor="@color/muted" android:textSize="12sp" />
+        <Spinner android:id="@+id/spMetodo" android:layout_width="match_parent" android:layout_height="48dp" />
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilC1" style="@style/Campo" android:hint="Campo 1">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etC1"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:maxLength="19" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilC2" style="@style/Campo" android:hint="Campo 2">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etC2"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:maxLength="40" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <LinearLayout android:id="@+id/llTarjeta" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:visibility="gone">
+            <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilVence" style="@style/Campo"
+                android:layout_width="0dp" android:layout_weight="1" android:layout_marginEnd="6dp" android:hint="Vence (MM/AA)">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etVence"
+                    android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="datetime" android:maxLength="5" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilCvv" style="@style/Campo"
+                android:layout_width="0dp" android:layout_weight="1" android:layout_marginStart="6dp" android:hint="CVV">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etCvv"
+                    android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="numberPassword" android:maxLength="3" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp"
+            android:text="Pago simulado: no se realiza ningún cobro real." android:textColor="@color/muted" android:textSize="11sp" />
+    </LinearLayout>
+</ScrollView>

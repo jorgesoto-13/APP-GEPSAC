@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:paddingHorizontal="24dp" android:paddingTop="4dp">
+        <ImageView android:id="@+id/imgProducto" android:layout_width="match_parent" android:layout_height="130dp"
+            android:background="@drawable/bg_placeholder" android:scaleType="center" android:src="@drawable/ic_image"
+            android:contentDescription="Imagen del producto" />
+        <Button android:id="@+id/btnImagen" style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp"
+            android:layout_marginBottom="8dp" android:text="Elegir imagen de la galería" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Marca" android:textColor="@color/muted" android:textSize="12sp" />
+        <Spinner android:id="@+id/spMarca" android:layout_width="match_parent" android:layout_height="48dp" />
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilNombre" style="@style/Campo" android:hint="Nombre (ej. Café Caffe Blend)">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etNombre"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textCapWords" android:maxLength="40" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilPres" style="@style/Campo" android:hint="Presentación (ej. 250 gr)">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPres"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="text" android:maxLength="20" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilPrecio" style="@style/Campo" android:hint="Precio (S/)">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPrecio"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="numberDecimal" android:maxLength="7" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/swActivo"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp"
+            android:text="Visible para los clientes" />
+    </LinearLayout>
+</ScrollView>
