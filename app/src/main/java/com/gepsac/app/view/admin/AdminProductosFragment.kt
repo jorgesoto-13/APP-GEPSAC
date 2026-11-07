@@ -1,4 +1,4 @@
-package com.gepsac.app.ui.admin
+package com.gepsac.app.view.admin
 
 import android.os.Bundle
 import android.widget.Toast
@@ -12,14 +12,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.gepsac.app.data.MARCAS
-import com.gepsac.app.data.Producto
+import com.gepsac.app.model.MARCAS
+import com.gepsac.app.model.Producto
 import com.gepsac.app.databinding.DialogProductoBinding
 import com.gepsac.app.databinding.FragmentAdminProductosBinding
-import com.gepsac.app.ui.catalogo.ProductoAdapter
-import com.gepsac.app.ui.Imagenes
-import com.gepsac.app.ui.err
-import com.gepsac.app.ui.mostrarProducto
+import com.gepsac.app.view.catalogo.ProductoAdapter
+import com.gepsac.app.view.Imagenes
+import com.gepsac.app.view.err
+import com.gepsac.app.view.mostrarProducto
 import com.gepsac.app.viewmodel.TiendaViewModel
 import com.gepsac.app.viewmodel.Validar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

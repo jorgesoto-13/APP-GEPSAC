@@ -6,14 +6,14 @@
         android:label="GEPSAC"
         android:supportsRtl="true"
         android:theme="@style/Theme.Gepsac">
-        <activity android:name=".ui.auth.LoginActivity" android:exported="true">
+        <activity android:name=".view.auth.LoginActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.ClienteActivity" android:exported="false" />
-        <activity android:name=".ui.admin.AdminActivity" android:exported="false" />
-        <activity android:name=".ui.seguimiento.SeguimientoActivity" android:exported="false" />
+        <activity android:name=".view.ClienteActivity" android:exported="false" />
+        <activity android:name=".view.admin.AdminActivity" android:exported="false" />
+        <activity android:name=".view.seguimiento.SeguimientoActivity" android:exported="false" />
     </application>
 </manifest>
