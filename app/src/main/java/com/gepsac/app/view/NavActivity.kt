@@ -1,16 +1,16 @@
-package com.gepsac.app.ui
+package com.gepsac.app.view
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.gepsac.app.R
-import com.gepsac.app.data.Repository
+import com.gepsac.app.model.Repository
 import com.gepsac.app.databinding.ActivityNavBinding
-import com.gepsac.app.ui.auth.LoginActivity
-import com.gepsac.app.ui.carrito.CarritoFragment
-import com.gepsac.app.ui.catalogo.CatalogoFragment
-import com.gepsac.app.ui.pedidos.PedidosFragment
+import com.gepsac.app.view.auth.LoginActivity
+import com.gepsac.app.view.carrito.CarritoFragment
+import com.gepsac.app.view.catalogo.CatalogoFragment
+import com.gepsac.app.view.pedidos.PedidosFragment
 
 abstract class NavActivity : AppCompatActivity() {
     protected lateinit var b: ActivityNavBinding

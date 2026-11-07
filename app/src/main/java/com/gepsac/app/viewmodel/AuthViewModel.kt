@@ -1,8 +1,8 @@
 package com.gepsac.app.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.gepsac.app.data.Repository
-import com.gepsac.app.data.Usuario
+import com.gepsac.app.model.Repository
+import com.gepsac.app.model.Usuario
 
 class AuthViewModel : ViewModel() {
     val usuario: Usuario? get() = Repository.usuarioActual

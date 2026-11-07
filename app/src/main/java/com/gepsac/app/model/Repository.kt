@@ -1,4 +1,4 @@
-package com.gepsac.app.data
+package com.gepsac.app.model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

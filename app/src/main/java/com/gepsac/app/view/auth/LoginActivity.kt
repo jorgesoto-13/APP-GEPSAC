@@ -1,4 +1,4 @@
-package com.gepsac.app.ui.auth
+package com.gepsac.app.view.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,9 +6,9 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.gepsac.app.databinding.ActivityLoginBinding
-import com.gepsac.app.ui.ClienteActivity
-import com.gepsac.app.ui.admin.AdminActivity
-import com.gepsac.app.ui.err
+import com.gepsac.app.view.ClienteActivity
+import com.gepsac.app.view.admin.AdminActivity
+import com.gepsac.app.view.err
 import com.gepsac.app.viewmodel.AuthViewModel
 import com.gepsac.app.viewmodel.Validar
 

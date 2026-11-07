@@ -1,4 +1,4 @@
-package com.gepsac.app.ui.carrito
+package com.gepsac.app.view.carrito
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,14 +11,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gepsac.app.R
-import com.gepsac.app.data.ItemPedido
+import com.gepsac.app.model.ItemPedido
 import com.gepsac.app.databinding.DialogCheckoutBinding
 import com.gepsac.app.databinding.FragmentCarritoBinding
 import com.gepsac.app.databinding.ItemCarritoBinding
-import com.gepsac.app.ui.ClienteActivity
-import com.gepsac.app.ui.elegirFecha
-import com.gepsac.app.ui.err
-import com.gepsac.app.ui.soles
+import com.gepsac.app.view.ClienteActivity
+import com.gepsac.app.view.elegirFecha
+import com.gepsac.app.view.err
+import com.gepsac.app.view.soles
 import com.gepsac.app.viewmodel.TiendaViewModel
 import com.gepsac.app.viewmodel.Validar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

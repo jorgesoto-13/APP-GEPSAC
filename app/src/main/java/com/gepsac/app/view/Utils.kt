@@ -1,4 +1,4 @@
-package com.gepsac.app.ui
+package com.gepsac.app.view
 
 import android.app.DatePickerDialog
 import android.content.Context

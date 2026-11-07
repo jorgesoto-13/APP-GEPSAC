@@ -1,4 +1,4 @@
-package com.gepsac.app.ui.catalogo
+package com.gepsac.app.view.catalogo
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,13 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.gepsac.app.data.MARCAS
-import com.gepsac.app.data.Producto
+import com.gepsac.app.model.MARCAS
+import com.gepsac.app.model.Producto
 import com.gepsac.app.databinding.FragmentCatalogoBinding
 import com.gepsac.app.databinding.ItemProductoBinding
-import com.gepsac.app.ui.crearChips
-import com.gepsac.app.ui.mostrarProducto
-import com.gepsac.app.ui.soles
+import com.gepsac.app.view.crearChips
+import com.gepsac.app.view.mostrarProducto
+import com.gepsac.app.view.soles
 import com.gepsac.app.viewmodel.TiendaViewModel
 import com.gepsac.app.viewmodel.Validar
 
