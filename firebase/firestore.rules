@@ -1,0 +1,105 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function uid() { return request.auth.uid; }
+    function isAdmin() {
+      return signedIn() &&
+        get(/databases/$(db)/documents/usuarios/$(uid())).data.rol == 'admin';
+    }
+    function soloCambia(campos) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(campos);
+    }
+
+    // ---------- usuarios ----------
+    // El registro desde la app solo crea clientes. El primer admin se crea a mano en la consola.
+    match /usuarios/{id} {
+      allow read: if signedIn() && (id == uid() || isAdmin());
+      allow create: if signedIn() && id == uid()
+                    && request.resource.data.rol == 'cliente'
+                    && request.resource.data.email == request.auth.token.email
+                    && request.resource.data.nombre is string
+                    && request.resource.data.nombre.size() >= 3
+                    && request.resource.data.nombre.size() <= 50
+                    && request.resource.data.telefono.matches('^9[0-9]{8}$');
+      allow update: if signedIn() && (id == uid() || isAdmin())
+                    && soloCambia(['nombre', 'telefono']);
+      allow delete: if false;
+    }
+
+    // ---------- productos ----------
+    function productoValido(p) {
+      return p.nombre is string && p.nombre.size() >= 3 && p.nombre.size() <= 40
+        && p.marca in ['Caffe', 'Kaphiy']
+        && p.presentacion is string && p.presentacion.size() > 0 && p.presentacion.size() <= 20
+        && p.precio is number && p.precio > 0 && p.precio <= 9999
+        && p.activo is bool
+        && p.imagen is string && p.imagen.size() <= 300000;
+    }
+    match /productos/{id} {
+      allow read: if signedIn();
+      allow create, update: if isAdmin() && productoValido(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // ---------- contador de pedidos ----------
+    // Solo puede subir de uno en uno. Lo crea a mano el administrador: { ultimo: 100000 }.
+    match /contadores/pedidos {
+      allow read: if signedIn();
+      allow update: if signedIn()
+                    && request.resource.data.ultimo == resource.data.ultimo + 1;
+    }
+
+    // ---------- pedidos ----------
+    function pedidoValido(p) {
+      return p.numero is int
+        && p.numero == getAfter(/databases/$(db)/documents/contadores/pedidos).data.ultimo
+        && p.telefono.matches('^9[0-9]{8}$')
+        && p.direccion.size() >= 8 && p.direccion.size() <= 120
+        && p.observacion.size() <= 150
+        && p.items is list && p.items.size() > 0 && p.items.size() <= 50
+        && p.total is number && p.total > 0
+        && p.fechaEntrega is timestamp
+        && p.estado is int;
+    }
+    // Avanza una etapa (salvo desde Registrado=1) o retrocede una (salvo desde 0 y Pagado=2).
+    function transicionAdmin() {
+      let a = resource.data.estado;
+      let n = request.resource.data.estado;
+      return n == a
+          || (n == a + 1 && a != 1 && a < 5)
+          || (n == a - 1 && a != 0 && a != 2);
+    }
+
+    match /pedidos/{id} {
+      allow read: if signedIn() && (isAdmin() || resource.data.clienteId == uid());
+
+      // Cliente: nace "Por registrar" (0). Admin a nombre de un cliente: nace "Registrado" (1).
+      allow create: if signedIn() && pedidoValido(request.resource.data) && (
+          (!isAdmin() && request.resource.data.clienteId == uid()
+                      && request.resource.data.creadoPor == uid()
+                      && request.resource.data.estado == 0)
+        || (isAdmin() && request.resource.data.creadoPor == uid()
+                      && request.resource.data.estado == 1));
+
+      allow update: if
+        // Admin: mueve etapas, sin tocar cliente, ítems ni total.
+        (isAdmin()
+          && request.resource.data.clienteId == resource.data.clienteId
+          && request.resource.data.items == resource.data.items
+          && request.resource.data.total == resource.data.total
+          && transicionAdmin())
+        ||
+        // Cliente: solo puede pagar su pedido Registrado (1 -> 2).
+        (signedIn() && resource.data.clienteId == uid()
+          && resource.data.estado == 1 && request.resource.data.estado == 2
+          && soloCambia(['estado', 'tiempos', 'pago'])
+          && request.resource.data.pago.metodo in ['Yape', 'Plin', 'Transferencia', 'Tarjeta']
+          && request.resource.data.pago.monto == resource.data.total);
+
+      // Solo se elimina un pedido que aún no se pagó.
+      allow delete: if isAdmin() && resource.data.estado < 2;
+    }
+  }
+}
