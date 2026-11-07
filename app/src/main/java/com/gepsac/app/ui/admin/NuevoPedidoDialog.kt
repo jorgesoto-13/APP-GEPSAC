@@ -1,4 +1,4 @@
-package com.gepsac.app.view.admin
+package com.gepsac.app.ui.admin
 
 import android.view.View
 import android.widget.AdapterView
@@ -6,12 +6,12 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.gepsac.app.model.ItemPedido
+import com.gepsac.app.data.ItemPedido
 import com.gepsac.app.databinding.DialogNuevoPedidoBinding
 import com.gepsac.app.databinding.ItemCantidadProductoBinding
-import com.gepsac.app.view.elegirFecha
-import com.gepsac.app.view.err
-import com.gepsac.app.view.soles
+import com.gepsac.app.ui.elegirFecha
+import com.gepsac.app.ui.err
+import com.gepsac.app.ui.soles
 import com.gepsac.app.viewmodel.TiendaViewModel
 import com.gepsac.app.viewmodel.Validar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

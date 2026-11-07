@@ -1,4 +1,4 @@
-package com.gepsac.app.view.pedidos
+package com.gepsac.app.ui.pedidos
 
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -11,16 +11,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.gepsac.app.model.ESTADOS
-import com.gepsac.app.model.ESTADO_COLORES
-import com.gepsac.app.model.Pedido
+import com.gepsac.app.data.ESTADOS
+import com.gepsac.app.data.ESTADO_COLORES
+import com.gepsac.app.data.Pedido
 import com.gepsac.app.databinding.FragmentPedidosBinding
 import com.gepsac.app.databinding.ItemPedidoBinding
-import com.gepsac.app.view.admin.mostrarNuevoPedido
-import com.gepsac.app.view.crearChips
-import com.gepsac.app.view.fechaHora
-import com.gepsac.app.view.seguimiento.SeguimientoActivity
-import com.gepsac.app.view.soles
+import com.gepsac.app.ui.admin.mostrarNuevoPedido
+import com.gepsac.app.ui.crearChips
+import com.gepsac.app.ui.fechaHora
+import com.gepsac.app.ui.seguimiento.SeguimientoActivity
+import com.gepsac.app.ui.soles
 import com.gepsac.app.viewmodel.TiendaViewModel
 
 /** Módulo de Pedidos: cliente ve los suyos, admin ve todos. */

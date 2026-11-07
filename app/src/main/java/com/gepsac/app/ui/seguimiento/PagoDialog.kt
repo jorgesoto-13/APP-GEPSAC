@@ -1,4 +1,4 @@
-package com.gepsac.app.view.seguimiento
+package com.gepsac.app.ui.seguimiento
 
 import android.text.InputType
 import android.view.View
@@ -6,11 +6,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.gepsac.app.model.METODOS_PAGO
-import com.gepsac.app.model.Pedido
+import com.gepsac.app.data.METODOS_PAGO
+import com.gepsac.app.data.Pedido
 import com.gepsac.app.databinding.DialogPagoBinding
-import com.gepsac.app.view.err
-import com.gepsac.app.view.soles
+import com.gepsac.app.ui.err
+import com.gepsac.app.ui.soles
 import com.gepsac.app.viewmodel.Validar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 

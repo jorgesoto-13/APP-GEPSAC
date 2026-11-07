@@ -1,4 +1,4 @@
-package com.gepsac.app.model
+package com.gepsac.app.data
 
 val ESTADOS = listOf("Por registrar", "Registrado", "Pagado", "En preparación", "Despachado", "Entregado")
 const val ESTADO_REGISTRADO = 1

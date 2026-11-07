@@ -1,4 +1,4 @@
-package com.gepsac.app.view.admin
+package com.gepsac.app.ui.admin
 
 import android.content.Context
 import android.os.Bundle
@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.gepsac.app.databinding.FragmentAdminClientesBinding
 import com.gepsac.app.databinding.ItemClienteBinding
-import com.gepsac.app.view.soles
+import com.gepsac.app.ui.soles
 import com.gepsac.app.viewmodel.ResumenCliente
 import com.gepsac.app.viewmodel.TiendaViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
