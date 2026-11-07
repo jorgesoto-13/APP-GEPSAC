@@ -1,4 +1,4 @@
-package com.gepsac.app.ui
+package com.gepsac.app.ui.common
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -8,15 +8,8 @@ import com.gepsac.app.R
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputLayout
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
-
-fun Double.soles(): String = "S/ " + String.format(Locale.US, "%.2f", this)
-
-fun Long.fechaHora(): String =
-    if (this == 0L) "" else SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date(this))
 
 /** Muestra el error en el campo. Devuelve true si el campo es válido (msg == null). */
 fun TextInputLayout.err(msg: String?): Boolean {

@@ -1,50 +1,49 @@
 package com.gepsac.app.ui.admin
 
 import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import java.io.File
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.gepsac.app.data.MARCAS
-import com.gepsac.app.data.Producto
+import com.gepsac.app.data.model.MARCAS
+import com.gepsac.app.data.model.Producto
 import com.gepsac.app.databinding.DialogProductoBinding
 import com.gepsac.app.databinding.FragmentAdminProductosBinding
+import com.gepsac.app.di.Fabrica
 import com.gepsac.app.ui.catalogo.ProductoAdapter
-import com.gepsac.app.ui.Imagenes
-import com.gepsac.app.ui.err
-import com.gepsac.app.ui.mostrarProducto
-import com.gepsac.app.viewmodel.TiendaViewModel
-import com.gepsac.app.viewmodel.Validar
+import com.gepsac.app.ui.common.Imagenes
+import com.gepsac.app.ui.common.err
+import com.gepsac.app.ui.common.mostrarProducto
+import com.gepsac.app.util.Validar
+import com.gepsac.app.util.observarEvento
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /** Módulo de Administración: gestión de productos. */
 class AdminProductosFragment : Fragment() {
     private var _b: FragmentAdminProductosBinding? = null
     private val b get() = _b!!
-    private val vm: TiendaViewModel by activityViewModels()
+    private val vm: AdminProductosViewModel by activityViewModels { Fabrica.adminProductos }
     private lateinit var adapter: ProductoAdapter
 
-    // Imagen elegida en el diálogo abierto (aún sin guardar) y su vista previa
+    // Imagen (Base64) elegida en el diálogo abierto, aún sin guardar, y su vista previa
     private var imagenNueva: String? = null
     private var dialogoActual: DialogProductoBinding? = null
     private val elegirImagen = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         val d = dialogoActual ?: return@registerForActivityResult
         if (uri == null) return@registerForActivityResult
-        val ruta = Imagenes.guardar(requireContext(), uri)
-        if (ruta == null) {
+        val base64 = Imagenes.codificar(requireContext(), uri)
+        if (base64 == null) {
             Toast.makeText(requireContext(), "No se pudo cargar la imagen", Toast.LENGTH_SHORT).show()
             return@registerForActivityResult
         }
-        imagenNueva?.let { File(it).delete() }   // descarta la elección anterior sin guardar
-        imagenNueva = ruta
-        d.imgProducto.mostrarProducto(ruta)
+        imagenNueva = base64
+        d.imgProducto.mostrarProducto(base64)
     }
 
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
@@ -57,6 +56,7 @@ class AdminProductosFragment : Fragment() {
         b.rv.adapter = adapter
         b.fab.setOnClickListener { dialogo(null) }
         vm.productos.observe(viewLifecycleOwner) { adapter.submit(it) }
+        vm.mensaje.observarEvento(viewLifecycleOwner) { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
     }
 
     private fun dialogo(p: Producto?) {
@@ -64,7 +64,6 @@ class AdminProductosFragment : Fragment() {
         d.spMarca.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, MARCAS)
         imagenNueva = null
         dialogoActual = d
-        var guardado = false
         d.imgProducto.mostrarProducto(p?.imagen ?: "")
         d.btnImagen.setOnClickListener { elegirImagen.launch("image/*") }
         if (p != null) {
@@ -81,7 +80,6 @@ class AdminProductosFragment : Fragment() {
         if (p != null) builder.setNeutralButton("Eliminar", null)
         val dlg = builder.create()
         dlg.setOnDismissListener {
-            if (!guardado) imagenNueva?.let { File(it).delete() }   // se canceló: no dejar archivos huérfanos
             imagenNueva = null
             dialogoActual = null
         }
@@ -97,15 +95,12 @@ class AdminProductosFragment : Fragment() {
                 d.tilPrecio.err(Validar.precio(precioTxt))
             ).all { it }
             if (!ok) return@setOnClickListener
-            val imagenFinal = imagenNueva ?: p?.imagen ?: ""
-            if (imagenNueva != null && !p?.imagen.isNullOrEmpty()) File(p!!.imagen).delete()   // reemplaza la anterior
-            guardado = true
-            vm.guardarProducto(
+            vm.guardar(
                 Producto(
-                    id = p?.id ?: ("p" + System.currentTimeMillis()), nombre = nombre,
+                    id = p?.id ?: vm.nuevoId(), nombre = nombre,
                     marca = MARCAS[d.spMarca.selectedItemPosition], presentacion = pres,
                     precio = precioTxt.trim().replace(",", ".").toDouble(), activo = d.swActivo.isChecked,
-                    imagen = imagenFinal
+                    imagen = imagenNueva ?: p?.imagen ?: ""
                 )
             )
             dlg.dismiss()
@@ -115,7 +110,7 @@ class AdminProductosFragment : Fragment() {
                 MaterialAlertDialogBuilder(requireContext())
                     .setMessage("¿Eliminar " + p.nombre + " " + p.presentacion + "?")
                     .setNegativeButton("No", null)
-                    .setPositiveButton("Eliminar") { _, _ -> vm.eliminarProducto(p.id); dlg.dismiss() }
+                    .setPositiveButton("Eliminar") { _, _ -> vm.eliminar(p.id); dlg.dismiss() }
                     .show()
             }
         }

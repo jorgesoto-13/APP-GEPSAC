@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name=".GepsacApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_logo"
         android:label="GEPSAC"
@@ -12,7 +15,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.ClienteActivity" android:exported="false" />
+        <activity android:name=".ui.cliente.ClienteActivity" android:exported="false" />
         <activity android:name=".ui.admin.AdminActivity" android:exported="false" />
         <activity android:name=".ui.seguimiento.SeguimientoActivity" android:exported="false" />
     </application>
