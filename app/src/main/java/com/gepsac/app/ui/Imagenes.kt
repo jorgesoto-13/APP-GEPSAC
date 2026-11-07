@@ -1,4 +1,4 @@
-package com.gepsac.app.view
+package com.gepsac.app.ui
 
 import android.content.Context
 import android.graphics.Bitmap

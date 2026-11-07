@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
-import com.gepsac.app.model.ESTADO_PAGADO
-import com.gepsac.app.model.ItemPedido
-import com.gepsac.app.model.Pedido
-import com.gepsac.app.model.Producto
-import com.gepsac.app.model.Repository
-import com.gepsac.app.model.Usuario
+import com.gepsac.app.data.ESTADO_PAGADO
+import com.gepsac.app.data.ItemPedido
+import com.gepsac.app.data.Pedido
+import com.gepsac.app.data.Producto
+import com.gepsac.app.data.Repository
+import com.gepsac.app.data.Usuario
 
 /** Fila del listado de clientes: cuántos pedidos hizo y cuánto ha pagado. */
 data class ResumenCliente(val cliente: Usuario, val pedidos: Int, val totalPagado: Double)

@@ -1,4 +1,4 @@
-package com.gepsac.app.view.seguimiento
+package com.gepsac.app.ui.seguimiento
 
 import android.content.res.ColorStateList
 import android.os.Bundle
@@ -6,15 +6,15 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.gepsac.app.model.ESTADOS
-import com.gepsac.app.model.ESTADO_COLORES
-import com.gepsac.app.model.ESTADO_PAGADO
-import com.gepsac.app.model.ESTADO_REGISTRADO
-import com.gepsac.app.model.Pedido
+import com.gepsac.app.data.ESTADOS
+import com.gepsac.app.data.ESTADO_COLORES
+import com.gepsac.app.data.ESTADO_PAGADO
+import com.gepsac.app.data.ESTADO_REGISTRADO
+import com.gepsac.app.data.Pedido
 import com.gepsac.app.databinding.ActivityPedidoDetalleBinding
 import com.gepsac.app.databinding.ItemEtapaBinding
-import com.gepsac.app.view.fechaHora
-import com.gepsac.app.view.soles
+import com.gepsac.app.ui.fechaHora
+import com.gepsac.app.ui.soles
 import com.gepsac.app.viewmodel.TiendaViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
