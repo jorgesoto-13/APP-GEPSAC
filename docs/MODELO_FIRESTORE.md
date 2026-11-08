@@ -1,6 +1,6 @@
 # Modelo de datos GEPSAC en Firebase (Auth + Firestore)
 
-Es el modelo que implementa la app (`data/firebase/`). Las reglas de seguridad están en
+Es el modelo que implementa la app (`model/firebase/`). Las reglas de seguridad están en
 [`firebase/firestore.rules`](../firebase/firestore.rules) y los pasos de configuración en [`firebase/README.md`](../firebase/README.md).
 
 ## 1. Decisiones de diseño
@@ -87,22 +87,21 @@ com.gepsac.app
 ├── di/                       Inyección manual
 │   ├── AppContainer.kt         crea los repositorios (único lugar que conoce Firebase)
 │   └── Fabrica.kt              cómo se construye cada ViewModel
-├── data/                     CAPA DE DATOS
-│   ├── model/                  Usuario, Producto, Pedido, NuevoPedido (puro Kotlin, sin Android ni Firebase)
+├── model/                    MODEL: datos y reglas de negocio
+│   ├── (raíz)                  Usuario, Producto, Pedido, NuevoPedido (puro Kotlin, sin Android ni Firebase)
 │   ├── repository/             interfaces: AuthRepository, ProductoRepository, PedidoRepository, UsuarioRepository
 │   └── firebase/               implementaciones con Auth/Firestore, mapeos documento <-> modelo, errores
-├── ui/                       CAPA DE PRESENTACIÓN (View + ViewModel juntos, por pantalla)
+├── view/                     VIEW: lo que se ve (Activities, Fragments, Adapters, diálogos)
 │   ├── base/                   NavActivity (barra inferior)
 │   ├── common/                 formato, vistas auxiliares, colores, imágenes
-│   ├── auth/                   LoginActivity + AuthViewModel
-│   ├── cliente/                ClienteActivity (contenedor del cliente)
-│   ├── catalogo/               CatalogoFragment + CatalogoViewModel + ProductoAdapter
-│   ├── carrito/                CarritoFragment + CarritoViewModel + CarritoAdapter
-│   ├── pedidos/                PedidosFragment + PedidosViewModel + PedidoAdapter
-│   ├── seguimiento/            SeguimientoActivity + SeguimientoViewModel + PagoDialog
-│   └── admin/                  AdminActivity, productos, clientes, nuevo pedido (cada uno con su ViewModel)
+│   ├── auth/  cliente/         LoginActivity · ClienteActivity
+│   ├── catalogo/  carrito/     CatalogoFragment, ProductoAdapter · CarritoFragment, CarritoAdapter
+│   ├── pedidos/  seguimiento/  PedidosFragment, PedidoAdapter · SeguimientoActivity, PagoDialog
+│   └── admin/                  AdminActivity, productos, clientes, nuevo pedido
+├── viewmodel/                VIEWMODEL: un ViewModel por pantalla (Auth, Catalogo, Carrito, Pedidos,
+│                             Seguimiento, AdminProductos, AdminClientes, NuevoPedido)
 └── util/                     Validar, Fechas, Evento (mensajes de un solo uso), FlowExt
 ```
 
-Flujo de dependencias (solo hacia abajo): `Fragment/Activity → ViewModel → interfaz de Repository ← implementación Firebase`.
+Flujo de dependencias (solo hacia abajo): `view → viewmodel → interfaz de Repository ← implementación Firebase`.
 Las pantallas y los ViewModels nunca importan Firebase.

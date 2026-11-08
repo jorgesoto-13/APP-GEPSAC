@@ -13,10 +13,11 @@ Flujo del pedido: Por registrar → Registrado → Pagado → En preparación �
 ## Arquitectura (MVVM + Repository)
 ```
 Fragment / Activity  →  ViewModel  →  interfaz Repository  ←  implementación Firebase
-      (ui/*)            (ui/*)         (data/repository)        (data/firebase)
+     (view/*)         (viewmodel/*)    (model/repository)        (model/firebase)
 ```
-- `data/model` modelos · `data/repository` interfaces · `data/firebase` Auth y Firestore
-- `ui/<pantalla>` cada pantalla con su ViewModel · `ui/common` utilidades de vista
+- `model/` modelos · `model/repository` interfaces · `model/firebase` Auth y Firestore
+- `view/<pantalla>` pantallas, adaptadores y diálogos · `view/common` utilidades de vista
+- `viewmodel/` un ViewModel por pantalla
 - `di` crea los repositorios y los ViewModels · `util` validaciones, fechas y eventos
 
 Detalle del modelo y de las carpetas: [`docs/MODELO_FIRESTORE.md`](docs/MODELO_FIRESTORE.md).

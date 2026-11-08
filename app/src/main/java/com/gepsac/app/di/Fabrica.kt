@@ -6,14 +6,14 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.gepsac.app.GepsacApp
-import com.gepsac.app.ui.admin.AdminClientesViewModel
-import com.gepsac.app.ui.admin.AdminProductosViewModel
-import com.gepsac.app.ui.admin.NuevoPedidoViewModel
-import com.gepsac.app.ui.auth.AuthViewModel
-import com.gepsac.app.ui.carrito.CarritoViewModel
-import com.gepsac.app.ui.catalogo.CatalogoViewModel
-import com.gepsac.app.ui.pedidos.PedidosViewModel
-import com.gepsac.app.ui.seguimiento.SeguimientoViewModel
+import com.gepsac.app.viewmodel.AdminClientesViewModel
+import com.gepsac.app.viewmodel.AdminProductosViewModel
+import com.gepsac.app.viewmodel.NuevoPedidoViewModel
+import com.gepsac.app.viewmodel.AuthViewModel
+import com.gepsac.app.viewmodel.CarritoViewModel
+import com.gepsac.app.viewmodel.CatalogoViewModel
+import com.gepsac.app.viewmodel.PedidosViewModel
+import com.gepsac.app.viewmodel.SeguimientoViewModel
 
 /**
  * Cómo se construye cada ViewModel con sus repositorios. Uso en una pantalla:

@@ -1,13 +1,13 @@
 package com.gepsac.app.di
 
-import com.gepsac.app.data.firebase.FirebaseAuthRepository
-import com.gepsac.app.data.firebase.FirestorePedidoRepository
-import com.gepsac.app.data.firebase.FirestoreProductoRepository
-import com.gepsac.app.data.firebase.FirestoreUsuarioRepository
-import com.gepsac.app.data.repository.AuthRepository
-import com.gepsac.app.data.repository.PedidoRepository
-import com.gepsac.app.data.repository.ProductoRepository
-import com.gepsac.app.data.repository.UsuarioRepository
+import com.gepsac.app.model.firebase.FirebaseAuthRepository
+import com.gepsac.app.model.firebase.FirestorePedidoRepository
+import com.gepsac.app.model.firebase.FirestoreProductoRepository
+import com.gepsac.app.model.firebase.FirestoreUsuarioRepository
+import com.gepsac.app.model.repository.AuthRepository
+import com.gepsac.app.model.repository.PedidoRepository
+import com.gepsac.app.model.repository.ProductoRepository
+import com.gepsac.app.model.repository.UsuarioRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
