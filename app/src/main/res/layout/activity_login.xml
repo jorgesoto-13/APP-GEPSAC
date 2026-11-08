@@ -36,20 +36,11 @@
             android:layout_marginTop="10dp" android:textColor="#B33A2E" android:textStyle="bold" android:textSize="12sp" android:visibility="gone" />
         <Button android:id="@+id/btnAccion" android:layout_width="match_parent" android:layout_height="52dp"
             android:layout_marginTop="18dp" android:text="Ingresar" />
+        <ProgressBar android:id="@+id/progreso" style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:visibility="gone" />
         <TextView android:id="@+id/tvCambiar" android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_marginTop="16dp" android:padding="8dp" android:clickable="true" android:focusable="true"
             android:textColor="@color/green" android:textStyle="bold" />
-
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="20dp"
-            android:text="Acceso rápido (demo)" android:textColor="@color/muted" android:textSize="12sp" />
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="6dp" android:orientation="horizontal">
-            <Button android:id="@+id/btnDemoCliente" style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                android:layout_marginEnd="6dp" android:text="Cliente" />
-            <Button android:id="@+id/btnDemoAdmin" style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                android:layout_marginStart="6dp" android:text="Admin" />
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>

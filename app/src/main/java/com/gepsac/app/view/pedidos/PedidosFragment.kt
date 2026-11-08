@@ -1,36 +1,39 @@
 package com.gepsac.app.view.pedidos
 
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.gepsac.app.model.ESTADOS
-import com.gepsac.app.model.ESTADO_COLORES
-import com.gepsac.app.model.Pedido
+import com.gepsac.app.model.Producto
+import com.gepsac.app.model.Usuario
 import com.gepsac.app.databinding.FragmentPedidosBinding
-import com.gepsac.app.databinding.ItemPedidoBinding
+import com.gepsac.app.di.Fabrica
+import com.gepsac.app.viewmodel.NuevoPedidoViewModel
 import com.gepsac.app.view.admin.mostrarNuevoPedido
-import com.gepsac.app.view.crearChips
-import com.gepsac.app.view.fechaHora
+import com.gepsac.app.view.common.crearChips
 import com.gepsac.app.view.seguimiento.SeguimientoActivity
-import com.gepsac.app.view.soles
-import com.gepsac.app.viewmodel.TiendaViewModel
+import com.gepsac.app.util.observarEvento
+import com.gepsac.app.viewmodel.PedidosViewModel
 
 /** Módulo de Pedidos: cliente ve los suyos, admin ve todos. */
 class PedidosFragment : Fragment() {
     private var _b: FragmentPedidosBinding? = null
     private val b get() = _b!!
-    private val vm: TiendaViewModel by activityViewModels()
-    private var todos = listOf<Pedido>()
-    private var filtro = -1
+    private val vm: PedidosViewModel by activityViewModels { Fabrica.pedidos }
+    private val nuevoVm: NuevoPedidoViewModel by viewModels { Fabrica.nuevoPedido }   // solo se usa si es admin
     private lateinit var adapter: PedidoAdapter
+
+    // Datos del diálogo "Nuevo pedido" (solo admin)
+    private var clientes = listOf<Usuario>()
+    private var productos = listOf<Producto>()
 
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
         _b = FragmentPedidosBinding.inflate(i, c, false); return b.root
@@ -42,52 +45,32 @@ class PedidosFragment : Fragment() {
         }
         b.rv.layoutManager = LinearLayoutManager(requireContext())
         b.rv.adapter = adapter
-        vm.pedidos.observe(viewLifecycleOwner) { l -> todos = l; aplicar() }
-        crearChips(b.chips, listOf("Todos") + ESTADOS) { sel -> filtro = ESTADOS.indexOf(sel); aplicar() }
-        b.etBuscar.doAfterTextChanged { aplicar() }
+        vm.pedidos.observe(viewLifecycleOwner) { l ->
+            adapter.submit(l)
+            b.tvVacio.visibility = if (l.isEmpty()) View.VISIBLE else View.GONE
+        }
+        vm.error.observarEvento(viewLifecycleOwner) { aviso(it) }
+
+        crearChips(b.chips, listOf("Todos") + ESTADOS) { sel -> vm.filtrarPorEstado(ESTADOS.indexOf(sel)) }
+        b.etBuscar.doAfterTextChanged { vm.buscar(it?.toString().orEmpty()) }
+
         b.fabNuevo.visibility = if (vm.esAdmin) View.VISIBLE else View.GONE
-        b.fabNuevo.setOnClickListener { mostrarNuevoPedido(vm) }
+        if (vm.esAdmin) {
+            nuevoVm.clientes.observe(viewLifecycleOwner) { clientes = it }
+            nuevoVm.productos.observe(viewLifecycleOwner) { productos = it }
+            nuevoVm.creado.observarEvento(viewLifecycleOwner) { numero ->
+                aviso("Pedido #$numero registrado. Esperando el pago del cliente.")
+            }
+            nuevoVm.mensaje.observarEvento(viewLifecycleOwner) { aviso(it) }
+            b.fabNuevo.setOnClickListener {
+                mostrarNuevoPedido(clientes, productos) { cliente, items, dir, tel, fecha, obs ->
+                    nuevoVm.crear(cliente, items, dir, tel, fecha, obs)
+                }
+            }
+        }
     }
 
-    private fun aplicar() {
-        val q = b.etBuscar.text.toString().trim().lowercase()
-        val l = todos.filter {
-            (filtro < 0 || it.estado == filtro) &&
-                (q.isEmpty() || it.clienteNombre.lowercase().contains(q) || it.numero.toString().contains(q))
-        }
-        adapter.submit(l)
-        b.tvVacio.visibility = if (l.isEmpty()) View.VISIBLE else View.GONE
-    }
+    private fun aviso(msg: String) = Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
 
     override fun onDestroyView() { _b = null; super.onDestroyView() }
-}
-
-class PedidoAdapter(
-    private val admin: Boolean,
-    private val onClick: (Pedido) -> Unit
-) : RecyclerView.Adapter<PedidoAdapter.VH>() {
-    private var data = listOf<Pedido>()
-    fun submit(l: List<Pedido>) { data = l; notifyDataSetChanged() }
-
-    class VH(val b: ItemPedidoBinding) : RecyclerView.ViewHolder(b.root)
-
-    override fun onCreateViewHolder(p: ViewGroup, t: Int) =
-        VH(ItemPedidoBinding.inflate(LayoutInflater.from(p.context), p, false))
-
-    override fun getItemCount() = data.size
-
-    override fun onBindViewHolder(h: VH, i: Int) {
-        val p = data[i]
-        val e = p.estado.coerceIn(0, ESTADOS.size - 1)
-        with(h.b) {
-            tvNumero.text = "Pedido #" + p.numero
-            tvCliente.text = if (admin) p.clienteNombre
-            else p.items.joinToString(", ") { x -> x.cantidad.toString() + "× " + x.nombre }
-            tvFecha.text = p.tiempos.getOrElse(0) { 0L }.fechaHora()
-            tvTotal.text = p.total.soles()
-            tvEstado.text = ESTADOS[e]
-            tvEstado.backgroundTintList = ColorStateList.valueOf(ESTADO_COLORES[e])
-            root.setOnClickListener { onClick(p) }
-        }
-    }
 }

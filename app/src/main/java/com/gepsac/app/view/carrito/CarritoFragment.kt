@@ -9,24 +9,23 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.gepsac.app.R
-import com.gepsac.app.model.ItemPedido
 import com.gepsac.app.databinding.DialogCheckoutBinding
 import com.gepsac.app.databinding.FragmentCarritoBinding
-import com.gepsac.app.databinding.ItemCarritoBinding
-import com.gepsac.app.view.ClienteActivity
-import com.gepsac.app.view.elegirFecha
-import com.gepsac.app.view.err
-import com.gepsac.app.view.soles
-import com.gepsac.app.viewmodel.TiendaViewModel
-import com.gepsac.app.viewmodel.Validar
+import com.gepsac.app.di.Fabrica
+import com.gepsac.app.view.cliente.ClienteActivity
+import com.gepsac.app.view.common.elegirFecha
+import com.gepsac.app.view.common.err
+import com.gepsac.app.view.common.soles
+import com.gepsac.app.util.Validar
+import com.gepsac.app.util.observarEvento
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.gepsac.app.viewmodel.CarritoViewModel
 
 class CarritoFragment : Fragment() {
     private var _b: FragmentCarritoBinding? = null
     private val b get() = _b!!
-    private val vm: TiendaViewModel by activityViewModels()
+    private val vm: CarritoViewModel by activityViewModels { Fabrica.carrito }
     private lateinit var adapter: CarritoAdapter
 
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
@@ -43,10 +42,21 @@ class CarritoFragment : Fragment() {
         vm.carrito.observe(viewLifecycleOwner) { l ->
             adapter.submit(l)
             b.tvVacio.visibility = if (l.isEmpty()) View.VISIBLE else View.GONE
-            b.btnConfirmar.isEnabled = l.isNotEmpty()
+            actualizarBoton()
         }
         vm.total.observe(viewLifecycleOwner) { b.tvTotal.text = "Total: " + it.soles() }
+        vm.enviando.observe(viewLifecycleOwner) { actualizarBoton() }
+        vm.pedidoEnviado.observarEvento(viewLifecycleOwner) { numero ->
+            Toast.makeText(requireContext(), "Pedido #$numero enviado. Está por registrar.", Toast.LENGTH_LONG).show()
+            (activity as? ClienteActivity)?.irA(R.id.nav_pedidos)
+        }
+        vm.error.observarEvento(viewLifecycleOwner) { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
         b.btnConfirmar.setOnClickListener { checkout() }
+    }
+
+    private fun actualizarBoton() {
+        val hayItems = vm.carrito.value.orEmpty().isNotEmpty()
+        b.btnConfirmar.isEnabled = hayItems && vm.enviando.value != true
     }
 
     private fun checkout() {
@@ -71,37 +81,10 @@ class CarritoFragment : Fragment() {
                 d.tilObs.err(Validar.observacion(obs))
             ).all { it }
             if (!ok) return@setOnClickListener
-            val p = vm.confirmarPedido(dir, tel, fecha, obs)
+            vm.confirmarPedido(dir, tel, fecha, obs)
             dlg.dismiss()
-            if (p != null) {
-                Toast.makeText(requireContext(), "Pedido #" + p.numero + " enviado. Está por registrar.", Toast.LENGTH_LONG).show()
-                (activity as? ClienteActivity)?.irA(R.id.nav_pedidos)
-            }
         }
     }
 
     override fun onDestroyView() { _b = null; super.onDestroyView() }
-}
-
-class CarritoAdapter(private val onCambio: (String, Int) -> Unit) : RecyclerView.Adapter<CarritoAdapter.VH>() {
-    private var data = listOf<ItemPedido>()
-    fun submit(l: List<ItemPedido>) { data = l; notifyDataSetChanged() }
-
-    class VH(val b: ItemCarritoBinding) : RecyclerView.ViewHolder(b.root)
-
-    override fun onCreateViewHolder(p: ViewGroup, t: Int) =
-        VH(ItemCarritoBinding.inflate(LayoutInflater.from(p.context), p, false))
-
-    override fun getItemCount() = data.size
-
-    override fun onBindViewHolder(h: VH, i: Int) {
-        val item = data[i]
-        with(h.b) {
-            tvNombre.text = item.nombre
-            tvSub.text = item.precio.soles() + " c/u · " + (item.precio * item.cantidad).soles()
-            tvCant.text = item.cantidad.toString()
-            btnMas.setOnClickListener { onCambio(item.productoId, 1) }
-            btnMenos.setOnClickListener { onCambio(item.productoId, -1) }
-        }
-    }
 }

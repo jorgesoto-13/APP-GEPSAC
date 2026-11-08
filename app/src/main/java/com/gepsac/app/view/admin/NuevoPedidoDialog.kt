@@ -7,19 +7,25 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.gepsac.app.model.ItemPedido
+import com.gepsac.app.model.Producto
+import com.gepsac.app.model.Usuario
 import com.gepsac.app.databinding.DialogNuevoPedidoBinding
 import com.gepsac.app.databinding.ItemCantidadProductoBinding
-import com.gepsac.app.view.elegirFecha
-import com.gepsac.app.view.err
-import com.gepsac.app.view.soles
-import com.gepsac.app.viewmodel.TiendaViewModel
-import com.gepsac.app.viewmodel.Validar
+import com.gepsac.app.view.common.elegirFecha
+import com.gepsac.app.view.common.err
+import com.gepsac.app.view.common.soles
+import com.gepsac.app.util.Validar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-/** El admin crea un pedido a nombre de un cliente (casos en que el cliente no puede hacerlo). Entra ya "Registrado". */
-fun Fragment.mostrarNuevoPedido(vm: TiendaViewModel) {
-    val clientes = vm.clientes()
-    val productos = vm.productosActivos()
+/**
+ * El admin crea un pedido a nombre de un cliente (casos en que el cliente no puede hacerlo). Entra ya "Registrado".
+ * El diálogo solo recoge y valida los datos; quien lo llama (ViewModel) guarda el pedido.
+ */
+fun Fragment.mostrarNuevoPedido(
+    clientes: List<Usuario>,
+    productos: List<Producto>,
+    onConfirmar: (cliente: Usuario, items: List<ItemPedido>, dir: String, tel: String, fecha: String, obs: String) -> Unit
+) {
     if (clientes.isEmpty() || productos.isEmpty()) {
         Toast.makeText(requireContext(), "Se necesita al menos un cliente y un producto activo", Toast.LENGTH_LONG).show()
         return
@@ -72,15 +78,14 @@ fun Fragment.mostrarNuevoPedido(vm: TiendaViewModel) {
                 val n = txt.trim().toIntOrNull() ?: 0
                 if (n > 0) {
                     val p = productos[i]
-                    items.add(ItemPedido(p.id, (p.nombre + " " + p.presentacion).trim(), p.precio, n))
+                    items.add(ItemPedido(p.id, p.nombreCompleto, p.precio, n))
                 }
             }
         }
         d.tvErrorItems.visibility = if (cantidadesOk && items.isEmpty()) View.VISIBLE else View.GONE
         if (!camposOk || !cantidadesOk || items.isEmpty()) return@setOnClickListener
 
-        val p = vm.crearPedidoAdmin(clientes[d.spCliente.selectedItemPosition], items, dir, tel, fecha, obs)
         dlg.dismiss()
-        Toast.makeText(requireContext(), "Pedido #" + p.numero + " registrado. Esperando el pago del cliente.", Toast.LENGTH_LONG).show()
+        onConfirmar(clientes[d.spCliente.selectedItemPosition], items, dir, tel, fecha, obs)
     }
 }

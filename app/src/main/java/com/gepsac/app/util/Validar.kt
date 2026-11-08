@@ -1,4 +1,4 @@
-package com.gepsac.app.viewmodel
+package com.gepsac.app.util
 
 import java.text.SimpleDateFormat
 import java.util.Calendar

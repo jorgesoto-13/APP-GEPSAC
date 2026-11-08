@@ -1,4 +1,4 @@
-package com.gepsac.app.view
+package com.gepsac.app.view.common
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -6,17 +6,23 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
+import android.util.Base64
 import android.util.LruCache
 import android.widget.ImageView
 import com.gepsac.app.R
-import java.io.File
+import java.io.ByteArrayOutputStream
 
+/**
+ * Las fotos de producto se reducen y se guardan como texto Base64 dentro del documento del producto en Firestore
+ * (así no hace falta Firebase Storage, que exige el plan de pago).
+ */
 object Imagenes {
-    private const val MAX_LADO = 600
+    private const val MAX_LADO = 480
+    private const val MAX_BYTES = 150_000   // el documento de Firestore admite 1 MiB; esto deja mucho margen
     private val cache = LruCache<String, Bitmap>(24)
 
-    /** Copia la imagen elegida a filesDir/productos, reducida y con la rotación corregida. Devuelve la ruta o null. */
-    fun guardar(ctx: Context, uri: Uri): String? {
+    /** Lee la imagen elegida, la reduce, corrige la rotación y la devuelve en Base64 (JPEG). Null si falla. */
+    fun codificar(ctx: Context, uri: Uri): String? {
         return try {
             val cr = ctx.contentResolver
             val medidas = BitmapFactory.Options().apply { inJustDecodeBounds = true }
@@ -44,26 +50,37 @@ object Imagenes {
                 bmp = Bitmap.createScaledBitmap(bmp, (bmp.width * f).toInt(), (bmp.height * f).toInt(), true)
             }
 
-            val dir = File(ctx.filesDir, "productos").apply { mkdirs() }
-            val archivo = File(dir, "img_" + System.currentTimeMillis() + ".jpg")
-            archivo.outputStream().use { bmp.compress(Bitmap.CompressFormat.JPEG, 85, it) }
-            archivo.absolutePath
+            // Baja la calidad hasta que quepa en el tamaño máximo.
+            var bytes = ByteArray(0)
+            for (calidad in intArrayOf(85, 70, 55, 40)) {
+                val salida = ByteArrayOutputStream()
+                bmp.compress(Bitmap.CompressFormat.JPEG, calidad, salida)
+                bytes = salida.toByteArray()
+                if (bytes.size <= MAX_BYTES) break
+            }
+            if (bytes.size > MAX_BYTES) null else Base64.encodeToString(bytes, Base64.NO_WRAP)
         } catch (e: Exception) {
             null
         }
     }
 
-    fun cargar(ruta: String): Bitmap? {
-        cache.get(ruta)?.let { return it }
-        if (!File(ruta).exists()) return null
-        val bmp = BitmapFactory.decodeFile(ruta) ?: return null
-        cache.put(ruta, bmp)
-        return bmp
+    fun decodificar(base64: String): Bitmap? {
+        val clave = base64.length.toString() + ":" + base64.hashCode()
+        cache.get(clave)?.let { return it }
+        return try {
+            val bytes = Base64.decode(base64, Base64.DEFAULT)
+            val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size) ?: return null
+            cache.put(clave, bmp)
+            bmp
+        } catch (e: IllegalArgumentException) {
+            null
+        }
     }
 }
 
-fun ImageView.mostrarProducto(ruta: String) {
-    val bmp = if (ruta.isEmpty()) null else Imagenes.cargar(ruta)
+/** Muestra la foto del producto (Base64) o, si no tiene, el ícono de imagen. */
+fun ImageView.mostrarProducto(base64: String) {
+    val bmp = if (base64.isEmpty()) null else Imagenes.decodificar(base64)
     clipToOutline = true   // respeta las esquinas redondeadas del fondo
     if (bmp != null) {
         setImageBitmap(bmp)

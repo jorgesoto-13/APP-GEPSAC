@@ -2,7 +2,7 @@ package com.gepsac.app.view.admin
 
 import androidx.fragment.app.Fragment
 import com.gepsac.app.R
-import com.gepsac.app.view.NavActivity
+import com.gepsac.app.view.base.NavActivity
 import com.gepsac.app.view.pedidos.PedidosFragment
 
 class AdminActivity : NavActivity() {

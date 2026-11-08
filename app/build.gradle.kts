@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -30,4 +31,13 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.8.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.4")
+
+    // Firebase (las versiones las fija el BoM).
+    // 34.12.0 y no uno más nuevo: desde BoM 34.13 las libs se compilan con metadata de Kotlin 2.3+ (35.x: 2.4)
+    // y este proyecto usa Kotlin 2.2.x. Para subir el BoM hay que subir antes el plugin de Kotlin.
+    implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    // Permite usar .await() sobre las tareas de Firebase dentro de corrutinas
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.11.0")
 }
