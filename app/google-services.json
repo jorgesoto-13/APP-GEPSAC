@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "481240556441",
+    "project_id": "gepsac-15d09",
+    "storage_bucket": "gepsac-15d09.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481240556441:android:7f1d0caa82057f607fe908",
+        "android_client_info": {
+          "package_name": "com.gepsac.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDC5iqklCJ4WDcb1MB1DAee4AA0bJZxWFc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

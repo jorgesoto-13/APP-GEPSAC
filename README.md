@@ -10,12 +10,14 @@ Flujo del pedido: Por registrar → Registrado → Pagado → En preparación �
 - Cada avance/retroceso pide confirmación. Desde "Pagado" no se puede retroceder.
 - El pago es simulado y no se guardan datos de tarjeta.
 
-## Arquitectura (MVVM + Repository)
+## Arquitectura (MVVM + Repository + Services)
 ```
-Fragment / Activity  →  ViewModel  →  interfaz Repository  ←  implementación Firebase
-     (view/*)         (viewmodel/*)    (model/repository)        (model/firebase)
+Fragment / Activity → ViewModel → interfaz Repository ← implementación Firebase → Service → SDK de Firebase
+     (view/*)       (viewmodel/*)  (model/repository)     (model/firebase)     (model/service)
 ```
-- `model/` modelos · `model/repository` interfaces · `model/firebase` Auth y Firestore
+- `model/` modelos · `model/repository` interfaces · `model/firebase` implementaciones de los repositorios
+- `model/service` servicios que hablan con Firebase: `AuthService`, `FirestoreService`, `StorageService`, `CloudFunctionsService`
+  (los dos últimos exigen el plan Blaze: existen en el código pero aún no los usa ningún repositorio)
 - `view/<pantalla>` pantallas, adaptadores y diálogos · `view/common` utilidades de vista
 - `viewmodel/` un ViewModel por pantalla
 - `di` crea los repositorios y los ViewModels · `util` validaciones, fechas y eventos

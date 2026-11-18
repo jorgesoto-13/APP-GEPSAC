@@ -1,4 +1,4 @@
-package com.gepsac.app.model.firebase
+package com.gepsac.app.model.service
 
 import com.gepsac.app.model.repository.ErrorApp
 import com.google.firebase.FirebaseNetworkException

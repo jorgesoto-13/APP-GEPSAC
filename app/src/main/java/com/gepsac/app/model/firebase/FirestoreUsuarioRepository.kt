@@ -3,15 +3,13 @@ package com.gepsac.app.model.firebase
 import com.gepsac.app.model.Rol
 import com.gepsac.app.model.Usuario
 import com.gepsac.app.model.repository.UsuarioRepository
-import com.google.firebase.firestore.FirebaseFirestore
+import com.gepsac.app.model.service.FirestoreService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class FirestoreUsuarioRepository(private val db: FirebaseFirestore) : UsuarioRepository {
+class FirestoreUsuarioRepository(private val firestore: FirestoreService) : UsuarioRepository {
 
     override fun observarClientes(): Flow<List<Usuario>> =
-        db.collection(Coleccion.USUARIOS)
-            .whereEqualTo("rol", Rol.CLIENTE.clave)
-            .cambios()
+        firestore.observarColeccion(Coleccion.USUARIOS) { it.whereEqualTo("rol", Rol.CLIENTE.clave) }
             .map { snap -> snap.documents.mapNotNull { it.aUsuario() }.sortedBy { it.nombre.lowercase() } }
 }

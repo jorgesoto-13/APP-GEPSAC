@@ -1,0 +1,118 @@
+@startuml
+title Modelo lógico · GEPSAC (notación de pata de gallo)
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 13
+skinparam ArrowColor #333333
+skinparam ArrowFontSize 12
+skinparam class {
+  BackgroundColor #EAF5FF
+  BorderColor #2E74B5
+  FontColor #10395E
+  HeaderBackgroundColor #AEDCFF
+}
+skinparam entity {
+  BackgroundColor #EAF5FF
+  BorderColor #2E74B5
+  FontColor #10395E
+}
+hide circle
+top to bottom direction
+
+entity "USUARIO" as usuario {
+  * id_usuario : texto <<PK>>
+  --
+  * nombre : texto
+  * email : texto <<único>>
+  * telefono : texto
+  * rol : texto (cliente o admin)
+  * creado_en : fecha y hora
+}
+
+entity "MARCA" as marca {
+  * id_marca : entero <<PK>>
+  --
+  * nombre : texto <<único>>
+}
+
+entity "PRODUCTO" as producto {
+  * id_producto : texto <<PK>>
+  --
+  * nombre : texto
+  * presentacion : texto
+  * precio : decimal
+  * activo : booleano
+  imagen : texto
+  * actualizado_en : fecha y hora
+}
+
+entity "ETAPA" as etapa {
+  * id_etapa : entero <<PK>>
+  --
+  * nombre : texto <<único>>
+}
+
+entity "PEDIDO" as pedido {
+  * id_pedido : texto <<PK>>
+  --
+  * numero : entero <<único>>
+  * telefono : texto
+  * direccion : texto
+  * fecha_entrega : fecha
+  observacion : texto
+  * total : decimal
+  * creado_en : fecha y hora
+}
+
+entity "DETALLE_PEDIDO" as detalle {
+  * id_pedido : texto <<PK, FK>>
+  * id_producto : texto <<PK, FK>>
+  --
+  * nombre_producto : texto
+  * precio_unitario : decimal
+  * cantidad : entero (1 a 100)
+}
+
+entity "HISTORIAL_ETAPA" as historial {
+  * id_pedido : texto <<PK, FK>>
+  * id_etapa : entero <<PK, FK>>
+  --
+  * fecha : fecha y hora
+}
+
+entity "PAGO" as pago {
+  * id_pago : entero <<PK>>
+  --
+  * metodo : texto (Yape, Plin, Transferencia, Tarjeta)
+  * monto : decimal
+  * referencia : texto
+  * fecha : fecha y hora
+}
+
+' --- Relaciones no identificadoras (línea punteada) ---
+usuario ||..o{ pedido : "realiza (cliente)"
+usuario ||..o{ pedido : "registra (creador)"
+etapa ||..o{ pedido : "etapa actual"
+marca ||..o{ producto : "agrupa"
+pedido ||..o| pago : "se paga con"
+
+' --- Relaciones identificadoras (línea sólida) ---
+pedido ||--|{ detalle : "contiene"
+producto ||--o{ detalle : "aparece en"
+pedido ||--|{ historial : "pasa por"
+etapa ||--o{ historial : "registrada en"
+
+legend right
+  <b>Cardinalidad</b>
+  ""||""  exactamente uno
+  ""o|""  cero o uno
+  ""}o""  cero o muchos
+  ""}|""  uno o muchos
+  ----
+  Línea sólida: relación identificadora
+  Línea punteada: relación no identificadora
+  *  atributo obligatorio
+endlegend
+@enduml

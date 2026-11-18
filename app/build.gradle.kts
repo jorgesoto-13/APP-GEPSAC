@@ -38,6 +38,9 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+    // Usados por StorageService y CloudFunctionsService (ambos exigen el plan Blaze para funcionar de verdad)
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-functions")
     // Permite usar .await() sobre las tareas de Firebase dentro de corrutinas
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.11.0")
 }

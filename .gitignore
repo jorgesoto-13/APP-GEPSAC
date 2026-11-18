@@ -16,6 +16,12 @@ local.properties
 *.p12
 *.pem
 
+# Firebase: claves privadas y dependencias del script de datos iniciales
+**/serviceAccountKey*.json
+firebase/seed/node_modules/
+hs_err_pid*.log
+replay_pid*.log
+
 # Archivos temporales
 .DS_Store
 Thumbs.db

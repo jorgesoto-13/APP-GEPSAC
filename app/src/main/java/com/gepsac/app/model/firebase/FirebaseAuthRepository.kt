@@ -4,15 +4,16 @@ import com.gepsac.app.model.Rol
 import com.gepsac.app.model.Usuario
 import com.gepsac.app.model.repository.AuthRepository
 import com.gepsac.app.model.repository.ErrorApp
-import com.google.firebase.auth.FirebaseAuth
+import com.gepsac.app.model.service.AuthService
+import com.gepsac.app.model.service.FirestoreService
+import com.gepsac.app.model.service.intentar
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CancellationException
 
-/** Autenticación con Firebase Auth (correo y contraseña) + perfil en la colección `usuarios/{uid}`. */
+/** Sesión con Firebase Auth (vía [AuthService]) + perfil en la colección `usuarios/{uid}` (vía [FirestoreService]). */
 class FirebaseAuthRepository(
-    private val auth: FirebaseAuth,
-    private val db: FirebaseFirestore
+    private val auth: AuthService,
+    private val firestore: FirestoreService
 ) : AuthRepository {
 
     @Volatile
@@ -20,21 +21,18 @@ class FirebaseAuthRepository(
     override val usuarioActual: Usuario? get() = usuario
 
     override suspend fun ingresar(email: String, pass: String): Result<Usuario> = intentar {
-        val resultado = auth.signInWithEmailAndPassword(email.trim(), pass).esperar()
-        val uid = resultado.user?.uid ?: throw ErrorApp("No se pudo iniciar sesión")
-        cargarPerfil(uid)
+        cargarPerfil(auth.iniciarSesion(email, pass).uid)
     }
 
     override suspend fun registrar(nombre: String, telefono: String, email: String, pass: String): Result<Usuario> =
         intentar {
             val correo = email.trim().lowercase()
-            val user = auth.createUserWithEmailAndPassword(correo, pass).esperar().user
-                ?: throw ErrorApp("No se pudo crear la cuenta")
+            val cuenta = auth.crearCuenta(correo, pass)
 
             val nuevo = Usuario(
-                id = user.uid,
+                id = cuenta.uid,
                 nombre = nombre.trim(),
-                email = user.email ?: correo,
+                email = cuenta.email ?: correo,
                 telefono = telefono.replace(" ", ""),
                 rol = Rol.CLIENTE
             )
@@ -46,11 +44,11 @@ class FirebaseAuthRepository(
                 "creadoEn" to FieldValue.serverTimestamp()
             )
             try {
-                db.collection(Coleccion.USUARIOS).document(user.uid).set(perfil).esperar()
+                firestore.guardar(Coleccion.USUARIOS, cuenta.uid, perfil)
             } catch (e: Exception) {
                 // Sin perfil la cuenta no sirve: se borra para que el correo pueda volver a registrarse.
-                runCatching { user.delete().esperar() }
-                auth.signOut()
+                runCatching { auth.eliminarCuentaActual() }
+                auth.cerrarSesion()
                 throw e
             }
             usuario = nuevo
@@ -59,7 +57,7 @@ class FirebaseAuthRepository(
 
     override suspend fun restaurarSesion(): Usuario? {
         usuario?.let { return it }
-        val uid = auth.currentUser?.uid ?: return null
+        val uid = auth.uidActual ?: return null
         return try {
             cargarPerfil(uid)
         } catch (e: CancellationException) {
@@ -70,14 +68,14 @@ class FirebaseAuthRepository(
     }
 
     override fun cerrarSesion() {
-        auth.signOut()
+        auth.cerrarSesion()
         usuario = null
     }
 
     private suspend fun cargarPerfil(uid: String): Usuario {
-        val perfil = db.collection(Coleccion.USUARIOS).document(uid).get().esperar().aUsuario()
+        val perfil = firestore.obtener(Coleccion.USUARIOS, uid).aUsuario()
         if (perfil == null) {
-            auth.signOut()
+            auth.cerrarSesion()
             throw ErrorApp("Tu cuenta no tiene perfil en la tienda. Contacta al administrador.")
         }
         usuario = perfil

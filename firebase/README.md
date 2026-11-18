@@ -17,7 +17,23 @@ Todo cabe en el plan gratuito **Spark** (no se usa Firebase Storage).
 - **Firestore Database →** crear base de datos en modo *producción* (la ubicación no se puede cambiar después).
 - **Firestore → Reglas →** pega el contenido de `firestore.rules` y publica.
 
-## 3. Datos iniciales (a mano, una sola vez)
+## 3. Datos iniciales
+
+**Opción A: con el script** (crea el contador, el administrador y, si quieres, 3 productos de ejemplo). Ver [`seed/`](seed/):
+
+1. En la consola: engranaje → *Configuración del proyecto* → pestaña **Cuentas de servicio** → **Generar nueva clave privada**.
+   Guarda el archivo como `firebase/seed/serviceAccountKey.json`. **Da control total del proyecto: no lo subas ni lo compartas.**
+2. En una terminal, dentro de `firebase/seed`:
+   ```
+   npm install
+   $env:ADMIN_EMAIL="tu_correo@gmail.com"; $env:ADMIN_PASSWORD="tu_contraseña"; $env:SEED_PRODUCTOS="1"; npm run seed
+   ```
+   (PowerShell. En Git Bash: `ADMIN_EMAIL=... ADMIN_PASSWORD=... SEED_PRODUCTOS=1 npm run seed`.)
+3. Cuando termine, **borra `serviceAccountKey.json`** y revoca la clave en la misma pestaña de la consola.
+
+El script no duplica nada si se repite.
+
+**Opción B: a mano** (una sola vez):
 
 1. **Crear el administrador.** En *Authentication → Usuarios* agrega un usuario con su correo y una contraseña propia.
    Copia su **UID**.
