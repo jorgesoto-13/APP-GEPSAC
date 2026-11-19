@@ -11,6 +11,7 @@ import android.util.LruCache
 import android.widget.ImageView
 import com.gepsac.app.R
 import java.io.ByteArrayOutputStream
+import android.graphics.Color
 
 /**
  * Las fotos de producto se reducen y se guardan como texto Base64 dentro del documento del producto en Firestore
@@ -81,10 +82,16 @@ object Imagenes {
 /** Muestra la foto del producto (Base64) o, si no tiene, el ícono de imagen. */
 fun ImageView.mostrarProducto(base64: String) {
     val bmp = if (base64.isEmpty()) null else Imagenes.decodificar(base64)
-    clipToOutline = true   // respeta las esquinas redondeadas del fondo
+
+    // Fondo blanco para los espacios laterales
+    setBackgroundColor(Color.WHITE)
+
+    // Respeta las esquinas redondeadas
+    clipToOutline = true
+
     if (bmp != null) {
         setImageBitmap(bmp)
-        scaleType = ImageView.ScaleType.CENTER_CROP
+        scaleType = ImageView.ScaleType.FIT_CENTER
     } else {
         setImageResource(R.drawable.ic_image)
         scaleType = ImageView.ScaleType.CENTER
