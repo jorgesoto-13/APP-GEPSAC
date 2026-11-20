@@ -2,7 +2,7 @@ name: APK de prueba
 
 # Compila la app en los servidores de GitHub y deja el APK para descargarlo desde el celular:
 # pestaña Actions -> última ejecución -> Artifacts -> app-debug.
-# En la rama main, además, publica una versión (Release) con el APK: la app instalada la detecta y ofrece actualizar.
+# En main (y, por ahora, en feat/ui-cafeteria) publica además una versión (Release) con el APK: la app instalada la detecta y ofrece actualizar.
 on:
   push:
   workflow_dispatch:
@@ -49,8 +49,9 @@ jobs:
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
 
-      - name: Publicar versión (solo main)
-        if: github.ref == 'refs/heads/main'
+      # Temporal: también publica desde la rama de pruebas para poder probar el aviso de actualización antes del merge.
+      - name: Publicar versión (main y rama de pruebas)
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat/ui-cafeteria'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ github.run_number }}
