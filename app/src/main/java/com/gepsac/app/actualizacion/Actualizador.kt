@@ -39,6 +39,9 @@ object Actualizador {
 
     private const val ARCHIVO = "gepsac-actualizacion.apk"
 
+    /** Versión que espera a que el usuario dé el permiso de instalar; al volver a la app, la descarga sigue sola. */
+    private var pendientePermiso: Version? = null
+
     /** Se pregunta una sola vez por apertura de la app: si el usuario elige «Más tarde», no se insiste. */
     private var consultado = false
 
@@ -49,6 +52,14 @@ object Actualizador {
             val ultima = withContext(Dispatchers.IO) { consultarUltimaVersion() } ?: return@launch
             if (ultima.numero > BuildConfig.NUMERO_COMPILACION) preguntar(actividad, ultima)
         }
+    }
+
+    /** Se llama al volver a una pantalla: si el usuario acababa de dar el permiso de instalar, continúa la descarga. */
+    fun reanudar(actividad: AppCompatActivity) {
+        val v = pendientePermiso ?: return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !actividad.packageManager.canRequestPackageInstalls()) return
+        pendientePermiso = null
+        iniciarDescarga(actividad, v)
     }
 
     private fun consultarUltimaVersion(): Version? {
@@ -100,7 +111,8 @@ object Actualizador {
 
         // Android 8+: instalar un APK exige permitirlo para esta app (una sola vez).
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !app.packageManager.canRequestPackageInstalls()) {
-            Toast.makeText(app, "Activa «Permitir de esta fuente» y vuelve a abrir la app para actualizar.", Toast.LENGTH_LONG).show()
+            pendientePermiso = v
+            Toast.makeText(app, "Activa «Permitir de esta fuente» y regresa a GEPSAC: la descarga seguirá sola.", Toast.LENGTH_LONG).show()
             val ajustes = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:" + app.packageName))
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             app.startActivity(ajustes)
@@ -142,6 +154,40 @@ object Actualizador {
         val instalador = Intent(Intent.ACTION_VIEW)
             .setDataAndType(uri, "application/vnd.android.package-archive")
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
-        app.startActivity(instalador)
+
+        // 1) Intento directo: funciona si GEPSAC está en pantalla.
+        try {
+            app.startActivity(instalador)
+        } catch (e: Exception) {
+            // Android puede bloquear abrir el instalador desde segundo plano: queda el aviso de abajo.
+        }
+        // 2) Aviso con botón por si lo anterior no pudo abrirse (por ejemplo, si el usuario salió de la app mientras descargaba).
+        avisarDescargaLista(app, instalador)
+    }
+
+    private fun avisarDescargaLista(app: Context, instalador: Intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(app, android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val canal = android.app.NotificationChannel("actualizaciones", "Actualizaciones", android.app.NotificationManager.IMPORTANCE_HIGH)
+            app.getSystemService(android.app.NotificationManager::class.java).createNotificationChannel(canal)
+        }
+        val abrir = android.app.PendingIntent.getActivity(
+            app, 0, instalador, android.app.PendingIntent.FLAG_IMMUTABLE or android.app.PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val aviso = androidx.core.app.NotificationCompat.Builder(app, "actualizaciones")
+            .setSmallIcon(com.gepsac.app.R.drawable.ic_cup)
+            .setContentTitle("Actualización lista")
+            .setContentText("Toca para instalar la nueva versión de GEPSAC.")
+            .setContentIntent(abrir)
+            .setAutoCancel(true)
+            .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
+            .build()
+        try {
+            androidx.core.app.NotificationManagerCompat.from(app).notify(4001, aviso)
+        } catch (e: SecurityException) {
+            // Sin permiso de notificaciones: se ignora.
+        }
     }
 }

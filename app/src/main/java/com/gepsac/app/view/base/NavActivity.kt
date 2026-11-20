@@ -76,6 +76,11 @@ abstract class NavActivity : AppCompatActivity() {
         if (!concedido) permisoAvisos.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 
+    override fun onResume() {
+        super.onResume()
+        Actualizador.reanudar(this)   // si el usuario acaba de dar el permiso de instalar, sigue la descarga
+    }
+
     fun irA(id: Int) { b.bottomNav.selectedItemId = id }
 
     private fun irALogin() {

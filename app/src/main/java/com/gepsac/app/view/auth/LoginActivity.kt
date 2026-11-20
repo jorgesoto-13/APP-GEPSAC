@@ -80,6 +80,11 @@ class LoginActivity : AppCompatActivity() {
         Actualizador.buscar(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        Actualizador.reanudar(this)   // si el usuario acaba de dar el permiso de instalar, sigue la descarga
+    }
+
     /** «¿Olvidaste tu contraseña?»: usa el correo que ya escribió en el campo. */
     private fun recuperar() {
         val email = b.etEmail.text.toString()
