@@ -25,7 +25,8 @@ internal fun DocumentSnapshot.aUsuario(): Usuario? {
         nombre = getString("nombre").orEmpty(),
         email = getString("email").orEmpty(),
         telefono = getString("telefono").orEmpty(),
-        rol = Rol.desde(getString("rol"))
+        rol = Rol.desde(getString("rol")),
+        direcciones = (get("direcciones") as? List<*>).orEmpty().filterIsInstance<String>()
     )
 }
 
@@ -83,7 +84,8 @@ internal fun DocumentSnapshot.aPedido(): Pedido? {
             metodo = m["metodo"].aTexto(),
             monto = m["monto"].aDouble(),
             referencia = m["referencia"].aTexto(),
-            fecha = m["fecha"].aMs()
+            fecha = m["fecha"].aMs(),
+            comprobante = m["comprobante"].aTexto()
         )
     }
 

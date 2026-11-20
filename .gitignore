@@ -15,6 +15,9 @@ local.properties
 *.keystore
 *.p12
 *.pem
+# Excepción: clave de DEBUG compartida por el grupo. Así todos los APK quedan firmados igual y se pueden
+# actualizar unos sobre otros. NO es una clave de producción (la contraseña es la de debug de Android).
+!app/gepsac-debug.keystore
 
 # Firebase: claves privadas y dependencias del script de datos iniciales
 **/serviceAccountKey*.json

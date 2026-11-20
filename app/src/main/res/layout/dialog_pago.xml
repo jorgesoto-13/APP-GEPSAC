@@ -29,6 +29,14 @@
                     android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="numberPassword" android:maxLength="3" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
+        <!-- Captura del Yape / Plin / transferencia (opcional) -->
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnComprobante" style="@style/Boton.Contorno"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp"
+            android:minHeight="48dp" android:text="Adjuntar captura del comprobante" android:textSize="14sp"
+            app:icon="@drawable/ic_attach" app:iconTint="@null" android:visibility="gone" />
+        <ImageView android:id="@+id/imgComprobante" android:layout_width="match_parent" android:layout_height="140dp"
+            android:layout_marginTop="8dp" android:scaleType="fitCenter" android:visibility="gone"
+            android:contentDescription="Vista previa del comprobante" />
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp"
             android:text="Pago simulado: no se realiza ningún cobro real." android:textColor="@color/muted" android:textSize="11sp" />
     </LinearLayout>

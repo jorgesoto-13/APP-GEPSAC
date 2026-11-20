@@ -32,5 +32,10 @@ class AuthService(private val auth: FirebaseAuth) {
         auth.currentUser?.delete()?.esperar()
     }
 
+    /** Envía al correo un enlace para elegir una contraseña nueva. */
+    suspend fun enviarRecuperacion(email: String) {
+        auth.sendPasswordResetEmail(email.trim()).esperar()
+    }
+
     fun cerrarSesion() = auth.signOut()
 }

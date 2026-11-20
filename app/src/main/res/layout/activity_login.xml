@@ -49,8 +49,14 @@
                     android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" android:maxLength="30" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView android:id="@+id/tvOlvide" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_gravity="end" android:layout_marginTop="4dp" android:minHeight="44dp" android:gravity="center_vertical"
+                android:paddingStart="8dp" android:paddingEnd="8dp" android:clickable="true" android:focusable="true"
+                android:background="?attr/selectableItemBackground" android:text="¿Olvidaste tu contraseña?"
+                android:textColor="@color/green" android:textSize="13sp" android:textStyle="bold" />
+
             <TextView android:id="@+id/tvError" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" android:textColor="@color/danger" android:textStyle="bold" android:textSize="13sp" android:visibility="gone" />
+                android:layout_marginTop="6dp" android:textColor="@color/danger" android:textStyle="bold" android:textSize="13sp" android:visibility="gone" />
             <Button android:id="@+id/btnAccion" android:layout_width="match_parent" android:layout_height="54dp"
                 android:layout_marginTop="20dp" android:text="Ingresar" />
             <ProgressBar android:id="@+id/progreso" style="?android:attr/progressBarStyleSmall"

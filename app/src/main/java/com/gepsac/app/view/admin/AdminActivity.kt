@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import com.gepsac.app.R
 import com.gepsac.app.view.base.NavActivity
 import com.gepsac.app.view.pedidos.PedidosFragment
+import com.gepsac.app.view.ventas.VentasFragment
 
 class AdminActivity : NavActivity() {
     override val titulo = "GEPSAC · Administrador"
@@ -12,6 +13,7 @@ class AdminActivity : NavActivity() {
     override fun fragmentPara(id: Int): Fragment = when (id) {
         R.id.nav_productos -> AdminProductosFragment()
         R.id.nav_clientes -> AdminClientesFragment()
+        R.id.nav_ventas -> VentasFragment()
         else -> PedidosFragment()
     }
 }

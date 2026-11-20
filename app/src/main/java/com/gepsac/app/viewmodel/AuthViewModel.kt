@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gepsac.app.model.Usuario
 import com.gepsac.app.model.repository.AuthRepository
+import com.gepsac.app.util.Evento
 import kotlinx.coroutines.launch
 
 sealed interface AuthEstado {
@@ -47,6 +48,23 @@ class AuthViewModel(private val repo: AuthRepository) : ViewModel() {
             repo.registrar(nombre.trim(), tel.trim(), email, pass).fold(
                 onSuccess = { _estado.value = AuthEstado.Listo(it) },
                 onFailure = { _estado.value = AuthEstado.Fallo(it.message ?: "No se pudo crear la cuenta") }
+            )
+        }
+    }
+
+    private val _recuperacion = MutableLiveData<Evento<String>>()
+
+    /** Resultado de «Olvidé mi contraseña»: mensaje listo para mostrar al usuario. */
+    val recuperacion: LiveData<Evento<String>> = _recuperacion
+
+    fun recuperarContrasena(email: String) {
+        viewModelScope.launch {
+            repo.recuperarContrasena(email).fold(
+                onSuccess = {
+                    _recuperacion.value =
+                        Evento("Si el correo está registrado, te enviamos un enlace para cambiar tu contraseña. Revisa también el spam.")
+                },
+                onFailure = { _recuperacion.value = Evento(it.message ?: "No se pudo enviar el correo") }
             )
         }
     }

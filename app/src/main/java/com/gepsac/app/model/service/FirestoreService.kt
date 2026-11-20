@@ -26,6 +26,11 @@ class FirestoreService(private val db: FirebaseFirestore) {
         documento(coleccion, id).set(datos).esperar()
     }
 
+    /** Cambia solo los campos indicados (el resto del documento queda igual). */
+    suspend fun actualizar(coleccion: String, id: String, datos: Map<String, Any?>) {
+        documento(coleccion, id).update(datos).esperar()
+    }
+
     suspend fun eliminar(coleccion: String, id: String) {
         documento(coleccion, id).delete().esperar()
     }

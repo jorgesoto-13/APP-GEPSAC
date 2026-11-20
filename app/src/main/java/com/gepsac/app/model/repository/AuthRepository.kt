@@ -14,5 +14,8 @@ interface AuthRepository {
     /** Recupera la sesión guardada por Firebase al abrir la app. Devuelve null si no hay o no se pudo leer. */
     suspend fun restaurarSesion(): Usuario?
 
+    /** Envía el correo para restablecer la contraseña. Por seguridad no revela si el correo está registrado. */
+    suspend fun recuperarContrasena(email: String): Result<Unit>
+
     fun cerrarSesion()
 }
