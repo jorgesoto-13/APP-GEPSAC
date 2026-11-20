@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.gepsac.app.BuildConfig
+import com.gepsac.app.actualizacion.Actualizador
 import com.gepsac.app.R
 import com.gepsac.app.view.common.Tema
 import com.gepsac.app.view.common.aparecer
@@ -75,6 +76,8 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         vm.restaurarSesion()
+        // También se busca aquí: quien aún no inició sesión (o cerró sesión) igual debe enterarse de la nueva versión.
+        Actualizador.buscar(this)
     }
 
     /** «¿Olvidaste tu contraseña?»: usa el correo que ya escribió en el campo. */
