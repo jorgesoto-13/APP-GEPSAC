@@ -15,7 +15,7 @@
                 android:textSize="30sp" android:textStyle="bold" android:letterSpacing="0.1"
                 android:fontFamily="sans-serif-medium" />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_marginTop="4dp" android:text="Caffe · Kaphiy" android:textColor="@color/cream_deep" android:textSize="14sp" />
+                android:layout_marginTop="4dp" android:text="Caffe · Kaphiy" android:textColor="#F1E6D6" android:textSize="14sp" />
         </LinearLayout>
 
         <!-- Formulario -->

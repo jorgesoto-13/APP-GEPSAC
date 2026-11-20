@@ -8,6 +8,8 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.TimeoutCancellationException
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -37,10 +39,18 @@ internal suspend fun <T> intentar(bloque: suspend () -> T): Result<T> =
         Result.failure(if (e is ErrorApp) e else ErrorApp(e.aMensaje(), e))
     }
 
+/**
+ * Cierra el flujo por un error de Firebase. Al cerrar sesión, las pantallas aún abiertas siguen escuchando un
+ * instante y Firestore les responde «sin permiso»: ese error es esperado y no debe mostrarse al usuario.
+ */
+private fun ProducerScope<*>.cerrarPorError(error: Exception) {
+    if (FirebaseAuth.getInstance().currentUser == null) close() else close(ErrorApp(error.aMensaje(), error))
+}
+
 /** Escucha una consulta en tiempo real. Se desconecta sola cuando nadie recoge el flujo. */
 internal fun Query.cambios(): Flow<QuerySnapshot> = callbackFlow {
     val registro = addSnapshotListener { snap, error ->
-        if (error != null) close(ErrorApp(error.aMensaje(), error))
+        if (error != null) cerrarPorError(error)
         else if (snap != null) trySend(snap)
     }
     awaitClose { registro.remove() }
@@ -49,7 +59,7 @@ internal fun Query.cambios(): Flow<QuerySnapshot> = callbackFlow {
 /** Escucha un documento en tiempo real. */
 internal fun DocumentReference.cambios(): Flow<DocumentSnapshot> = callbackFlow {
     val registro = addSnapshotListener { snap, error ->
-        if (error != null) close(ErrorApp(error.aMensaje(), error))
+        if (error != null) cerrarPorError(error)
         else if (snap != null) trySend(snap)
     }
     awaitClose { registro.remove() }
