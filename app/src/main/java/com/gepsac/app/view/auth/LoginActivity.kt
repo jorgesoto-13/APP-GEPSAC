@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.gepsac.app.BuildConfig
 import com.gepsac.app.R
 import com.gepsac.app.view.common.aparecer
 import com.gepsac.app.view.common.emerger
@@ -43,6 +44,8 @@ class LoginActivity : AppCompatActivity() {
             TransitionManager.beginDelayedTransition(b.form)   // los campos aparecen/desaparecen con animación
             actualizarUI()
         }
+        b.tvVersion.text = "GEPSAC · versión " + BuildConfig.VERSION_NAME +
+            if (BuildConfig.NUMERO_COMPILACION > 0) " (compilación " + BuildConfig.NUMERO_COMPILACION + ")" else " (local)"
         b.tvOlvide.setOnClickListener { recuperar() }
         vm.recuperacion.observarEvento(this) { Toast.makeText(this, it, Toast.LENGTH_LONG).show() }
         actualizarUI()

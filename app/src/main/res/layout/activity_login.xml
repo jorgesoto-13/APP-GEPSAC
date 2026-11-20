@@ -67,6 +67,10 @@
                 android:gravity="center" android:paddingStart="12dp" android:paddingEnd="12dp" android:clickable="true" android:focusable="true"
                 android:background="?attr/selectableItemBackground"
                 android:textColor="@color/green" android:textStyle="bold" />
+
+            <!-- Versión de la app que se está usando -->
+            <TextView android:id="@+id/tvVersion" style="@style/Etiqueta" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" android:layout_marginTop="24dp" android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
