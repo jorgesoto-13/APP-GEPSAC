@@ -14,6 +14,8 @@ import com.gepsac.app.databinding.ActivityPedidoDetalleBinding
 import com.gepsac.app.databinding.ItemEtapaBinding
 import com.gepsac.app.di.Fabrica
 import com.gepsac.app.view.common.ESTADO_COLORES
+import com.gepsac.app.view.common.aparecer
+import com.gepsac.app.view.common.emerger
 import com.gepsac.app.view.common.fecha
 import com.gepsac.app.view.common.fechaHora
 import com.gepsac.app.view.common.soles
@@ -91,15 +93,24 @@ class SeguimientoActivity : AppCompatActivity() {
         }
         b.tvTotal.text = "Total: " + p.total.soles()
 
+        // La animación de entrada solo se hace la primera vez; después, los cambios en vivo no la repiten.
+        val animar = b.llTimeline.childCount == 0
         b.llTimeline.removeAllViews()
         ESTADOS.forEachIndexed { i, nombre ->
             val v = ItemEtapaBinding.inflate(layoutInflater, b.llTimeline, false)
             val hecho = i <= e
             v.dot.backgroundTintList = ColorStateList.valueOf(if (hecho) ESTADO_COLORES[ULTIMO_ESTADO] else 0xFFCFCBC2.toInt())
+            // Conector hacia la etapa siguiente: verde si esa etapa ya se alcanzó.
+            v.linea.visibility = if (i == ESTADOS.lastIndex) View.INVISIBLE else View.VISIBLE
+            v.linea.setBackgroundColor(if (i < e) ESTADO_COLORES[ULTIMO_ESTADO] else 0xFFE7DCCB.toInt())
             v.tvEtapa.text = nombre
             v.tvEtapa.alpha = if (hecho) 1f else 0.45f
             v.tvHora.text = if (hecho) p.tiempos.getOrElse(i) { 0L }.fechaHora() else "Pendiente"
             b.llTimeline.addView(v.root)
+            if (animar) {
+                v.root.aparecer(i * 60L)
+                if (i == e) v.dot.emerger(i * 60L + 150L)   // la etapa actual «salta» al aparecer
+            }
         }
 
         // Avisos

@@ -2,9 +2,15 @@ package com.gepsac.app.view.auth
 
 import android.content.Intent
 import android.os.Bundle
+import android.transition.TransitionManager
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import com.gepsac.app.R
+import com.gepsac.app.view.common.aparecer
+import com.gepsac.app.view.common.emerger
 import com.gepsac.app.model.Usuario
 import com.gepsac.app.databinding.ActivityLoginBinding
 import com.gepsac.app.di.Fabrica
@@ -25,9 +31,21 @@ class LoginActivity : AppCompatActivity() {
         b = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(b.root)
 
+        // La cabecera de marca llega hasta arriba: barra de estado del mismo color y con íconos claros.
+        window.statusBarColor = ContextCompat.getColor(this, R.color.brown_dark)
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
+
         b.btnAccion.setOnClickListener { if (registro) registrar() else ingresar() }
-        b.tvCambiar.setOnClickListener { registro = !registro; actualizarUI() }
+        b.tvCambiar.setOnClickListener {
+            registro = !registro
+            TransitionManager.beginDelayedTransition(b.form)   // los campos aparecen/desaparecen con animación
+            actualizarUI()
+        }
         actualizarUI()
+        if (savedInstanceState == null) {
+            b.imgLogo.emerger(100)
+            b.form.aparecer(220)
+        }
 
         vm.estado.observe(this) { estado ->
             cargando(estado == AuthEstado.Cargando)
@@ -72,6 +90,8 @@ class LoginActivity : AppCompatActivity() {
         b.tilNombre.visibility = reg
         b.tilTel.visibility = reg
         b.tilPass2.visibility = reg
+        b.tvBienvenida.text = if (registro) "Crea tu cuenta" else "Bienvenido"
+        b.tvSubtitulo.text = if (registro) "Regístrate como cliente para hacer tus pedidos." else "Inicia sesión para continuar."
         b.btnAccion.text = if (registro) "Crear cuenta" else "Ingresar"
         b.tvCambiar.text = if (registro) "¿Ya tienes cuenta? Ingresa" else "¿Eres nuevo? Crea tu cuenta de cliente"
         listOf(b.tilNombre, b.tilTel, b.tilEmail, b.tilPass, b.tilPass2).forEach { it.error = null }

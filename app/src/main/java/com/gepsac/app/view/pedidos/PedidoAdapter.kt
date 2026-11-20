@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gepsac.app.model.ESTADOS
 import com.gepsac.app.model.Pedido
 import com.gepsac.app.databinding.ItemPedidoBinding
+import com.gepsac.app.view.common.AnimadorLista
 import com.gepsac.app.view.common.ESTADO_COLORES
 import com.gepsac.app.view.common.fechaHora
 import com.gepsac.app.view.common.soles
@@ -16,6 +17,7 @@ class PedidoAdapter(
     private val onClick: (Pedido) -> Unit
 ) : RecyclerView.Adapter<PedidoAdapter.VH>() {
     private var data = listOf<Pedido>()
+    private val animador = AnimadorLista()
     fun submit(l: List<Pedido>) { data = l; notifyDataSetChanged() }
 
     class VH(val b: ItemPedidoBinding) : RecyclerView.ViewHolder(b.root)
@@ -38,5 +40,6 @@ class PedidoAdapter(
             tvEstado.backgroundTintList = ColorStateList.valueOf(ESTADO_COLORES[e])
             root.setOnClickListener { onClick(p) }
         }
+        animador.animar(h.itemView, i)
     }
 }

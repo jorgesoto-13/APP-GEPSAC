@@ -1,16 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Tema general: Material 3 con paleta de cafetería -->
     <style name="Theme.Gepsac" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/brown</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/cream_deep</item>
+        <item name="colorOnPrimaryContainer">@color/brown_dark</item>
         <item name="colorSecondary">@color/green</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/cream_deep</item>
+        <item name="colorOnSecondaryContainer">@color/brown_dark</item>
+        <item name="colorTertiary">@color/caramel</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/ink</item>
+        <item name="colorSurfaceVariant">@color/cream_deep</item>
+        <item name="colorOnSurfaceVariant">@color/muted</item>
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorOutlineVariant">@color/line</item>
+        <item name="colorError">@color/danger</item>
+
         <item name="android:windowBackground">@color/cream</item>
         <item name="android:statusBarColor">@color/cream</item>
+        <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowAnimationStyle">@style/Animacion.Gepsac</item>
+
+        <item name="shapeAppearanceSmallComponent">@style/Forma.Pequena</item>
+        <item name="shapeAppearanceMediumComponent">@style/Forma.Mediana</item>
+
+        <item name="materialButtonStyle">@style/Boton</item>
+        <item name="materialButtonOutlinedStyle">@style/Boton.Contorno</item>
+        <item name="bottomNavigationStyle">@style/Navegacion.Inferior</item>
     </style>
+
+    <!-- Formas redondeadas -->
+    <style name="Forma.Pequena" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+    <style name="Forma.Mediana" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">18dp</item>
+    </style>
+
+    <!-- Botones: esquinas suaves, sin mayúsculas forzadas -->
+    <style name="Boton" parent="Widget.Material3.Button">
+        <item name="cornerRadius">14dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+    <style name="Boton.Contorno" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="cornerRadius">14dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="strokeColor">@color/outline</item>
+    </style>
+
+    <!-- Barra inferior -->
+    <style name="Navegacion.Inferior" parent="Widget.Material3.BottomNavigationView">
+        <item name="backgroundTint">@color/white</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+
+    <!-- Campos de texto -->
     <style name="Campo" parent="Widget.Material3.TextInputLayout.OutlinedBox">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">12dp</item>
+        <item name="boxCornerRadiusTopStart">14dp</item>
+        <item name="boxCornerRadiusTopEnd">14dp</item>
+        <item name="boxCornerRadiusBottomStart">14dp</item>
+        <item name="boxCornerRadiusBottomEnd">14dp</item>
+    </style>
+
+    <!-- Filtros (chips) -->
+    <style name="Filtro" parent="Widget.Material3.Chip.Filter">
+        <item name="chipCornerRadius">20dp</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <!-- Textos -->
+    <style name="Encabezado">
+        <item name="android:textColor">@color/brown_dark</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    <style name="Etiqueta">
+        <item name="android:textColor">@color/muted</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- Transiciones entre pantallas: entra deslizando y con fundido, sale con retraso mínimo -->
+    <style name="Animacion.Gepsac" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/pantalla_entra</item>
+        <item name="android:activityOpenExitAnimation">@anim/pantalla_cede</item>
+        <item name="android:activityCloseEnterAnimation">@anim/pantalla_vuelve</item>
+        <item name="android:activityCloseExitAnimation">@anim/pantalla_sale</item>
     </style>
 </resources>

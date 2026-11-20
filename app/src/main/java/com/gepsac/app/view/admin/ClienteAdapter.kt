@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.gepsac.app.databinding.ItemClienteBinding
+import com.gepsac.app.view.common.AnimadorLista
 import com.gepsac.app.view.common.soles
 import com.gepsac.app.viewmodel.ResumenCliente
 
 /** Adapter del ListView: reutiliza la vista de la fila (convertView) para que el scroll sea fluido. */
 class ClienteAdapter(private val ctx: Context) : BaseAdapter() {
     private var data = listOf<ResumenCliente>()
+    private val animador = AnimadorLista()
     fun submit(l: List<ResumenCliente>) { data = l; notifyDataSetChanged() }
 
     override fun getCount() = data.size
@@ -26,6 +28,7 @@ class ClienteAdapter(private val ctx: Context) : BaseAdapter() {
         b.tvContacto.text = r.cliente.email + " · " + r.cliente.telefono
         b.tvPedidos.text = if (r.pedidos == 1) "1 pedido" else r.pedidos.toString() + " pedidos"
         b.tvTotal.text = r.totalPagado.soles()
+        animador.animar(b.root, position)
         return b.root
     }
 }
