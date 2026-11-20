@@ -73,7 +73,13 @@ class CarritoViewModel(
         if (e != null && e.cantidad >= Validar.MAX_CANT) return false
         local.guardar(
             if (e != null) l.map { if (it.productoId == p.id) it.copy(cantidad = it.cantidad + 1) else it }
-            else l + ItemPedido(p.id, p.nombreCompleto, p.precio, 1)
+            else l + ItemPedido(
+                productoId = p.id,
+                nombre = p.nombreCompleto,
+                precio = p.precio,
+                cantidad = 1,
+                imagen = p.imagen
+            )
         )
         return true
     }

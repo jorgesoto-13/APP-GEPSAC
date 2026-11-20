@@ -52,7 +52,8 @@ class CarritoLocal(contexto: Context) {
                     productoId = o.getString("id"),
                     nombre = o.getString("nombre"),
                     precio = o.getDouble("precio"),
-                    cantidad = o.getInt("cantidad")
+                    cantidad = o.getInt("cantidad"),
+                    imagen = o.optString("imagen","")
                 )
             }.filter { it.cantidad > 0 }
         } catch (e: JSONException) {
@@ -69,6 +70,7 @@ class CarritoLocal(contexto: Context) {
                     .put("nombre", it.nombre)
                     .put("precio", it.precio)
                     .put("cantidad", it.cantidad)
+                    .put("imagen",it.imagen)
             )
         }
         return arr.toString()

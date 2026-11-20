@@ -7,6 +7,7 @@ import com.gepsac.app.model.ItemPedido
 import com.gepsac.app.databinding.ItemCarritoBinding
 import com.gepsac.app.view.common.AnimadorLista
 import com.gepsac.app.view.common.soles
+import com.gepsac.app.view.common.mostrarProducto
 
 class CarritoAdapter(private val onCambio: (String, Int) -> Unit) : RecyclerView.Adapter<CarritoAdapter.VH>() {
     private var data = listOf<ItemPedido>()
@@ -26,6 +27,7 @@ class CarritoAdapter(private val onCambio: (String, Int) -> Unit) : RecyclerView
             tvNombre.text = item.nombre
             tvSub.text = item.precio.soles() + " c/u · " + (item.precio * item.cantidad).soles()
             tvCant.text = item.cantidad.toString()
+            img.mostrarProducto(item.imagen)
             btnMas.setOnClickListener { onCambio(item.productoId, 1) }
             btnMenos.setOnClickListener { onCambio(item.productoId, -1) }
         }

@@ -9,7 +9,7 @@ val ULTIMO_ESTADO = ESTADOS.size - 1
 val METODOS_PAGO = listOf("Yape", "Plin", "Transferencia", "Tarjeta")
 
 /** Línea del pedido. Guarda nombre y precio del momento: si luego cambia el producto, el pedido no se altera. */
-data class ItemPedido(val productoId: String, val nombre: String, val precio: Double, val cantidad: Int)
+data class ItemPedido(val productoId: String, val nombre: String, val precio: Double, val cantidad: Int, val imagen: String="")
 
 /**
  * Pago (simulado). Nunca incluye datos de tarjeta: solo método, monto y una referencia.
