@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Marca: café (Caffe) y verde (Kaphiy) -->
     <color name="brown">#6B4226</color>
+    <color name="brown_dark">#432611</color>
+    <color name="caramel">#C8894A</color>
     <color name="green">#3F6B42</color>
-    <color name="cream">#F6F5F3</color>
+    <color name="green_soft">#E4EFE2</color>
+
+    <!-- Superficies y texto (contraste mínimo 4.5:1 sobre crema y blanco) -->
+    <color name="cream">#FBF6EE</color>
+    <color name="cream_deep">#F1E6D6</color>
     <color name="white">#FFFFFF</color>
-    <color name="ink">#1B1B1B</color>
-    <color name="muted">#74716B</color>
-    <color name="line">#DEDBD4</color>
+    <color name="ink">#2A1B12</color>
+    <color name="muted">#6F6358</color>
+    <color name="line">#E7DCCB</color>
+    <color name="outline">#9C8B7A</color>
+
+    <!-- Estados -->
+    <color name="danger">#B33A2E</color>
+    <color name="aviso_bg">#FFF1D6</color>
+    <color name="aviso_text">#6B4A00</color>
 </resources>

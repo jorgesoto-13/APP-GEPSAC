@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gepsac.app.model.Producto
 import com.gepsac.app.databinding.ItemProductoBinding
+import com.gepsac.app.view.common.AnimadorLista
 import com.gepsac.app.view.common.mostrarProducto
 import com.gepsac.app.view.common.soles
 
@@ -14,6 +15,7 @@ class ProductoAdapter(
     private val onClick: (Producto) -> Unit
 ) : RecyclerView.Adapter<ProductoAdapter.VH>() {
     private var data = listOf<Producto>()
+    private val animador = AnimadorLista()
     fun submit(l: List<Producto>) { data = l; notifyDataSetChanged() }
 
     class VH(val b: ItemProductoBinding) : RecyclerView.ViewHolder(b.root)
@@ -34,5 +36,6 @@ class ProductoAdapter(
             btn.text = if (admin) "Editar" else "Agregar"
             btn.setOnClickListener { onClick(p) }
         }
+        animador.animar(h.itemView, i)
     }
 }

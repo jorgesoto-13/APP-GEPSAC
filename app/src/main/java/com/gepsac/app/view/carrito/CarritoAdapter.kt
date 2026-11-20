@@ -5,10 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gepsac.app.model.ItemPedido
 import com.gepsac.app.databinding.ItemCarritoBinding
+import com.gepsac.app.view.common.AnimadorLista
 import com.gepsac.app.view.common.soles
 
 class CarritoAdapter(private val onCambio: (String, Int) -> Unit) : RecyclerView.Adapter<CarritoAdapter.VH>() {
     private var data = listOf<ItemPedido>()
+    private val animador = AnimadorLista()
     fun submit(l: List<ItemPedido>) { data = l; notifyDataSetChanged() }
 
     class VH(val b: ItemCarritoBinding) : RecyclerView.ViewHolder(b.root)
@@ -27,5 +29,6 @@ class CarritoAdapter(private val onCambio: (String, Int) -> Unit) : RecyclerView
             btnMas.setOnClickListener { onCambio(item.productoId, 1) }
             btnMenos.setOnClickListener { onCambio(item.productoId, -1) }
         }
+        animador.animar(h.itemView, i)
     }
 }

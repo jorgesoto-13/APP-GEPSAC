@@ -1,0 +1,36 @@
+name: APK de prueba
+
+# Compila la app en los servidores de GitHub y deja el APK para descargarlo desde el celular:
+# pestaña Actions -> última ejecución -> Artifacts -> app-debug.
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Instalar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      # El repositorio no incluye gradlew, así que se instala la misma versión que pide gradle-wrapper.properties.
+      - name: Instalar Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 9.5.0
+
+      - name: Compilar el APK (debug)
+        run: gradle :app:assembleDebug --no-daemon --stacktrace
+
+      - name: Guardar el APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error

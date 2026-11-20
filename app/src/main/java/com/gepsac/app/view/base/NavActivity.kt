@@ -37,7 +37,10 @@ abstract class NavActivity : AppCompatActivity() {
         }
         b.bottomNav.inflateMenu(menuRes)
         b.bottomNav.setOnItemSelectedListener {
-            supportFragmentManager.beginTransaction().replace(R.id.container, fragmentPara(it.itemId)).commit()
+            supportFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.fragmento_entra, R.anim.fragmento_sale)
+                .replace(R.id.container, fragmentPara(it.itemId))
+                .commit()
             true
         }
         if (savedInstanceState == null) b.bottomNav.selectedItemId = inicio
