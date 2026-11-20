@@ -17,6 +17,7 @@ import com.gepsac.app.databinding.ActivityNavBinding
 import com.gepsac.app.di.Fabrica
 import com.gepsac.app.viewmodel.AuthViewModel
 import com.gepsac.app.view.auth.LoginActivity
+import com.gepsac.app.view.common.Tema
 
 /** Pantalla base con barra inferior. La usan ClienteActivity y AdminActivity. */
 abstract class NavActivity : AppCompatActivity() {
@@ -44,6 +45,7 @@ abstract class NavActivity : AppCompatActivity() {
         b = ActivityNavBinding.inflate(layoutInflater)
         setContentView(b.root)
         b.tvTitulo.text = titulo
+        b.btnAjustes.setOnClickListener { Tema.mostrarSelector(this) }
         b.tvSalir.setOnClickListener {
             contenedor.notificador.detener()
             contenedor.carritoLocal.cerrar()

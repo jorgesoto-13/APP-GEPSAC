@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.gepsac.app.BuildConfig
 import com.gepsac.app.R
+import com.gepsac.app.view.common.Tema
 import com.gepsac.app.view.common.aparecer
 import com.gepsac.app.view.common.nombrePersona
 import com.gepsac.app.view.common.paraTelefono
@@ -56,6 +57,8 @@ class LoginActivity : AppCompatActivity() {
         b.tvVersion.text ="GEPSAC · versión " + BuildConfig.VERSION_NAME +
             if (BuildConfig.NUMERO_COMPILACION > 0) " (compilación " + BuildConfig.NUMERO_COMPILACION + ")" else " (local)"
         b.tvOlvide.setOnClickListener { recuperar() }
+        b.tvTema.text = "Tema: " + Tema.nombreActual(this)
+        b.tvTema.setOnClickListener { Tema.mostrarSelector(this) }
         vm.recuperacion.observarEvento(this) { Toast.makeText(this, it, Toast.LENGTH_LONG).show() }
         actualizarUI()
         if (savedInstanceState == null) {
