@@ -71,17 +71,18 @@ class FirestorePedidoRepository(private val firestore: FirestoreService) : Pedid
         }
     }
 
-    override suspend fun pagar(id: String, metodo: String, referencia: String): Result<Unit> = intentar {
+    override suspend fun pagar(id: String, metodo: String, referencia: String, comprobante: String): Result<Unit> = intentar {
         val ref = pedido(id)
         firestore.transaccion { tx ->
             val snap = tx.get(ref)
             if (estadoDe(snap) != ESTADO_REGISTRADO) throw ErrorApp("Este pedido no está listo para pagar")
-            val pago = mapOf(
+            val pago = mutableMapOf<String, Any>(
                 "metodo" to metodo,
                 "monto" to (snap.getDouble("total") ?: 0.0),
                 "referencia" to referencia,
                 "fecha" to FieldValue.serverTimestamp()
             )
+            if (comprobante.isNotEmpty()) pago["comprobante"] = comprobante
             tx.update(ref, "estado", ESTADO_PAGADO, "tiempos.$ESTADO_PAGADO", FieldValue.serverTimestamp(), "pago", pago)
             Unit
         }

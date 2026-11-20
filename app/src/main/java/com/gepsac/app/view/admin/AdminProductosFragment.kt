@@ -20,6 +20,9 @@ import com.gepsac.app.view.catalogo.ProductoAdapter
 import com.gepsac.app.view.common.Imagenes
 import com.gepsac.app.view.common.err
 import com.gepsac.app.view.common.mostrarProducto
+import com.gepsac.app.view.common.nombreProducto
+import com.gepsac.app.view.common.precio
+import com.gepsac.app.view.common.presentacion
 import com.gepsac.app.util.Validar
 import com.gepsac.app.util.observarEvento
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -63,6 +66,9 @@ class AdminProductosFragment : Fragment() {
     private fun dialogo(p: Producto?) {
         val d = DialogProductoBinding.inflate(layoutInflater)
         d.spMarca.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, MARCAS)
+        d.etNombre.nombreProducto(40)
+        d.etPres.presentacion(20)
+        d.etPrecio.precio()
         imagenNueva = null
         dialogoActual = d
         d.imgProducto.mostrarProducto(p?.imagen ?: "")

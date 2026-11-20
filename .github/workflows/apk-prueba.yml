@@ -2,9 +2,13 @@ name: APK de prueba
 
 # Compila la app en los servidores de GitHub y deja el APK para descargarlo desde el celular:
 # pestaña Actions -> última ejecución -> Artifacts -> app-debug.
+# En la rama main, además, publica una versión (Release) con el APK: la app instalada la detecta y ofrece actualizar.
 on:
   push:
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   apk:
@@ -26,7 +30,17 @@ jobs:
           gradle-version: 9.5.0
 
       - name: Compilar el APK (debug)
-        run: gradle :app:assembleDebug --no-daemon --stacktrace
+        run: |
+          set -o pipefail
+          gradle :app:assembleDebug --no-daemon --stacktrace 2>&1 | tee build.log
+
+      # Si falla, deja los errores del compilador como anotación visible en la ejecución.
+      - name: Resumir errores de compilación
+        if: failure()
+        run: |
+          errs=$(grep -E '^e: |error: |What went wrong|Execution failed|AAPT|Resource' -A1 build.log | head -60 || true)
+          msg=$(printf '%s' "$errs" | sed ':a;N;$!ba;s/%/%25/g;s/\r//g;s/\n/%0A/g')
+          echo "::error title=Errores de compilacion::${msg}"
 
       - name: Guardar el APK
         uses: actions/upload-artifact@v4
@@ -34,3 +48,12 @@ jobs:
           name: app-debug
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+
+      - name: Publicar versión (solo main)
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: GEPSAC build ${{ github.run_number }}
+          body: ${{ github.event.head_commit.message }}
+          files: app/build/outputs/apk/debug/app-debug.apk

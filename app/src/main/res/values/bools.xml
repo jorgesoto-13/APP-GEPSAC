@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Íconos oscuros en la barra de estado (de día); de noche se invierten en values-night -->
+    <bool name="barra_estado_clara">true</bool>
+</resources>

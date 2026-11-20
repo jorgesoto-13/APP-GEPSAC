@@ -16,7 +16,13 @@ data class Usuario(
     val nombre: String,
     val email: String,
     val telefono: String,
-    val rol: Rol = Rol.CLIENTE
+    val rol: Rol = Rol.CLIENTE,
+    /** Direcciones de entrega guardadas (las más recientes primero, máximo [MAX_DIRECCIONES]). */
+    val direcciones: List<String> = emptyList()
 ) {
+    companion object {
+        const val MAX_DIRECCIONES = 5
+    }
+
     val esAdmin: Boolean get() = rol == Rol.ADMIN
 }

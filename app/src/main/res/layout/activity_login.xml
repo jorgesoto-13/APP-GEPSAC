@@ -34,7 +34,7 @@
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilTel" style="@style/Campo" android:hint="Teléfono (9 dígitos)">
                 <com.google.android.material.textfield.TextInputEditText android:id="@+id/etTel"
-                    android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="phone" android:maxLength="11" />
+                    android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:digits="0123456789" android:maxLength="9" />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilEmail" style="@style/Campo" android:hint="Correo electrónico">
                 <com.google.android.material.textfield.TextInputEditText android:id="@+id/etEmail"
@@ -49,8 +49,14 @@
                     android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" android:maxLength="30" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView android:id="@+id/tvOlvide" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_gravity="end" android:layout_marginTop="4dp" android:minHeight="44dp" android:gravity="center_vertical"
+                android:paddingStart="8dp" android:paddingEnd="8dp" android:clickable="true" android:focusable="true"
+                android:background="?attr/selectableItemBackground" android:text="¿Olvidaste tu contraseña?"
+                android:textColor="@color/green" android:textSize="13sp" android:textStyle="bold" />
+
             <TextView android:id="@+id/tvError" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" android:textColor="@color/danger" android:textStyle="bold" android:textSize="13sp" android:visibility="gone" />
+                android:layout_marginTop="6dp" android:textColor="@color/danger" android:textStyle="bold" android:textSize="13sp" android:visibility="gone" />
             <Button android:id="@+id/btnAccion" android:layout_width="match_parent" android:layout_height="54dp"
                 android:layout_marginTop="20dp" android:text="Ingresar" />
             <ProgressBar android:id="@+id/progreso" style="?android:attr/progressBarStyleSmall"
@@ -61,6 +67,15 @@
                 android:gravity="center" android:paddingStart="12dp" android:paddingEnd="12dp" android:clickable="true" android:focusable="true"
                 android:background="?attr/selectableItemBackground"
                 android:textColor="@color/green" android:textStyle="bold" />
+
+            <!-- Versión de la app que se está usando -->
+            <TextView android:id="@+id/tvTema" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" android:layout_marginTop="12dp" android:minHeight="44dp" android:gravity="center"
+                android:paddingStart="12dp" android:paddingEnd="12dp" android:clickable="true" android:focusable="true"
+                android:background="?attr/selectableItemBackground" android:text="Tema: claro u oscuro"
+                android:textColor="@color/green" android:textSize="13sp" android:textStyle="bold" />
+            <TextView android:id="@+id/tvVersion" style="@style/Etiqueta" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" android:layout_marginTop="4dp" android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

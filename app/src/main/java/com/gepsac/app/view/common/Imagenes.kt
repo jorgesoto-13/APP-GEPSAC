@@ -20,16 +20,22 @@ import android.graphics.Color
 object Imagenes {
     private const val MAX_LADO = 480
     private const val MAX_BYTES = 150_000   // el documento de Firestore admite 1 MiB; esto deja mucho margen
+    private const val LADO_COMPROBANTE = 1100
+    private const val BYTES_COMPROBANTE = 180_000   // en Base64 ~240 000 caracteres: cabe en el límite de las reglas (250 000)
     private val cache = LruCache<String, Bitmap>(24)
 
-    /** Lee la imagen elegida, la reduce, corrige la rotación y la devuelve en Base64 (JPEG). Null si falla. */
-    fun codificar(ctx: Context, uri: Uri): String? {
+    /**
+     * Lee la imagen elegida, la reduce, corrige la rotación y la devuelve en Base64 (JPEG). Null si falla.
+     * Si no cabe en [maxBytes], la va reduciendo hasta que quepa (las capturas de comprobante usan un lado mayor
+     * para que el texto siga siendo legible).
+     */
+    fun codificar(ctx: Context, uri: Uri, maxLado: Int = MAX_LADO, maxBytes: Int = MAX_BYTES): String? {
         return try {
             val cr = ctx.contentResolver
             val medidas = BitmapFactory.Options().apply { inJustDecodeBounds = true }
             cr.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, medidas) }
             var muestreo = 1
-            while (medidas.outWidth / (muestreo * 2) >= MAX_LADO && medidas.outHeight / (muestreo * 2) >= MAX_LADO) muestreo *= 2
+            while (medidas.outWidth / (muestreo * 2) >= maxLado && medidas.outHeight / (muestreo * 2) >= maxLado) muestreo *= 2
             var bmp = cr.openInputStream(uri)?.use {
                 BitmapFactory.decodeStream(it, null, BitmapFactory.Options().apply { inSampleSize = muestreo })
             } ?: return null
@@ -46,24 +52,33 @@ object Imagenes {
             if (grados != 0f) bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.width, bmp.height, Matrix().apply { postRotate(grados) }, true)
 
             val mayor = maxOf(bmp.width, bmp.height)
-            if (mayor > MAX_LADO) {
-                val f = MAX_LADO.toFloat() / mayor
+            if (mayor > maxLado) {
+                val f = maxLado.toFloat() / mayor
                 bmp = Bitmap.createScaledBitmap(bmp, (bmp.width * f).toInt(), (bmp.height * f).toInt(), true)
             }
 
-            // Baja la calidad hasta que quepa en el tamaño máximo.
-            var bytes = ByteArray(0)
-            for (calidad in intArrayOf(85, 70, 55, 40)) {
-                val salida = ByteArrayOutputStream()
-                bmp.compress(Bitmap.CompressFormat.JPEG, calidad, salida)
-                bytes = salida.toByteArray()
-                if (bytes.size <= MAX_BYTES) break
+            // Baja la calidad y, si hace falta, el tamaño, hasta que quepa.
+            var resultado: ByteArray? = null
+            for (intento in 0 until 4) {
+                for (calidad in intArrayOf(85, 70, 55, 40)) {
+                    val salida = ByteArrayOutputStream()
+                    bmp.compress(Bitmap.CompressFormat.JPEG, calidad, salida)
+                    val bytes = salida.toByteArray()
+                    if (bytes.size <= maxBytes) { resultado = bytes; break }
+                }
+                if (resultado != null) break
+                bmp = Bitmap.createScaledBitmap(
+                    bmp, (bmp.width * 0.75f).toInt().coerceAtLeast(1), (bmp.height * 0.75f).toInt().coerceAtLeast(1), true
+                )
             }
-            if (bytes.size > MAX_BYTES) null else Base64.encodeToString(bytes, Base64.NO_WRAP)
+            resultado?.let { Base64.encodeToString(it, Base64.NO_WRAP) }
         } catch (e: Exception) {
             null
         }
     }
+
+    /** Captura de un comprobante de pago: más resolución que las fotos de producto, para poder leer los montos. */
+    fun codificarComprobante(ctx: Context, uri: Uri): String? = codificar(ctx, uri, LADO_COMPROBANTE, BYTES_COMPROBANTE)
 
     fun decodificar(base64: String): Bitmap? {
         val clave = base64.length.toString() + ":" + base64.hashCode()

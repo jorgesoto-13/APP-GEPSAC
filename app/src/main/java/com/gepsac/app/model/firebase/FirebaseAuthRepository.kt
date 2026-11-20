@@ -7,6 +7,7 @@ import com.gepsac.app.model.repository.ErrorApp
 import com.gepsac.app.model.service.AuthService
 import com.gepsac.app.model.service.FirestoreService
 import com.gepsac.app.model.service.intentar
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.firestore.FieldValue
 import kotlinx.coroutines.CancellationException
 
@@ -64,6 +65,14 @@ class FirebaseAuthRepository(
             throw e
         } catch (e: Exception) {
             null
+        }
+    }
+
+    override suspend fun recuperarContrasena(email: String): Result<Unit> = intentar {
+        try {
+            auth.enviarRecuperacion(email.trim().lowercase())
+        } catch (e: FirebaseAuthInvalidUserException) {
+            // No se avisa si el correo no existe: así nadie puede averiguar quién tiene cuenta.
         }
     }
 

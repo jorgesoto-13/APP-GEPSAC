@@ -11,8 +11,17 @@ val METODOS_PAGO = listOf("Yape", "Plin", "Transferencia", "Tarjeta")
 /** Línea del pedido. Guarda nombre y precio del momento: si luego cambia el producto, el pedido no se altera. */
 data class ItemPedido(val productoId: String, val nombre: String, val precio: Double, val cantidad: Int)
 
-/** Pago (simulado). Nunca incluye datos de tarjeta: solo método, monto y una referencia. */
-data class Pago(val metodo: String, val monto: Double, val referencia: String, val fecha: Long)
+/**
+ * Pago (simulado). Nunca incluye datos de tarjeta: solo método, monto y una referencia.
+ * [comprobante] es la captura de pantalla del Yape/Plin/transferencia (JPEG reducido en Base64); vacío si no se adjuntó.
+ */
+data class Pago(
+    val metodo: String,
+    val monto: Double,
+    val referencia: String,
+    val fecha: Long,
+    val comprobante: String = ""
+)
 
 data class Pedido(
     val id: String,
@@ -31,8 +40,13 @@ data class Pedido(
     /** Una posición por etapa (mismo orden que [ESTADOS]). 0L = etapa aún no alcanzada. */
     val tiempos: List<Long>,
     val pago: Pago? = null,
-    val creadoPor: String = ""
+    val creadoPor: String = "",
+    /** Punto de entrega marcado en el mapa (opcional). */
+    val latitud: Double? = null,
+    val longitud: Double? = null
 ) {
+    val tieneUbicacion: Boolean get() = latitud != null && longitud != null
+
     val estadoSeguro: Int get() = estado.coerceIn(0, ULTIMO_ESTADO)
     val metodoPago: String get() = pago?.metodo.orEmpty()
 

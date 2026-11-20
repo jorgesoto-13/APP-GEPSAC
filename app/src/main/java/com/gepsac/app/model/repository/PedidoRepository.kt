@@ -25,8 +25,11 @@ interface PedidoRepository {
 
     suspend fun retroceder(id: String): Result<Unit>
 
-    /** Registra el pago de un pedido "Registrado" y lo pasa a "Pagado". */
-    suspend fun pagar(id: String, metodo: String, referencia: String): Result<Unit>
+    /**
+     * Registra el pago de un pedido "Registrado" y lo pasa a "Pagado".
+     * [comprobante] es la captura del pago en Base64 (opcional, vacío si no hay).
+     */
+    suspend fun pagar(id: String, metodo: String, referencia: String, comprobante: String = ""): Result<Unit>
 
     /** Solo se puede eliminar un pedido que aún no está pagado. */
     suspend fun eliminar(id: String): Result<Unit>

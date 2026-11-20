@@ -23,8 +23,12 @@ service cloud.firestore {
                     && request.resource.data.nombre.size() >= 3
                     && request.resource.data.nombre.size() <= 50
                     && request.resource.data.telefono.matches('^9[0-9]{8}$');
+      // 'direcciones': hasta 5 direcciones de entrega guardadas por el propio cliente.
       allow update: if signedIn() && (id == uid() || isAdmin())
-                    && soloCambia(['nombre', 'telefono']);
+                    && soloCambia(['nombre', 'telefono', 'direcciones'])
+                    && (!('direcciones' in request.resource.data)
+                        || (request.resource.data.direcciones is list
+                            && request.resource.data.direcciones.size() <= 5));
       allow delete: if false;
     }
 
@@ -61,7 +65,10 @@ service cloud.firestore {
         && p.items is list && p.items.size() > 0 && p.items.size() <= 50
         && p.total is number && p.total > 0
         && p.fechaEntrega is timestamp
-        && p.estado is int;
+        && p.estado is int
+        // Punto de entrega marcado en el mapa (opcional): coordenadas válidas.
+        && (!('latitud' in p) || (p.latitud is number && p.latitud >= -90 && p.latitud <= 90))
+        && (!('longitud' in p) || (p.longitud is number && p.longitud >= -180 && p.longitud <= 180));
     }
     // Avanza una etapa (salvo desde Registrado=1) o retrocede una (salvo desde 0 y Pagado=2).
     function transicionAdmin() {
@@ -96,7 +103,10 @@ service cloud.firestore {
           && resource.data.estado == 1 && request.resource.data.estado == 2
           && soloCambia(['estado', 'tiempos', 'pago'])
           && request.resource.data.pago.metodo in ['Yape', 'Plin', 'Transferencia', 'Tarjeta']
-          && request.resource.data.pago.monto == resource.data.total);
+          && request.resource.data.pago.monto == resource.data.total
+          // Captura del comprobante (Base64, opcional): el documento admite 1 MiB, esto deja margen.
+          && (!('comprobante' in request.resource.data.pago)
+              || request.resource.data.pago.comprobante.size() <= 250000));
 
       // Solo se elimina un pedido que aún no se pagó.
       allow delete: if isAdmin() && resource.data.estado < 2;

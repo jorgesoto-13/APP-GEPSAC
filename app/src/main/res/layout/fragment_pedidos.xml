@@ -19,7 +19,7 @@
             android:textColor="@color/muted" android:textSize="15sp" android:visibility="gone" />
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton android:id="@+id/fabNuevo"
             android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|end"
-            android:layout_margin="16dp" android:text="Nuevo pedido" android:textColor="@color/white"
-            app:icon="@drawable/ic_add" app:iconTint="@color/white" app:backgroundTint="@color/brown" android:visibility="gone" />
+            android:layout_margin="16dp" android:text="Nuevo pedido" android:textColor="@color/on_brown"
+            app:icon="@drawable/ic_add" app:iconTint="@color/on_brown" app:backgroundTint="@color/brown" android:visibility="gone" />
     </FrameLayout>
 </LinearLayout>

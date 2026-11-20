@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Tema general: Material 3 con paleta de cafetería -->
-    <style name="Theme.Gepsac" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.Gepsac" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/brown</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/on_brown</item>
         <item name="colorPrimaryContainer">@color/cream_deep</item>
         <item name="colorOnPrimaryContainer">@color/brown_dark</item>
         <item name="colorSecondary">@color/green</item>
-        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorOnSecondary">@color/on_brown</item>
         <item name="colorSecondaryContainer">@color/cream_deep</item>
         <item name="colorOnSecondaryContainer">@color/brown_dark</item>
         <item name="colorTertiary">@color/caramel</item>
-        <item name="colorSurface">@color/white</item>
+        <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@color/ink</item>
         <item name="colorSurfaceVariant">@color/cream_deep</item>
         <item name="colorOnSurfaceVariant">@color/muted</item>
@@ -21,8 +21,8 @@
 
         <item name="android:windowBackground">@color/cream</item>
         <item name="android:statusBarColor">@color/cream</item>
-        <item name="android:navigationBarColor">@color/white</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/surface</item>
+        <item name="android:windowLightStatusBar">@bool/barra_estado_clara</item>
         <item name="android:windowAnimationStyle">@style/Animacion.Gepsac</item>
 
         <item name="shapeAppearanceSmallComponent">@style/Forma.Pequena</item>
@@ -62,7 +62,7 @@
 
     <!-- Barra inferior -->
     <style name="Navegacion.Inferior" parent="Widget.Material3.BottomNavigationView">
-        <item name="backgroundTint">@color/white</item>
+        <item name="backgroundTint">@color/surface</item>
         <item name="labelVisibilityMode">labeled</item>
     </style>
 

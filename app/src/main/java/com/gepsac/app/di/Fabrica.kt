@@ -14,6 +14,7 @@ import com.gepsac.app.viewmodel.CarritoViewModel
 import com.gepsac.app.viewmodel.CatalogoViewModel
 import com.gepsac.app.viewmodel.PedidosViewModel
 import com.gepsac.app.viewmodel.SeguimientoViewModel
+import com.gepsac.app.viewmodel.VentasViewModel
 
 /**
  * Cómo se construye cada ViewModel con sus repositorios. Uso en una pantalla:
@@ -27,13 +28,22 @@ object Fabrica {
         initializer { CatalogoViewModel(contenedor().productoRepository) }
     }
     val carrito: ViewModelProvider.Factory = viewModelFactory {
-        initializer { CarritoViewModel(contenedor().pedidoRepository, contenedor().authRepository) }
+        initializer {
+            val c = contenedor()
+            CarritoViewModel(c.pedidoRepository, c.authRepository, c.usuarioRepository, c.carritoLocal)
+        }
     }
     val pedidos: ViewModelProvider.Factory = viewModelFactory {
         initializer { PedidosViewModel(contenedor().pedidoRepository, contenedor().authRepository) }
     }
     val seguimiento: ViewModelProvider.Factory = viewModelFactory {
-        initializer { SeguimientoViewModel(contenedor().pedidoRepository, contenedor().authRepository) }
+        initializer {
+            val c = contenedor()
+            SeguimientoViewModel(c.pedidoRepository, c.authRepository, c.productoRepository, c.carritoLocal)
+        }
+    }
+    val ventas: ViewModelProvider.Factory = viewModelFactory {
+        initializer { VentasViewModel(contenedor().pedidoRepository) }
     }
     val adminProductos: ViewModelProvider.Factory = viewModelFactory {
         initializer { AdminProductosViewModel(contenedor().productoRepository) }

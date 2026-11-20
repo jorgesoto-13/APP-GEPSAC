@@ -7,14 +7,21 @@
     <color name="green">#3F6B42</color>
     <color name="green_soft">#E4EFE2</color>
 
-    <!-- Superficies y texto (contraste mínimo 4.5:1 sobre crema y blanco) -->
+    <!-- Superficies y texto (contraste mínimo 4.5:1). Todos tienen versión nocturna en values-night. -->
     <color name="cream">#FBF6EE</color>
     <color name="cream_deep">#F1E6D6</color>
-    <color name="white">#FFFFFF</color>
+    <color name="surface">#FFFFFF</color>
     <color name="ink">#2A1B12</color>
     <color name="muted">#6F6358</color>
     <color name="line">#E7DCCB</color>
     <color name="outline">#9C8B7A</color>
+
+    <!-- Texto sobre el color de marca (blanco de día, oscuro de noche) -->
+    <color name="on_brown">#FFFFFF</color>
+    <color name="on_brown_suave">#E9D8C6</color>
+
+    <!-- Siempre blanco: texto sobre las etiquetas de colores fijos -->
+    <color name="white">#FFFFFF</color>
 
     <!-- Estados -->
     <color name="danger">#B33A2E</color>

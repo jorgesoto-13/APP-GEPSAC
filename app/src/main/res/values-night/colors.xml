@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Modo oscuro: marrones cálidos muy oscuros, texto crema y acentos caramelo -->
+    <color name="brown">#E3B27B</color>
+    <color name="brown_dark">#F1DFCB</color>
+    <color name="caramel">#D9A15E</color>
+    <color name="green">#8FC793</color>
+    <color name="green_soft">#1F2E20</color>
+
+    <color name="cream">#17110C</color>
+    <color name="cream_deep">#2B2018</color>
+    <color name="surface">#231A13</color>
+    <color name="ink">#F3EADF</color>
+    <color name="muted">#BDB0A2</color>
+    <color name="line">#3B2F25</color>
+    <color name="outline">#8C7B6B</color>
+
+    <color name="on_brown">#2A1B12</color>
+    <color name="on_brown_suave">#4A3322</color>
+
+    <color name="danger">#FF8F80</color>
+    <color name="aviso_bg">#3A2F14</color>
+    <color name="aviso_text">#F2D78F</color>
+</resources>
