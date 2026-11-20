@@ -40,8 +40,13 @@ data class Pedido(
     /** Una posición por etapa (mismo orden que [ESTADOS]). 0L = etapa aún no alcanzada. */
     val tiempos: List<Long>,
     val pago: Pago? = null,
-    val creadoPor: String = ""
+    val creadoPor: String = "",
+    /** Punto de entrega marcado en el mapa (opcional). */
+    val latitud: Double? = null,
+    val longitud: Double? = null
 ) {
+    val tieneUbicacion: Boolean get() = latitud != null && longitud != null
+
     val estadoSeguro: Int get() = estado.coerceIn(0, ULTIMO_ESTADO)
     val metodoPago: String get() = pago?.metodo.orEmpty()
 

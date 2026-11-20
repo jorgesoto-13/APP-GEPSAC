@@ -12,6 +12,9 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.gepsac.app.BuildConfig
 import com.gepsac.app.R
 import com.gepsac.app.view.common.aparecer
+import com.gepsac.app.view.common.nombrePersona
+import com.gepsac.app.view.common.paraTelefono
+import com.gepsac.app.view.common.sinEspacios
 import com.gepsac.app.view.common.emerger
 import com.gepsac.app.model.Usuario
 import com.gepsac.app.databinding.ActivityLoginBinding
@@ -19,6 +22,7 @@ import com.gepsac.app.di.Fabrica
 import com.gepsac.app.view.admin.AdminActivity
 import com.gepsac.app.view.cliente.ClienteActivity
 import com.gepsac.app.view.common.err
+import com.gepsac.app.view.seguimiento.SeguimientoActivity
 import com.gepsac.app.util.Validar
 import com.gepsac.app.util.observarEvento
 import com.gepsac.app.viewmodel.AuthViewModel
@@ -44,7 +48,12 @@ class LoginActivity : AppCompatActivity() {
             TransitionManager.beginDelayedTransition(b.form)   // los campos aparecen/desaparecen con animación
             actualizarUI()
         }
-        b.tvVersion.text = "GEPSAC · versión " + BuildConfig.VERSION_NAME +
+        // Qué se puede escribir en cada campo (el celular, por ejemplo, solo admite 9 dígitos).
+        b.etNombre.nombrePersona(50)
+        b.etTel.paraTelefono(b.tilTel)
+        b.etEmail.sinEspacios(60)
+
+        b.tvVersion.text ="GEPSAC · versión " + BuildConfig.VERSION_NAME +
             if (BuildConfig.NUMERO_COMPILACION > 0) " (compilación " + BuildConfig.NUMERO_COMPILACION + ")" else " (local)"
         b.tvOlvide.setOnClickListener { recuperar() }
         vm.recuperacion.observarEvento(this) { Toast.makeText(this, it, Toast.LENGTH_LONG).show() }
@@ -94,7 +103,7 @@ class LoginActivity : AppCompatActivity() {
             b.tilNombre.err(Validar.nombre(nombre)),
             b.tilTel.err(Validar.telefono(tel)),
             b.tilEmail.err(Validar.email(email)),
-            b.tilPass.err(Validar.password(pass)),
+            b.tilPass.err(Validar.passwordNueva(pass)),
             b.tilPass2.err(Validar.confirmar(pass, pass2))
         ).all { it }
         if (!ok) return
@@ -127,9 +136,18 @@ class LoginActivity : AppCompatActivity() {
         b.tvError.visibility = View.VISIBLE
     }
 
+    companion object {
+        /** Id del pedido que se debe abrir después de iniciar sesión (lo envían los avisos). */
+        const val EXTRA_PEDIDO = "pedidoId"
+    }
+
     private fun irAPanel(usuario: Usuario) {
         val destino = if (usuario.esAdmin) AdminActivity::class.java else ClienteActivity::class.java
         startActivity(Intent(this, destino))
+        // Si se llegó desde un aviso de pedido, tras abrir el panel se abre ese pedido.
+        intent.getStringExtra(EXTRA_PEDIDO)?.let {
+            startActivity(Intent(this, SeguimientoActivity::class.java).putExtra("id", it))
+        }
         finish()
     }
 }

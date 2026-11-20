@@ -44,6 +44,16 @@ object Validar {
         else -> null
     }
 
+    /** Contraseña al CREAR la cuenta: 6 a 30 caracteres, sin espacios, con letras y números. */
+    fun passwordNueva(s: String): String? = when {
+        s.isEmpty() -> "Ingresa una contraseña"
+        s.length < 6 -> "Mínimo 6 caracteres"
+        s.length > 30 -> "Máximo 30 caracteres"
+        s.any { it.isWhitespace() } -> "No puede tener espacios"
+        s.none { it.isLetter() } || s.none { it.isDigit() } -> "Debe incluir letras y números"
+        else -> null
+    }
+
     fun confirmar(p1: String, p2: String): String? = if (p1 != p2) "Las contraseñas no coinciden" else null
 
     fun direccion(s: String): String? {
@@ -52,6 +62,7 @@ object Validar {
             t.isEmpty() -> "Ingresa la dirección de entrega"
             t.length < 8 -> "Escribe una dirección completa (mínimo 8 caracteres)"
             t.length > 120 -> "Máximo 120 caracteres"
+            t.none { it.isLetter() } -> "Incluye el nombre de la calle o avenida"
             else -> null
         }
     }
@@ -64,7 +75,12 @@ object Validar {
         val hoy = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
         }.time
-        return if (d.before(hoy)) "La fecha no puede ser pasada" else null
+        val limite = (hoy.clone() as java.util.Date).let { Calendar.getInstance().apply { time = it; add(Calendar.YEAR, 1) }.time }
+        return when {
+            d.before(hoy) -> "La fecha no puede ser pasada"
+            d.after(limite) -> "La fecha no puede ser mayor a un año"
+            else -> null
+        }
     }
 
     fun observacion(s: String): String? = if (s.trim().length > 150) "Máximo 150 caracteres" else null
@@ -97,7 +113,9 @@ object Validar {
     }
 
     fun precio(s: String): String? {
-        val v = s.trim().replace(",", ".").toDoubleOrNull() ?: return "Ingresa un precio válido"
+        val t = s.trim().replace(",", ".")
+        if (!Regex("""^\d{1,4}(\.\d{1,2})?$""").matches(t)) return "Usa números, con hasta 2 decimales (ej. 12.50)"
+        val v = t.toDoubleOrNull() ?: return "Ingresa un precio válido"
         return when {
             v <= 0 -> "Debe ser mayor a 0"
             v > 9999 -> "Máximo S/ 9999"

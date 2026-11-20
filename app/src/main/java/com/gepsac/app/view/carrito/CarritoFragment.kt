@@ -2,6 +2,8 @@ package com.gepsac.app.view.carrito
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
@@ -12,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +26,8 @@ import com.gepsac.app.di.Fabrica
 import com.gepsac.app.view.cliente.ClienteActivity
 import com.gepsac.app.view.common.elegirFecha
 import com.gepsac.app.view.common.err
+import com.gepsac.app.view.common.paraTelefono
+import com.gepsac.app.view.mapa.MapaActivity
 import com.gepsac.app.view.common.soles
 import com.gepsac.app.util.Validar
 import com.gepsac.app.util.observarEvento
@@ -46,6 +51,22 @@ class CarritoFragment : Fragment() {
 
     /** Diálogo de envío abierto (para rellenar la dirección cuando llega la ubicación). */
     private var dialogoActual: DialogCheckoutBinding? = null
+
+    // Punto de entrega marcado en el mapa o tomado del GPS (null si la dirección se escribió a mano).
+    private var latitud: Double? = null
+    private var longitud: Double? = null
+    private var rellenandoDireccion = false   // true mientras la propia app escribe en el campo
+
+    private val selectorMapa = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { r ->
+        val datos = r.data
+        if (r.resultCode == Activity.RESULT_OK && datos != null) {
+            fijarDireccion(
+                datos.getStringExtra(MapaActivity.EXTRA_DIRECCION).orEmpty(),
+                datos.getDoubleExtra(MapaActivity.EXTRA_LATITUD, 0.0),
+                datos.getDoubleExtra(MapaActivity.EXTRA_LONGITUD, 0.0)
+            )
+        }
+    }
 
     private val permisoUbicacion = registerForActivityResult(ActivityResultContracts.RequestPermission()) { concedido ->
         if (concedido) usarUbicacion()
@@ -86,7 +107,12 @@ class CarritoFragment : Fragment() {
     private fun checkout() {
         val d = DialogCheckoutBinding.inflate(layoutInflater)
         dialogoActual = d
+        latitud = null
+        longitud = null
+        d.etTel.paraTelefono(d.tilTel)
         d.etTel.setText(vm.telefonoUsuario)
+        // Si el cliente corrige la dirección a mano, el punto del mapa ya no corresponde y se descarta.
+        d.etDir.doAfterTextChanged { if (!rellenandoDireccion) { latitud = null; longitud = null } }
         d.etFecha.setOnClickListener {
             requireContext().elegirFecha { f -> d.etFecha.setText(f); d.tilFecha.error = null }
         }
@@ -106,6 +132,12 @@ class CarritoFragment : Fragment() {
             }
         }
         d.btnUbicacion.setOnClickListener { pedirUbicacion() }
+        d.btnMapa.setOnClickListener {
+            val intent = Intent(requireContext(), MapaActivity::class.java)
+            latitud?.let { intent.putExtra(MapaActivity.EXTRA_LATITUD, it) }
+            longitud?.let { intent.putExtra(MapaActivity.EXTRA_LONGITUD, it) }
+            selectorMapa.launch(intent)
+        }
 
         val dlg = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Enviar pedido").setView(d.root)
@@ -125,9 +157,20 @@ class CarritoFragment : Fragment() {
             ).all { it }
             if (!ok) return@setOnClickListener
             if (d.cbGuardarDir.isChecked) vm.guardarDireccion(dir)
-            vm.confirmarPedido(dir, tel, fecha, obs)
+            vm.confirmarPedido(dir, tel, fecha, obs, latitud, longitud)
             dlg.dismiss()
         }
+    }
+
+    /** Pone la dirección en el campo (sin que el observador la tome como edición manual) y guarda el punto. */
+    private fun fijarDireccion(texto: String, lat: Double?, lng: Double?) {
+        val d = dialogoActual ?: return
+        rellenandoDireccion = true
+        d.etDir.setText(texto.take(120))
+        rellenandoDireccion = false
+        d.tilDir.error = null
+        latitud = lat
+        longitud = lng
     }
 
     // ---------- Ubicación actual ----------
@@ -156,7 +199,7 @@ class CarritoFragment : Fragment() {
                     Toast.makeText(ctx, "Encontré tu ubicación, pero no pude convertirla en dirección. Escríbela a mano.", Toast.LENGTH_LONG).show()
                     return@launch
                 }
-                dialogoActual?.let { it.etDir.setText(direccion.take(120)); it.tilDir.error = null }
+                fijarDireccion(direccion, ubicacion.latitude, ubicacion.longitude)
             } catch (e: Exception) {
                 Toast.makeText(ctx, "No se pudo obtener la ubicación.", Toast.LENGTH_LONG).show()
             }

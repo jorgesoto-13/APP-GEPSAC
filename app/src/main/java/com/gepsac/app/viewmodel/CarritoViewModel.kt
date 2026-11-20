@@ -98,7 +98,7 @@ class CarritoViewModel(
         viewModelScope.launch { usuarios.guardarDirecciones(u.id, nuevas) }
     }
 
-    fun confirmarPedido(dir: String, tel: String, fecha: String, obs: String) {
+    fun confirmarPedido(dir: String, tel: String, fecha: String, obs: String, latitud: Double? = null, longitud: Double? = null) {
         val items = local.items.value
         val usuario = auth.usuarioActual
         if (items.isEmpty() || usuario == null || _enviando.value == true) return
@@ -108,7 +108,7 @@ class CarritoViewModel(
         }
         _enviando.value = true
         viewModelScope.launch {
-            val nuevo = NuevoPedido(usuario, items, dir.trim(), tel.replace(" ", ""), fechaMs, obs.trim())
+            val nuevo = NuevoPedido(usuario, items, dir.trim(), tel.replace(" ", ""), fechaMs, obs.trim(), latitud, longitud)
             pedidos.crear(nuevo, usuario).fold(
                 onSuccess = { numero ->
                     local.guardar(emptyList())

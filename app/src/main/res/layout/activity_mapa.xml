@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <org.osmdroid.views.MapView android:id="@+id/mapa" android:layout_width="match_parent" android:layout_height="match_parent" />
+
+    <!-- Marcador fijo al centro: se mueve el mapa por debajo y la punta queda justo en el centro -->
+    <ImageView android:id="@+id/pin" android:layout_width="48dp" android:layout_height="48dp" android:layout_gravity="center"
+        android:translationY="-24dp" android:src="@drawable/ic_pin_mapa" android:importantForAccessibility="no" />
+
+    <!-- Buscador de lugares -->
+    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_gravity="top" android:layout_margin="12dp" app:cardBackgroundColor="@color/surface"
+        app:cardCornerRadius="16dp" app:cardElevation="4dp" app:strokeWidth="0dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:gravity="center_vertical" android:orientation="horizontal" android:paddingStart="12dp" android:paddingEnd="4dp">
+            <EditText android:id="@+id/etBuscar" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1"
+                android:background="@null" android:hint="Busca una calle, barrio o lugar" android:imeOptions="actionSearch"
+                android:inputType="text" android:maxLength="80" android:singleLine="true" android:importantForAutofill="no"
+                android:textColor="@color/ink" android:textColorHint="@color/muted" android:textSize="15sp" />
+            <ImageButton android:id="@+id/btnBuscar" android:layout_width="48dp" android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless" android:src="@drawable/ic_search"
+                android:tint="@color/brown" android:contentDescription="Buscar" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Atribución obligatoria de OpenStreetMap -->
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|start"
+        android:layout_marginBottom="150dp" android:background="#B3FFFFFF" android:paddingStart="6dp" android:paddingEnd="6dp"
+        android:text="© OpenStreetMap" android:textColor="#444444" android:textSize="10sp" />
+
+    <!-- Mi ubicación -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/btnMiUbicacion"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp" android:layout_marginBottom="160dp" app:fabSize="mini"
+        app:backgroundTint="@color/surface" app:tint="@color/brown" android:src="@drawable/ic_gps"
+        android:contentDescription="Ir a mi ubicación" />
+
+    <!-- Dirección elegida y botón de confirmar -->
+    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_gravity="bottom" app:cardBackgroundColor="@color/surface" app:cardCornerRadius="24dp"
+        app:cardElevation="8dp" app:strokeWidth="0dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="20dp">
+            <TextView style="@style/Etiqueta" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Mueve el mapa o toca un punto: el marcador rojo es tu dirección" />
+            <TextView android:id="@+id/tvDireccion" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="6dp" android:minLines="2" android:maxLines="3" android:ellipsize="end"
+                android:textColor="@color/ink" android:textSize="15sp" android:textStyle="bold" />
+            <Button android:id="@+id/btnConfirmar" android:layout_width="match_parent" android:layout_height="54dp"
+                android:layout_marginTop="12dp" android:text="Usar esta ubicación" android:enabled="false" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</FrameLayout>

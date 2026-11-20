@@ -13,6 +13,7 @@ import com.gepsac.app.databinding.DialogNuevoPedidoBinding
 import com.gepsac.app.databinding.ItemCantidadProductoBinding
 import com.gepsac.app.view.common.elegirFecha
 import com.gepsac.app.view.common.err
+import com.gepsac.app.view.common.paraTelefono
 import com.gepsac.app.view.common.soles
 import com.gepsac.app.util.Validar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -31,6 +32,7 @@ fun Fragment.mostrarNuevoPedido(
         return
     }
     val d = DialogNuevoPedidoBinding.inflate(layoutInflater)
+    d.etTel.paraTelefono(d.tilTel)
     d.spCliente.adapter = ArrayAdapter(
         requireContext(), android.R.layout.simple_spinner_dropdown_item,
         clientes.map { it.nombre + " (" + it.email + ")" }

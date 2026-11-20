@@ -34,7 +34,7 @@
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilTel" style="@style/Campo" android:hint="Teléfono (9 dígitos)">
                 <com.google.android.material.textfield.TextInputEditText android:id="@+id/etTel"
-                    android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="phone" android:maxLength="11" />
+                    android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:digits="0123456789" android:maxLength="9" />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilEmail" style="@style/Campo" android:hint="Correo electrónico">
                 <com.google.android.material.textfield.TextInputEditText android:id="@+id/etEmail"

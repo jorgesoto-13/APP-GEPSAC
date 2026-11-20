@@ -70,4 +70,7 @@ dependencies {
 
     // Ubicación actual para rellenar la dirección de entrega (no necesita clave de API)
     implementation("com.google.android.gms:play-services-location:21.3.0")
+
+    // Mapa gratuito de OpenStreetMap para marcar el punto de entrega (sin clave de API ni cuenta de pago)
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
 }

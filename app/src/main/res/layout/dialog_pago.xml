@@ -29,14 +29,20 @@
                     android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="numberPassword" android:maxLength="3" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
-        <!-- Captura del Yape / Plin / transferencia (opcional) -->
+        <!-- Captura del Yape / Plin / transferencia: obligatoria, viaja con el pedido hasta el administrador -->
+        <TextView android:id="@+id/tvAyudaComprobante" style="@style/Etiqueta" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="14dp" android:text="Adjunta la captura de tu pago. Se guarda gratis junto al pedido y el administrador la revisa antes de preparar tu compra."
+            android:visibility="gone" />
         <com.google.android.material.button.MaterialButton android:id="@+id/btnComprobante" style="@style/Boton.Contorno"
-            android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp"
             android:minHeight="48dp" android:text="Adjuntar captura del comprobante" android:textSize="14sp"
             app:icon="@drawable/ic_attach" app:iconTint="@null" android:visibility="gone" />
-        <ImageView android:id="@+id/imgComprobante" android:layout_width="match_parent" android:layout_height="140dp"
+        <ImageView android:id="@+id/imgComprobante" android:layout_width="match_parent" android:layout_height="160dp"
             android:layout_marginTop="8dp" android:scaleType="fitCenter" android:visibility="gone"
             android:contentDescription="Vista previa del comprobante" />
+        <TextView android:id="@+id/tvErrorComprobante" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="4dp" android:text="Adjunta la captura de tu pago para continuar"
+            android:textColor="@color/danger" android:textSize="12sp" android:visibility="gone" />
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp"
             android:text="Pago simulado: no se realiza ningún cobro real." android:textColor="@color/muted" android:textSize="11sp" />
     </LinearLayout>

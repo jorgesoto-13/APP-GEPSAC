@@ -13,14 +13,17 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.gepsac.app.GepsacApp
 import com.gepsac.app.R
 import com.gepsac.app.model.ESTADOS
+import com.gepsac.app.model.ESTADO_PAGADO
 import com.gepsac.app.model.ESTADO_REGISTRADO
 import com.gepsac.app.model.Pedido
 import com.gepsac.app.model.ULTIMO_ESTADO
 import com.gepsac.app.databinding.ActivityPedidoDetalleBinding
 import com.gepsac.app.databinding.ItemEtapaBinding
 import com.gepsac.app.di.Fabrica
+import com.gepsac.app.view.auth.LoginActivity
 import com.gepsac.app.view.common.ESTADO_COLORES
 import com.gepsac.app.view.common.aparecer
 import com.gepsac.app.view.common.emerger
@@ -50,6 +53,14 @@ class SeguimientoActivity : AppCompatActivity() {
         setContentView(b.root)
         val id = intent.getStringExtra("id")
         if (id == null) { finish(); return }
+
+        // Si la app se reinició (por ejemplo, al abrir este pedido desde un aviso), primero se recupera la sesión
+        // en el login, que luego vuelve a abrir este mismo pedido.
+        if ((application as GepsacApp).contenedor.authRepository.usuarioActual == null) {
+            startActivity(Intent(this, LoginActivity::class.java).putExtra(LoginActivity.EXTRA_PEDIDO, id))
+            finish()
+            return
+        }
         vm.cargar(id)
 
         b.tvVolver.setOnClickListener { finish() }
@@ -68,8 +79,12 @@ class SeguimientoActivity : AppCompatActivity() {
         }
         b.btnAvanzar.setOnClickListener {
             val p = actual ?: return@setOnClickListener
-            val msg = if (p.estado == 0) "¿Registrar el pedido #" + p.numero + "?"
-            else "¿Seguro que quieres pasar el pedido #" + p.numero + " a «" + ESTADOS[p.estado + 1] + "»?"
+            val msg = when (p.estado) {
+                0 -> "¿Registrar el pedido #" + p.numero + "?"
+                ESTADO_PAGADO -> "¿Confirmas que el comprobante del pedido #" + p.numero + " es correcto y quieres pasarlo a «" +
+                    ESTADOS[p.estado + 1] + "»?"
+                else -> "¿Seguro que quieres pasar el pedido #" + p.numero + " a «" + ESTADOS[p.estado + 1] + "»?"
+            }
             confirmar(msg) { vm.avanzar(p.id) }
         }
         b.btnRetroceder.setOnClickListener {
@@ -90,10 +105,15 @@ class SeguimientoActivity : AppCompatActivity() {
         vm.agregadoAlCarrito.observarEvento(this) { finish() }
     }
 
-    /** Abre la dirección en la app de mapas del teléfono (sin claves de API). */
-    private fun abrirMapa(direccion: String) {
+    /** Abre el punto de entrega en la app de mapas del teléfono: el punto exacto si se marcó, o si no la dirección escrita. */
+    private fun abrirMapa(p: Pedido) {
+        val uri = if (p.tieneUbicacion) {
+            Uri.parse("geo:" + p.latitud + "," + p.longitud + "?q=" + p.latitud + "," + p.longitud + "(" + Uri.encode("Entrega pedido #" + p.numero) + ")")
+        } else {
+            Uri.parse("geo:0,0?q=" + Uri.encode(p.direccion))
+        }
         try {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + Uri.encode(direccion))))
+            startActivity(Intent(Intent.ACTION_VIEW, uri))
         } catch (e: ActivityNotFoundException) {
             Toast.makeText(this, "No hay una app de mapas instalada.", Toast.LENGTH_SHORT).show()
         }
@@ -131,9 +151,10 @@ class SeguimientoActivity : AppCompatActivity() {
         b.tvCliente.text = "Cliente: " + p.clienteNombre
         b.tvContacto.text = "Tel: " + p.telefono + " · " + p.clienteEmail
         // La dirección se subraya y, al tocarla, se abre en la app de mapas.
-        b.tvDireccion.text = "Dirección: " + p.direccion + "  (ver en el mapa)"
+        b.tvDireccion.text = "Dirección: " + p.direccion +
+            if (p.tieneUbicacion) "  (ver el punto exacto en el mapa)" else "  (ver en el mapa)"
         b.tvDireccion.paintFlags = b.tvDireccion.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-        b.tvDireccion.setOnClickListener { abrirMapa(p.direccion) }
+        b.tvDireccion.setOnClickListener { abrirMapa(p) }
         b.tvEntrega.text = "Entrega solicitada: " + p.fechaEntrega.fecha()
         b.tvPago.text = "Pago: " + p.metodoPago + (p.pago?.referencia?.let { " · " + it } ?: "")
         b.tvPago.visibility = if (p.metodoPago.isEmpty()) View.GONE else View.VISIBLE
@@ -141,6 +162,7 @@ class SeguimientoActivity : AppCompatActivity() {
         // Captura del comprobante (si el cliente la adjuntó): toca para ampliar.
         val comprobante = p.pago?.comprobante.orEmpty()
         b.imgComprobante.visibility = if (comprobante.isEmpty()) View.GONE else View.VISIBLE
+        b.tvTituloComprobante.visibility = b.imgComprobante.visibility
         if (comprobante.isNotEmpty()) {
             b.imgComprobante.mostrarProducto(comprobante)
             b.imgComprobante.setOnClickListener { verComprobante(comprobante) }
@@ -177,6 +199,10 @@ class SeguimientoActivity : AppCompatActivity() {
             !admin && e == 0 -> "Aún no se ha registrado tu pedido. Cuando el administrador lo registre, podrás realizar el pago."
             !admin && e == ESTADO_REGISTRADO -> "Tu pedido ya fue registrado. Realiza el pago para que empiece la preparación."
             admin && e == ESTADO_REGISTRADO -> "Esperando el pago del cliente. No se puede avanzar hasta que pague."
+            admin && e == ESTADO_PAGADO && p.pago?.comprobante.orEmpty().isNotEmpty() ->
+                "El cliente ya pagó con " + p.metodoPago + ". Revisa el comprobante de más abajo y, si todo está bien, aprueba el pago para pasar el pedido a preparación."
+            admin && e == ESTADO_PAGADO ->
+                "El cliente pagó con " + p.metodoPago + " (pago simulado, sin comprobante). Puedes pasar el pedido a preparación."
             else -> null
         }
         b.tvAviso.text = aviso
@@ -189,7 +215,11 @@ class SeguimientoActivity : AppCompatActivity() {
         // Admin: registrar/avanzar, retroceder, eliminar
         b.btnEliminar.visibility = if (admin && p.puedeEliminar) View.VISIBLE else View.GONE
         b.btnAvanzar.visibility = if (admin && p.puedeAvanzar) View.VISIBLE else View.GONE
-        if (p.puedeAvanzar) b.btnAvanzar.text = if (e == 0) "Registrar pedido" else "Pasar a: " + ESTADOS[e + 1]
+        if (p.puedeAvanzar) b.btnAvanzar.text = when (e) {
+            0 -> "Registrar pedido"
+            ESTADO_PAGADO -> "Aprobar pago y pasar a: " + ESTADOS[e + 1]
+            else -> "Pasar a: " + ESTADOS[e + 1]
+        }
         b.btnRetroceder.visibility = if (admin && p.puedeRetroceder) View.VISIBLE else View.GONE
         if (p.puedeRetroceder) b.btnRetroceder.text = "Retroceder a: " + ESTADOS[e - 1]
     }

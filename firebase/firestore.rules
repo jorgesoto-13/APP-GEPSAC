@@ -65,7 +65,10 @@ service cloud.firestore {
         && p.items is list && p.items.size() > 0 && p.items.size() <= 50
         && p.total is number && p.total > 0
         && p.fechaEntrega is timestamp
-        && p.estado is int;
+        && p.estado is int
+        // Punto de entrega marcado en el mapa (opcional): coordenadas válidas.
+        && (!('latitud' in p) || (p.latitud is number && p.latitud >= -90 && p.latitud <= 90))
+        && (!('longitud' in p) || (p.longitud is number && p.longitud >= -180 && p.longitud <= 180));
     }
     // Avanza una etapa (salvo desde Registrado=1) o retrocede una (salvo desde 0 y Pagado=2).
     function transicionAdmin() {

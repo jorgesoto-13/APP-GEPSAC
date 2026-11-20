@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Avisos de pedidos (Android 13+ lo pide en pantalla) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- «Usar mi ubicación» para rellenar la dirección de entrega -->
@@ -25,6 +26,7 @@
         <activity android:name=".view.cliente.ClienteActivity" android:exported="false" />
         <activity android:name=".view.admin.AdminActivity" android:exported="false" />
         <activity android:name=".view.seguimiento.SeguimientoActivity" android:exported="false" />
+        <activity android:name=".view.mapa.MapaActivity" android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

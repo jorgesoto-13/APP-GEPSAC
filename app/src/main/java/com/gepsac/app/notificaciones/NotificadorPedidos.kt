@@ -17,7 +17,7 @@ import com.gepsac.app.model.ESTADO_PAGADO
 import com.gepsac.app.model.Pedido
 import com.gepsac.app.model.Usuario
 import com.gepsac.app.model.repository.PedidoRepository
-import com.gepsac.app.view.auth.LoginActivity
+import com.gepsac.app.view.seguimiento.SeguimientoActivity
 import com.gepsac.app.view.common.soles
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -72,17 +72,21 @@ class NotificadorPedidos(
         if (usuario.esAdmin) {
             when {
                 anterior == null && p.creadoPor != usuario.id ->
-                    notificar(idAviso, "Nuevo pedido #" + p.numero, p.clienteNombre + " hizo un pedido por " + p.total.soles())
+                    notificar(idAviso, p.id, "Nuevo pedido #" + p.numero, p.clienteNombre + " hizo un pedido por " + p.total.soles())
                 anterior != null && anterior < ESTADO_PAGADO && p.estado >= ESTADO_PAGADO ->
-                    notificar(idAviso, "Pedido #" + p.numero + " pagado", p.clienteNombre + " pagó " + p.total.soles())
+                    notificar(
+                        idAviso, p.id, "Pedido #" + p.numero + " pagado",
+                        p.clienteNombre + " pagó " + p.total.soles() +
+                            if (p.pago?.comprobante.orEmpty().isNotEmpty()) ". Toca para revisar el comprobante." else "."
+                    )
             }
         } else {
             when {
                 anterior == null && p.creadoPor != usuario.id ->
-                    notificar(idAviso, "Pedido #" + p.numero, "Se registró un pedido a tu nombre.")
+                    notificar(idAviso, p.id, "Pedido #" + p.numero, "Se registró un pedido a tu nombre.")
                 // Pagar lo hace el propio cliente: no hace falta avisarle.
                 anterior != null && p.estado > anterior && p.estado != ESTADO_PAGADO ->
-                    notificar(idAviso, "Pedido #" + p.numero, "Ahora está: «" + ESTADOS[p.estadoSeguro] + "»")
+                    notificar(idAviso, p.id, "Pedido #" + p.numero, "Ahora está: «" + ESTADOS[p.estadoSeguro] + "»")
             }
         }
     }
@@ -115,16 +119,16 @@ class NotificadorPedidos(
         contexto.getSystemService(NotificationManager::class.java).createNotificationChannel(canal)
     }
 
-    private fun notificar(id: Int, titulo: String, texto: String) {
+    private fun notificar(id: Int, pedidoId: String, titulo: String, texto: String) {
         // Desde Android 13 hace falta el permiso de notificaciones (se pide al abrir el panel).
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             ContextCompat.checkSelfPermission(contexto, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
         ) return
 
-        // Al tocar el aviso se abre la app; el login recupera la sesión y entra directo al panel.
+        // Al tocar el aviso se abre ese pedido (si la sesión ya no está en memoria, pasa antes por el login).
         val abrir = PendingIntent.getActivity(
-            contexto, 0,
-            Intent(contexto, LoginActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP),
+            contexto, id,
+            Intent(contexto, SeguimientoActivity::class.java).putExtra("id", pedidoId).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         val aviso = NotificationCompat.Builder(contexto, CANAL)

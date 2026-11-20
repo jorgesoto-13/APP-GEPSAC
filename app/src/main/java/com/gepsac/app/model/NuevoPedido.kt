@@ -8,7 +8,10 @@ data class NuevoPedido(
     val telefono: String,
     /** Fecha de entrega solicitada, en milisegundos. */
     val fechaEntrega: Long,
-    val observacion: String
+    val observacion: String,
+    /** Punto de entrega marcado en el mapa (opcional): permite abrirlo exacto en la app de mapas. */
+    val latitud: Double? = null,
+    val longitud: Double? = null
 ) {
     val total: Double get() = items.sumOf { it.precio * it.cantidad }
 }

@@ -104,7 +104,9 @@ internal fun DocumentSnapshot.aPedido(): Pedido? {
         estado = (d["estado"] as? Number)?.toInt() ?: 0,
         tiempos = tiempos,
         pago = pago,
-        creadoPor = d["creadoPor"].aTexto()
+        creadoPor = d["creadoPor"].aTexto(),
+        latitud = (d["latitud"] as? Number)?.toDouble(),
+        longitud = (d["longitud"] as? Number)?.toDouble()
     )
 }
 
@@ -112,7 +114,7 @@ internal fun DocumentSnapshot.aPedido(): Pedido? {
 internal fun NuevoPedido.aMapa(numero: Long, creadorId: String, estadoInicial: Int): Map<String, Any> {
     // Una clave por etapa alcanzada: "0" = Por registrar, "1" = Registrado, ...
     val tiempos = (0..estadoInicial).associate { it.toString() to FieldValue.serverTimestamp() }
-    return mapOf(
+    val base: Map<String, Any> = mapOf(
         "numero" to numero,
         "clienteId" to cliente.id,
         "clienteNombre" to cliente.nombre,
@@ -135,4 +137,6 @@ internal fun NuevoPedido.aMapa(numero: Long, creadorId: String, estadoInicial: I
         "tiempos" to tiempos,
         "creadoEn" to FieldValue.serverTimestamp()
     )
+    // El punto del mapa solo se guarda si el cliente lo marcó.
+    return if (latitud != null && longitud != null) base + mapOf<String, Any>("latitud" to latitud, "longitud" to longitud) else base
 }
