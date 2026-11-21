@@ -19,82 +19,68 @@
 <!-- r_realiza -->
 <g id="node7" class="node">
 <title>r_realiza</title>
-<polygon fill="#e2f0d0" stroke="#a9d18e" stroke-width="1.5" points="410.4,-649.44 356.4,-620.64 410.4,-591.84 464.4,-620.64 410.4,-649.44"/>
-<text xml:space="preserve" text-anchor="middle" x="410.4" y="-623.69" font-family="Segoe UI" font-size="11.00">realiza</text>
-<text xml:space="preserve" text-anchor="middle" x="410.4" y="-610.19" font-family="Segoe UI" font-size="11.00">(cliente)</text>
+<polygon fill="#e2f0d0" stroke="#a9d18e" stroke-width="1.5" points="410.4,-584.64 356.4,-555.84 410.4,-527.04 464.4,-555.84 410.4,-584.64"/>
+<text xml:space="preserve" text-anchor="middle" x="410.4" y="-552.14" font-family="Segoe UI" font-size="11.00">realiza</text>
 </g>
 <!-- usu&#45;&#45;r_realiza -->
 <g id="edge1" class="edge">
 <title>usu&#45;&#45;r_realiza</title>
-<path fill="none" stroke="#7ea6d8" stroke-width="2" d="M273.86,-573.38C306.56,-584.7 348.19,-599.11 376.84,-609.02"/>
-<text xml:space="preserve" text-anchor="middle" x="297.43" y="-564.16" font-family="Segoe UI" font-size="14.00" fill="#1f1f1f">1</text>
-</g>
-<!-- r_registra -->
-<g id="node8" class="node">
-<title>r_registra</title>
-<polygon fill="#e2f0d0" stroke="#a9d18e" stroke-width="1.5" points="410.4,-519.84 356.4,-491.04 410.4,-462.24 464.4,-491.04 410.4,-519.84"/>
-<text xml:space="preserve" text-anchor="middle" x="410.4" y="-494.09" font-family="Segoe UI" font-size="11.00">registra</text>
-<text xml:space="preserve" text-anchor="middle" x="410.4" y="-480.59" font-family="Segoe UI" font-size="11.00">(creador)</text>
-</g>
-<!-- usu&#45;&#45;r_registra -->
-<g id="edge3" class="edge">
-<title>usu&#45;&#45;r_registra</title>
-<path fill="none" stroke="#7ea6d8" stroke-width="2" d="M273.86,-538.3C306.56,-526.98 348.19,-512.57 376.84,-502.66"/>
-<text xml:space="preserve" text-anchor="middle" x="289.57" y="-515.49" font-family="Segoe UI" font-size="14.00" fill="#1f1f1f">1</text>
+<path fill="none" stroke="#7ea6d8" stroke-width="2" d="M281.66,-555.84C305.05,-555.84 331.86,-555.84 354.94,-555.84"/>
+<text xml:space="preserve" text-anchor="middle" x="302.45" y="-539.17" font-family="Segoe UI" font-size="14.00" fill="#1f1f1f">1</text>
 </g>
 <!-- a_usu_0 -->
-<g id="node13" class="node">
+<g id="node12" class="node">
 <title>a_usu_0</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="129.6" cy="-656.64" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="129.6" y="-652.94" font-family="Segoe UI" font-size="11.00">nombre</text>
 </g>
 <!-- usu&#45;&#45;a_usu_0 -->
-<g id="edge13" class="edge">
+<g id="edge11" class="edge">
 <title>usu&#45;&#45;a_usu_0</title>
 <path fill="none" stroke="#9db5d6" d="M206.9,-573.4C188.98,-592.69 160.51,-623.35 143.58,-641.58"/>
 </g>
 <!-- a_usu_1 -->
-<g id="node14" class="node">
+<g id="node13" class="node">
 <title>a_usu_1</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="36" cy="-591.84" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="start" x="18.38" y="-589.14" font-family="Segoe UI" text-decoration="underline" font-size="11.00">correo</text>
 </g>
 <!-- usu&#45;&#45;a_usu_1 -->
-<g id="edge14" class="edge">
+<g id="edge12" class="edge">
 <title>usu&#45;&#45;a_usu_1</title>
 <path fill="none" stroke="#9db5d6" d="M164.74,-567.08C133.41,-573.11 95.95,-580.31 69.53,-585.39"/>
 </g>
 <!-- a_usu_2 -->
-<g id="node15" class="node">
+<g id="node14" class="node">
 <title>a_usu_2</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="36" cy="-519.84" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="36" y="-516.14" font-family="Segoe UI" font-size="11.00">teléfono</text>
 </g>
 <!-- usu&#45;&#45;a_usu_2 -->
-<g id="edge15" class="edge">
+<g id="edge13" class="edge">
 <title>usu&#45;&#45;a_usu_2</title>
 <path fill="none" stroke="#9db5d6" d="M164.74,-544.6C133.41,-538.57 95.95,-531.37 69.53,-526.29"/>
 </g>
 <!-- a_usu_3 -->
-<g id="node16" class="node">
+<g id="node15" class="node">
 <title>a_usu_3</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="129.6" cy="-447.84" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="129.6" y="-444.14" font-family="Segoe UI" font-size="11.00">rol</text>
 </g>
 <!-- usu&#45;&#45;a_usu_3 -->
-<g id="edge16" class="edge">
+<g id="edge14" class="edge">
 <title>usu&#45;&#45;a_usu_3</title>
 <path fill="none" stroke="#9db5d6" d="M208.16,-538.49C190.07,-517.62 160,-482.92 142.79,-463.05"/>
 </g>
 <!-- a_usu_4 -->
-<g id="node17" class="node">
+<g id="node16" class="node">
 <title>a_usu_4</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" stroke-dasharray="5,2" cx="223.2" cy="-397.44" rx="72" ry="15.84"/>
 <ellipse fill="none" stroke="#9a9a9a" stroke-dasharray="5,2" cx="223.2" cy="-397.44" rx="76" ry="19.84"/>
 <text xml:space="preserve" text-anchor="middle" x="223.2" y="-393.74" font-family="Segoe UI" font-size="11.00">direcciones guardadas</text>
 </g>
 <!-- usu&#45;&#45;a_usu_4 -->
-<g id="edge17" class="edge">
+<g id="edge15" class="edge">
 <title>usu&#45;&#45;a_usu_4</title>
 <path fill="none" stroke="#9db5d6" d="M223.2,-538.28C223.2,-508.64 223.2,-448.85 223.2,-417.56"/>
 </g>
@@ -105,116 +91,127 @@
 <text xml:space="preserve" text-anchor="middle" x="597.6" y="-550.39" font-family="Segoe UI" font-size="16.00">Pedido</text>
 </g>
 <!-- r_contiene -->
-<g id="node9" class="node">
+<g id="node8" class="node">
 <title>r_contiene</title>
 <polygon fill="#e2f0d0" stroke="#a9d18e" stroke-width="1.5" points="885.6,-584.64 831.6,-555.84 885.6,-527.04 939.6,-555.84 885.6,-584.64"/>
 <text xml:space="preserve" text-anchor="middle" x="885.6" y="-552.14" font-family="Segoe UI" font-size="11.00">contiene</text>
 </g>
 <!-- ped&#45;&#45;r_contiene -->
-<g id="edge5" class="edge">
+<g id="edge3" class="edge">
 <title>ped&#45;&#45;r_contiene</title>
 <path fill="none" stroke="#7ea6d8" stroke-width="2" d="M655.88,-555.84C706.83,-555.84 780.3,-555.84 830.34,-555.84"/>
 <text xml:space="preserve" text-anchor="middle" x="676.67" y="-539.17" font-family="Segoe UI" font-size="14.00" fill="#1f1f1f">N</text>
 </g>
 <!-- r_paga -->
-<g id="node11" class="node">
+<g id="node10" class="node">
 <title>r_paga</title>
 <polygon fill="#e2f0d0" stroke="#a9d18e" stroke-width="1.5" points="597.6,-368.64 543.6,-339.84 597.6,-311.04 651.6,-339.84 597.6,-368.64"/>
 <text xml:space="preserve" text-anchor="middle" x="597.6" y="-336.14" font-family="Segoe UI" font-size="11.00">se paga con</text>
 </g>
 <!-- ped&#45;&#45;r_paga -->
-<g id="edge9" class="edge">
+<g id="edge7" class="edge">
 <title>ped&#45;&#45;r_paga</title>
 <path fill="none" stroke="#7ea6d8" stroke-width="2" d="M597.6,-538.53C597.6,-501.69 597.6,-415.16 597.6,-369.41"/>
 <text xml:space="preserve" text-anchor="middle" x="585.6" y="-513.07" font-family="Segoe UI" font-size="14.00" fill="#1f1f1f">1</text>
 </g>
 <!-- a_ped_0 -->
-<g id="node33" class="node">
+<g id="node32" class="node">
 <title>a_ped_0</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="875.52" cy="-630.72" rx="37.44" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="875.52" y="-627.02" font-family="Segoe UI" font-size="11.00">dirección</text>
 </g>
 <!-- ped&#45;&#45;a_ped_0 -->
-<g id="edge33" class="edge">
+<g id="edge31" class="edge">
 <title>ped&#45;&#45;a_ped_0</title>
 <path fill="none" stroke="#9db5d6" d="M655.86,-571.54C713,-586.93 798.01,-609.84 843.71,-622.15"/>
 </g>
 <!-- a_ped_1 -->
-<g id="node34" class="node">
+<g id="node33" class="node">
 <title>a_ped_1</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="841.68" cy="-708.48" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="841.68" y="-704.78" font-family="Segoe UI" font-size="11.00">teléfono</text>
 </g>
 <!-- ped&#45;&#45;a_ped_1 -->
-<g id="edge34" class="edge">
+<g id="edge32" class="edge">
 <title>ped&#45;&#45;a_ped_1</title>
 <path fill="none" stroke="#9db5d6" d="M625.6,-573.35C675.06,-604.28 776.81,-667.91 820.73,-695.38"/>
 </g>
 <!-- a_ped_2 -->
-<g id="node35" class="node">
+<g id="node34" class="node">
 <title>a_ped_2</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="786.24" cy="-773.28" rx="57.6" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="786.24" y="-769.58" font-family="Segoe UI" font-size="11.00">fecha de entrega</text>
 </g>
 <!-- ped&#45;&#45;a_ped_2 -->
-<g id="edge35" class="edge">
+<g id="edge33" class="edge">
 <title>ped&#45;&#45;a_ped_2</title>
 <path fill="none" stroke="#9db5d6" d="M612.72,-573.27C648.56,-614.58 738.27,-717.99 772.59,-757.55"/>
 </g>
 <!-- a_ped_3 -->
-<g id="node36" class="node">
+<g id="node35" class="node">
 <title>a_ped_3</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="739.44" cy="-822.24" rx="60.48" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="739.44" y="-818.54" font-family="Segoe UI" font-size="11.00">fecha de creación</text>
 </g>
 <!-- ped&#45;&#45;a_ped_3 -->
-<g id="edge36" class="edge">
+<g id="edge34" class="edge">
 <title>ped&#45;&#45;a_ped_3</title>
 <path fill="none" stroke="#9db5d6" d="M606.91,-573.32C632.92,-622.17 706.09,-759.59 731.01,-806.4"/>
 </g>
 <!-- a_ped_4 -->
-<g id="node37" class="node">
+<g id="node36" class="node">
 <title>a_ped_4</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="734.4" cy="-483.84" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="734.4" y="-480.14" font-family="Segoe UI" font-size="11.00">total</text>
 </g>
 <!-- ped&#45;&#45;a_ped_4 -->
-<g id="edge37" class="edge">
+<g id="edge35" class="edge">
 <title>ped&#45;&#45;a_ped_4</title>
-<path fill="none" stroke="#9db5d6" d="M630.72,-538.41C655.55,-525.34 688.92,-507.78 711.01,-496.15"/>
+<path fill="none" stroke="#9db5d6" d="M630.72,-538.41C655.54,-525.34 688.92,-507.78 711.01,-496.15"/>
 </g>
 <!-- a_ped_5 -->
-<g id="node38" class="node">
+<g id="node37" class="node">
 <title>a_ped_5</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" stroke-dasharray="5,2" cx="720" cy="-419.04" rx="43.2" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="720" y="-415.34" font-family="Segoe UI" font-size="11.00">observación</text>
 </g>
 <!-- ped&#45;&#45;a_ped_5 -->
-<g id="edge38" class="edge">
+<g id="edge36" class="edge">
 <title>ped&#45;&#45;a_ped_5</title>
 <path fill="none" stroke="#9db5d6" d="M613.1,-538.51C637.29,-511.48 683.6,-459.72 706.5,-434.13"/>
 </g>
 <!-- a_ped_6 -->
-<g id="node39" class="node">
+<g id="node38" class="node">
 <title>a_ped_6</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="478.8" cy="-696.24" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="start" x="457.8" y="-693.54" font-family="Segoe UI" text-decoration="underline" font-size="11.00">número</text>
 </g>
 <!-- ped&#45;&#45;a_ped_6 -->
-<g id="edge39" class="edge">
+<g id="edge37" class="edge">
 <title>ped&#45;&#45;a_ped_6</title>
 <path fill="none" stroke="#9db5d6" d="M582.79,-573.34C559.28,-601.12 513.8,-654.87 491.61,-681.1"/>
 </g>
 <!-- a_ped_7 -->
-<g id="node40" class="node">
+<g id="node39" class="node">
 <title>a_ped_7</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" stroke-dasharray="5,2" cx="453.6" cy="-368.64" rx="69.12" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="453.6" y="-364.94" font-family="Segoe UI" font-size="11.00">ubicación en el mapa</text>
 </g>
 <!-- ped&#45;&#45;a_ped_7 -->
-<g id="edge40" class="edge">
+<g id="edge38" class="edge">
 <title>ped&#45;&#45;a_ped_7</title>
 <path fill="none" stroke="#9db5d6" d="M584.31,-538.56C556.53,-502.45 492.67,-419.43 465.83,-384.54"/>
+</g>
+<!-- a_ped_8 -->
+<g id="node40" class="node">
+<title>a_ped_8</title>
+<ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="446.4" cy="-469.44" rx="40.32" ry="15.84"/>
+<text xml:space="preserve" text-anchor="middle" x="446.4" y="-465.74" font-family="Segoe UI" font-size="11.00">creado por</text>
+</g>
+<!-- ped&#45;&#45;a_ped_8 -->
+<g id="edge39" class="edge">
+<title>ped&#45;&#45;a_ped_8</title>
+<path fill="none" stroke="#9db5d6" d="M567,-538.36C538.18,-521.89 495.64,-497.58 469.54,-482.67"/>
 </g>
 <!-- pro -->
 <g id="node3" class="node">
@@ -223,57 +220,57 @@
 <text xml:space="preserve" text-anchor="middle" x="1173.6" y="-550.39" font-family="Segoe UI" font-size="16.00">Producto</text>
 </g>
 <!-- a_pro_0 -->
-<g id="node21" class="node">
+<g id="node20" class="node">
 <title>a_pro_0</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="1339.2" cy="-635.04" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="start" x="1318.2" y="-632.34" font-family="Segoe UI" text-decoration="underline" font-size="11.00">nombre</text>
 </g>
 <!-- pro&#45;&#45;a_pro_0 -->
-<g id="edge21" class="edge">
+<g id="edge19" class="edge">
 <title>pro&#45;&#45;a_pro_0</title>
 <path fill="none" stroke="#9db5d6" d="M1209.94,-573.22C1241.74,-588.43 1287.06,-610.1 1314.72,-623.33"/>
 </g>
 <!-- a_pro_1 -->
-<g id="node22" class="node">
+<g id="node21" class="node">
 <title>a_pro_1</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="1360.8" cy="-563.04" rx="46.08" ry="15.84"/>
-<text xml:space="preserve" text-anchor="start" x="1325.18" y="-560.34" font-family="Segoe UI" text-decoration="underline" font-size="11.00">presentación</text>
+<text xml:space="preserve" text-anchor="start" x="1325.17" y="-560.34" font-family="Segoe UI" text-decoration="underline" font-size="11.00">presentación</text>
 </g>
 <!-- pro&#45;&#45;a_pro_1 -->
-<g id="edge22" class="edge">
+<g id="edge20" class="edge">
 <title>pro&#45;&#45;a_pro_1</title>
 <path fill="none" stroke="#9db5d6" d="M1232.06,-558.09C1258.67,-559.11 1289.7,-560.31 1314.63,-561.26"/>
 </g>
 <!-- a_pro_2 -->
-<g id="node23" class="node">
+<g id="node22" class="node">
 <title>a_pro_2</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="1332" cy="-491.04" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="1332" y="-487.34" font-family="Segoe UI" font-size="11.00">precio</text>
 </g>
 <!-- pro&#45;&#45;a_pro_2 -->
-<g id="edge23" class="edge">
+<g id="edge21" class="edge">
 <title>pro&#45;&#45;a_pro_2</title>
 <path fill="none" stroke="#9db5d6" d="M1216.47,-538.3C1244.87,-526.68 1281.23,-511.81 1305.5,-501.88"/>
 </g>
 <!-- a_pro_3 -->
-<g id="node24" class="node">
+<g id="node23" class="node">
 <title>a_pro_3</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="1238.4" cy="-433.44" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="1238.4" y="-429.74" font-family="Segoe UI" font-size="11.00">activo</text>
 </g>
 <!-- pro&#45;&#45;a_pro_3 -->
-<g id="edge24" class="edge">
+<g id="edge22" class="edge">
 <title>pro&#45;&#45;a_pro_3</title>
 <path fill="none" stroke="#9db5d6" d="M1182.88,-538.3C1195.55,-514.37 1218.06,-471.86 1230.16,-449.01"/>
 </g>
 <!-- a_pro_4 -->
-<g id="node25" class="node">
+<g id="node24" class="node">
 <title>a_pro_4</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" stroke-dasharray="5,2" cx="1116" cy="-433.44" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="1116" y="-429.74" font-family="Segoe UI" font-size="11.00">imagen</text>
 </g>
 <!-- pro&#45;&#45;a_pro_4 -->
-<g id="edge25" class="edge">
+<g id="edge23" class="edge">
 <title>pro&#45;&#45;a_pro_4</title>
 <path fill="none" stroke="#9db5d6" d="M1165.35,-538.3C1154.15,-514.51 1134.3,-472.33 1123.5,-449.39"/>
 </g>
@@ -284,25 +281,25 @@
 <text xml:space="preserve" text-anchor="middle" x="1173.6" y="-838.39" font-family="Segoe UI" font-size="16.00">Marca</text>
 </g>
 <!-- r_agrupa -->
-<g id="node10" class="node">
+<g id="node9" class="node">
 <title>r_agrupa</title>
 <polygon fill="#e2f0d0" stroke="#a9d18e" stroke-width="1.5" points="1173.6,-728.64 1119.6,-699.84 1173.6,-671.04 1227.6,-699.84 1173.6,-728.64"/>
 <text xml:space="preserve" text-anchor="middle" x="1173.6" y="-696.14" font-family="Segoe UI" font-size="11.00">agrupa</text>
 </g>
 <!-- mar&#45;&#45;r_agrupa -->
-<g id="edge7" class="edge">
+<g id="edge5" class="edge">
 <title>mar&#45;&#45;r_agrupa</title>
 <path fill="none" stroke="#7ea6d8" stroke-width="2" d="M1173.6,-826.47C1173.6,-802.38 1173.6,-758.51 1173.6,-729.26"/>
 <text xml:space="preserve" text-anchor="middle" x="1161.6" y="-801.01" font-family="Segoe UI" font-size="14.00" fill="#1f1f1f">1</text>
 </g>
 <!-- a_mar_0 -->
-<g id="node20" class="node">
+<g id="node19" class="node">
 <title>a_mar_0</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="1317.6" cy="-872.64" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="start" x="1296.6" y="-869.94" font-family="Segoe UI" text-decoration="underline" font-size="11.00">nombre</text>
 </g>
 <!-- mar&#45;&#45;a_mar_0 -->
-<g id="edge20" class="edge">
+<g id="edge18" class="edge">
 <title>mar&#45;&#45;a_mar_0</title>
 <path fill="none" stroke="#9db5d6" d="M1232.17,-855.55C1249.92,-859.1 1268.81,-862.88 1284.29,-865.98"/>
 </g>
@@ -314,57 +311,57 @@
 <text xml:space="preserve" text-anchor="middle" x="597.6" y="-118.39" font-family="Segoe UI" font-size="16.00">Pago</text>
 </g>
 <!-- a_pag_0 -->
-<g id="node28" class="node">
+<g id="node27" class="node">
 <title>a_pag_0</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="432" cy="-159.84" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="432" y="-156.14" font-family="Segoe UI" font-size="11.00">método</text>
 </g>
 <!-- pag&#45;&#45;a_pag_0 -->
-<g id="edge28" class="edge">
+<g id="edge26" class="edge">
 <title>pag&#45;&#45;a_pag_0</title>
 <path fill="none" stroke="#9db5d6" d="M535.47,-137.35C511.42,-142.57 484.89,-148.34 464.72,-152.73"/>
 </g>
 <!-- a_pag_1 -->
-<g id="node29" class="node">
+<g id="node28" class="node">
 <title>a_pag_1</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="446.4" cy="-73.44" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="446.4" y="-69.74" font-family="Segoe UI" font-size="11.00">monto</text>
 </g>
 <!-- pag&#45;&#45;a_pag_1 -->
-<g id="edge29" class="edge">
+<g id="edge27" class="edge">
 <title>pag&#45;&#45;a_pag_1</title>
 <path fill="none" stroke="#9db5d6" d="M535.23,-103.05C514.57,-96.16 492.54,-88.82 475.59,-83.17"/>
 </g>
 <!-- a_pag_2 -->
-<g id="node30" class="node">
+<g id="node29" class="node">
 <title>a_pag_2</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="597.6" cy="-15.84" rx="40.32" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="597.6" y="-12.14" font-family="Segoe UI" font-size="11.00">referencia</text>
 </g>
 <!-- pag&#45;&#45;a_pag_2 -->
-<g id="edge30" class="edge">
+<g id="edge28" class="edge">
 <title>pag&#45;&#45;a_pag_2</title>
 <path fill="none" stroke="#9db5d6" d="M597.6,-102.5C597.6,-81.72 597.6,-50.61 597.6,-31.86"/>
 </g>
 <!-- a_pag_3 -->
-<g id="node31" class="node">
+<g id="node30" class="node">
 <title>a_pag_3</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="748.8" cy="-73.44" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="748.8" y="-69.74" font-family="Segoe UI" font-size="11.00">fecha</text>
 </g>
 <!-- pag&#45;&#45;a_pag_3 -->
-<g id="edge31" class="edge">
+<g id="edge29" class="edge">
 <title>pag&#45;&#45;a_pag_3</title>
 <path fill="none" stroke="#9db5d6" d="M659.97,-103.05C680.63,-96.16 702.66,-88.82 719.61,-83.17"/>
 </g>
 <!-- a_pag_4 -->
-<g id="node32" class="node">
+<g id="node31" class="node">
 <title>a_pag_4</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" stroke-dasharray="5,2" cx="784.8" cy="-159.84" rx="43.2" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="784.8" y="-156.14" font-family="Segoe UI" font-size="11.00">comprobante</text>
 </g>
 <!-- pag&#45;&#45;a_pag_4 -->
-<g id="edge32" class="edge">
+<g id="edge30" class="edge">
 <title>pag&#45;&#45;a_pag_4</title>
 <path fill="none" stroke="#9db5d6" d="M660.2,-135.88C688.57,-141.34 721.24,-147.62 746.01,-152.38"/>
 </g>
@@ -375,53 +372,47 @@
 <text xml:space="preserve" text-anchor="middle" x="597.6" y="-838.39" font-family="Segoe UI" font-size="16.00">Etapa</text>
 </g>
 <!-- r_pasa -->
-<g id="node12" class="node">
+<g id="node11" class="node">
 <title>r_pasa</title>
 <polygon fill="#e2f0d0" stroke="#a9d18e" stroke-width="1.5" points="597.6,-728.64 543.6,-699.84 597.6,-671.04 651.6,-699.84 597.6,-728.64"/>
 <text xml:space="preserve" text-anchor="middle" x="597.6" y="-696.14" font-family="Segoe UI" font-size="11.00">pasa por</text>
 </g>
 <!-- eta&#45;&#45;r_pasa -->
-<g id="edge11" class="edge">
+<g id="edge9" class="edge">
 <title>eta&#45;&#45;r_pasa</title>
 <path fill="none" stroke="#7ea6d8" stroke-width="2" d="M597.6,-826.47C597.6,-802.38 597.6,-758.51 597.6,-729.26"/>
 <text xml:space="preserve" text-anchor="middle" x="585.6" y="-801.01" font-family="Segoe UI" font-size="14.00" fill="#1f1f1f">M</text>
 </g>
 <!-- a_eta_0 -->
-<g id="node18" class="node">
+<g id="node17" class="node">
 <title>a_eta_0</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="453.6" cy="-937.44" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="453.6" y="-933.74" font-family="Segoe UI" font-size="11.00">nombre</text>
 </g>
 <!-- eta&#45;&#45;a_eta_0 -->
-<g id="edge18" class="edge">
+<g id="edge16" class="edge">
 <title>eta&#45;&#45;a_eta_0</title>
 <path fill="none" stroke="#9db5d6" d="M570.85,-861.23C542.87,-879.41 499.56,-907.57 474.15,-924.08"/>
 </g>
 <!-- a_eta_1 -->
-<g id="node19" class="node">
+<g id="node18" class="node">
 <title>a_eta_1</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" cx="741.6" cy="-937.44" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="start" x="725.85" y="-934.74" font-family="Segoe UI" text-decoration="underline" font-size="11.00">orden</text>
 </g>
 <!-- eta&#45;&#45;a_eta_1 -->
-<g id="edge19" class="edge">
+<g id="edge17" class="edge">
 <title>eta&#45;&#45;a_eta_1</title>
 <path fill="none" stroke="#9db5d6" d="M624.35,-861.23C652.33,-879.41 695.64,-907.57 721.05,-924.08"/>
 </g>
 <!-- r_realiza&#45;&#45;ped -->
 <g id="edge2" class="edge">
 <title>r_realiza&#45;&#45;ped</title>
-<path fill="none" stroke="#7ea6d8" stroke-width="2" d="M443.87,-609.06C472.58,-599.12 514.38,-584.65 547.15,-573.3"/>
-<text xml:space="preserve" text-anchor="middle" x="531.43" y="-586.77" font-family="Segoe UI" font-size="14.00" fill="#1f1f1f">N</text>
-</g>
-<!-- r_registra&#45;&#45;ped -->
-<g id="edge4" class="edge">
-<title>r_registra&#45;&#45;ped</title>
-<path fill="none" stroke="#7ea6d8" stroke-width="2" d="M443.87,-502.62C472.58,-512.56 514.38,-527.03 547.15,-538.38"/>
-<text xml:space="preserve" text-anchor="middle" x="523.58" y="-538.24" font-family="Segoe UI" font-size="14.00" fill="#1f1f1f">N</text>
+<path fill="none" stroke="#7ea6d8" stroke-width="2" d="M465.81,-555.84C488.88,-555.84 515.69,-555.84 539.08,-555.84"/>
+<text xml:space="preserve" text-anchor="middle" x="518.3" y="-563.17" font-family="Segoe UI" font-size="14.00" fill="#1f1f1f">N</text>
 </g>
 <!-- r_contiene&#45;&#45;pro -->
-<g id="edge6" class="edge">
+<g id="edge4" class="edge">
 <title>r_contiene&#45;&#45;pro</title>
 <path fill="none" stroke="#7ea6d8" stroke-width="2" d="M941.13,-555.84C991.15,-555.84 1064.41,-555.84 1115.28,-555.84"/>
 <text xml:space="preserve" text-anchor="middle" x="1094.49" y="-563.17" font-family="Segoe UI" font-size="14.00" fill="#1f1f1f">M</text>
@@ -433,7 +424,7 @@
 <text xml:space="preserve" text-anchor="middle" x="835.2" y="-422.54" font-family="Segoe UI" font-size="11.00">cantidad</text>
 </g>
 <!-- r_contiene&#45;&#45;ar_contiene_0 -->
-<g id="edge41" class="edge">
+<g id="edge40" class="edge">
 <title>r_contiene&#45;&#45;ar_contiene_0</title>
 <path fill="none" stroke="#9db5d6" d="M876.12,-531.46C865.97,-505.36 850.15,-464.69 841.45,-442.32"/>
 </g>
@@ -444,24 +435,24 @@
 <text xml:space="preserve" text-anchor="middle" x="957.6" y="-422.54" font-family="Segoe UI" font-size="11.00">precio al comprar</text>
 </g>
 <!-- r_contiene&#45;&#45;ar_contiene_1 -->
-<g id="edge42" class="edge">
+<g id="edge41" class="edge">
 <title>r_contiene&#45;&#45;ar_contiene_1</title>
 <path fill="none" stroke="#9db5d6" d="M898.31,-532.97C912.76,-506.95 935.99,-465.14 948.66,-442.34"/>
 </g>
 <!-- r_agrupa&#45;&#45;pro -->
-<g id="edge8" class="edge">
+<g id="edge6" class="edge">
 <title>r_agrupa&#45;&#45;pro</title>
 <path fill="none" stroke="#7ea6d8" stroke-width="2" d="M1173.6,-670.35C1173.6,-641.06 1173.6,-597.14 1173.6,-573.1"/>
 <text xml:space="preserve" text-anchor="middle" x="1185.6" y="-589.21" font-family="Segoe UI" font-size="14.00" fill="#1f1f1f">N</text>
 </g>
 <!-- r_paga&#45;&#45;pag -->
-<g id="edge10" class="edge">
+<g id="edge8" class="edge">
 <title>r_paga&#45;&#45;pag</title>
 <path fill="none" stroke="#7ea6d8" stroke-width="2" d="M597.6,-310.26C597.6,-266.12 597.6,-184.07 597.6,-145.26"/>
 <text xml:space="preserve" text-anchor="middle" x="609.6" y="-161.36" font-family="Segoe UI" font-size="14.00" fill="#1f1f1f">0..1</text>
 </g>
 <!-- r_pasa&#45;&#45;ped -->
-<g id="edge12" class="edge">
+<g id="edge10" class="edge">
 <title>r_pasa&#45;&#45;ped</title>
 <path fill="none" stroke="#7ea6d8" stroke-width="2" d="M597.6,-670.35C597.6,-641.06 597.6,-597.14 597.6,-573.1"/>
 <text xml:space="preserve" text-anchor="middle" x="609.6" y="-589.21" font-family="Segoe UI" font-size="14.00" fill="#1f1f1f">N</text>
@@ -473,29 +464,29 @@
 <text xml:space="preserve" text-anchor="middle" x="475.2" y="-764.54" font-family="Segoe UI" font-size="11.00">fecha</text>
 </g>
 <!-- r_pasa&#45;&#45;ar_pasa_0 -->
-<g id="edge43" class="edge">
+<g id="edge42" class="edge">
 <title>r_pasa&#45;&#45;ar_pasa_0</title>
 <path fill="none" stroke="#9db5d6" d="M570.74,-714.85C548.92,-727.04 518.5,-744.04 497.89,-755.56"/>
 </g>
 <!-- a_a_ped_7_0 -->
-<g id="node26" class="node">
+<g id="node25" class="node">
 <title>a_a_ped_7_0</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" stroke-dasharray="5,2" cx="360" cy="-289.44" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="360" y="-285.74" font-family="Segoe UI" font-size="11.00">latitud</text>
 </g>
 <!-- a_a_ped_7_1 -->
-<g id="node27" class="node">
+<g id="node26" class="node">
 <title>a_a_ped_7_1</title>
 <ellipse fill="#dcdcdc" stroke="#9a9a9a" stroke-dasharray="5,2" cx="482.4" cy="-260.64" rx="36" ry="15.84"/>
 <text xml:space="preserve" text-anchor="middle" x="482.4" y="-256.94" font-family="Segoe UI" font-size="11.00">longitud</text>
 </g>
 <!-- a_ped_7&#45;&#45;a_a_ped_7_0 -->
-<g id="edge26" class="edge">
+<g id="edge24" class="edge">
 <title>a_ped_7&#45;&#45;a_a_ped_7_0</title>
 <path fill="none" stroke="#9db5d6" d="M435.11,-352.99C418.17,-338.66 393.3,-317.61 376.88,-303.72"/>
 </g>
 <!-- a_ped_7&#45;&#45;a_a_ped_7_1 -->
-<g id="edge27" class="edge">
+<g id="edge25" class="edge">
 <title>a_ped_7&#45;&#45;a_a_ped_7_1</title>
 <path fill="none" stroke="#9db5d6" d="M457.85,-352.7C463.29,-332.29 472.68,-297.09 478.13,-276.64"/>
 </g>

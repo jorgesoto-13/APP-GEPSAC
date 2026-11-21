@@ -14,8 +14,7 @@ graph conceptual {
   mar [label="Marca", shape=box, style=filled, fillcolor="#FAD7A0", color="#E59866", penwidth=2, fontsize=16, width=1.60, height=0.46, pos="17.00,12.00!"]
   pag [label="Pago", shape=box, style=filled, fillcolor="#FAD7A0", color="#E59866", penwidth=2, fontsize=16, width=1.60, height=0.46, pos="9.00,2.00!", peripheries=2]
   eta [label="Etapa", shape=box, style=filled, fillcolor="#FAD7A0", color="#E59866", penwidth=2, fontsize=16, width=1.60, height=0.46, pos="9.00,12.00!"]
-  r_realiza [label="realiza\n(cliente)", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="6.40,8.90!"]
-  r_registra [label="registra\n(creador)", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="6.40,7.10!"]
+  r_realiza [label="realiza", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="6.40,8.00!"]
   r_contiene [label="contiene", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="13.00,8.00!"]
   r_agrupa [label="agrupa", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="17.00,10.00!"]
   r_paga [label="se paga con", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="9.00,5.00!"]
@@ -48,13 +47,12 @@ graph conceptual {
   a_ped_5 [label="observación", shape=ellipse, style="filled,dashed", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.20, height=0.44, pos="10.70,6.10!"]
   a_ped_6 [label=<<U>número</U>>, shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="7.35,9.95!"]
   a_ped_7 [label="ubicación en el mapa", shape=ellipse, style="filled,dashed", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.92, height=0.44, pos="7.00,5.40!"]
+  a_ped_8 [label="creado por", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.12, height=0.44, pos="6.90,6.80!"]
   ar_contiene_0 [label="cantidad", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="12.30,6.20!"]
   ar_contiene_1 [label="precio al comprar", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.68, height=0.44, pos="14.00,6.20!"]
   ar_pasa_0 [label="fecha", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="7.30,10.95!"]
   usu -- r_realiza [taillabel="1"]
   r_realiza -- ped [headlabel="N"]
-  usu -- r_registra [taillabel="1"]
-  r_registra -- ped [headlabel="N"]
   ped -- r_contiene [taillabel="N"]
   r_contiene -- pro [headlabel="M"]
   mar -- r_agrupa [taillabel="1"]
@@ -92,6 +90,7 @@ graph conceptual {
   ped -- a_ped_5
   ped -- a_ped_6
   ped -- a_ped_7
+  ped -- a_ped_8
   r_contiene -- ar_contiene_0
   r_contiene -- ar_contiene_1
   r_pasa -- ar_pasa_0

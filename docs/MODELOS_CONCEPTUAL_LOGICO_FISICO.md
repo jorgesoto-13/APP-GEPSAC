@@ -20,8 +20,7 @@ El modelo lógico detallado, al estilo Oracle Data Modeler, está en [`MODELO_LO
 | Relación | Cardinalidad | Por qué |
 |---|---|---|
 | usuario **guarda** dirección_guardada | 1 : 0..5 | Máximo 5 direcciones por usuario (la más reciente primero) |
-| usuario **realiza** pedido (cliente) | 1 : 0..N | Un pedido tiene un solo `clienteId`; un usuario puede no tener pedidos |
-| usuario **registra** pedido (creador) | 1 : 0..N | `creadoPor`: el cliente o el administrador; siempre uno |
+| usuario **realiza** pedido | 1 : 0..N | Un pedido tiene un solo `clienteId`; un usuario puede no tener pedidos. `creadoPor` (cliente o administrador) es un atributo más del pedido en el conceptual |
 | etapa **actual de** pedido | 1 : 0..N | Cada pedido tiene un `estado`; una etapa puede no tener pedidos |
 | marca **agrupa** producto | 1 : 0..N | Cada producto tiene una marca |
 | pedido **contiene** detalle_pedido | 1 : **1..N** | Un pedido **debe** tener al menos un ítem (regla `items.size() > 0`) |
@@ -54,8 +53,7 @@ Detalle de campos y reglas del físico de Firestore: [`MODELO_FIRESTORE.md`](MOD
 
 | Relación | Entidades | Cardinalidad | Atributos de la relación |
 |---|---|---|---|
-| **realiza** | USUARIO (cliente) – PEDIDO | 1 : N | |
-| **registra** | USUARIO (quien lo crea: cliente o administrador) – PEDIDO | 1 : N | |
+| **realiza** | USUARIO – PEDIDO | 1 : N | Quién creó el pedido (cliente o administrador) va como atributo `creado por` del pedido |
 | **contiene** | PEDIDO – PRODUCTO | **M : N** | cantidad, precio unitario al comprar |
 | **agrupa** | MARCA – PRODUCTO | 1 : N | |
 | **se paga con** | PEDIDO – PAGO | 1 : 0..1 | |
