@@ -60,6 +60,18 @@ class SeguimientoViewModel(
     fun pagar(id: String, metodo: String, referencia: String, comprobante: String) =
         ejecutar("Pago recibido con $metodo. ¡Gracias!") { repo.pagar(id, metodo, referencia, comprobante) }
 
+    // ---------- Revisión del pago por el administrador ----------
+
+    fun aprobarPago(id: String) =
+        ejecutar("Pago aprobado correctamente. El pedido puede pasar a preparación.") {
+            repo.aprobarPago(id)
+        }
+
+    fun observarPago(id: String, motivo: String) =
+        ejecutar("Pago observado. El cliente puede corregir y reenviar su comprobante.") {
+            repo.observarPago(id, motivo)
+        }
+
     /**
      * «Volver a pedir»: agrega al carrito los productos de este pedido con el precio y el nombre de hoy.
      * Los que ya no existen o están inactivos se omiten y se avisa.

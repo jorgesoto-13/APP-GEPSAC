@@ -79,15 +79,27 @@ internal fun DocumentSnapshot.aPedido(): Pedido? {
         )
     }
 
+
     val pago = (d["pago"] as? Map<*, *>)?.let { m ->
+        val estadoPedido = (d["estado"] as? Number)?.toInt() ?: 0
+
         Pago(
             metodo = m["metodo"].aTexto(),
             monto = m["monto"].aDouble(),
             referencia = m["referencia"].aTexto(),
             fecha = m["fecha"].aMs(),
-            comprobante = m["comprobante"].aTexto()
+            comprobante = m["comprobante"].aTexto(),
+            estadoRevision = m["estadoRevision"].aTexto().ifEmpty {
+                if (estadoPedido >= com.gepsac.app.model.ESTADO_PAGADO)
+                    com.gepsac.app.model.PAGO_APROBADO
+                else
+                    com.gepsac.app.model.PAGO_PENDIENTE
+            },
+            observacionAdmin = m["observacionAdmin"].aTexto(),
+            fechaRevision = m["fechaRevision"].aMs()
         )
     }
+
 
     return Pedido(
         id = id,

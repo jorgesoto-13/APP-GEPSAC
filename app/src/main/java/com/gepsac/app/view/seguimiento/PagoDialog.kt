@@ -78,10 +78,10 @@ fun AppCompatActivity.mostrarPago(
         when (m) {
             "Yape", "Plin" -> {
                 d.etC1.soloDigitos(9)
-                d.etC2.soloDigitos(6)
+                d.etC2.soloDigitos(3)
                 d.etC2.inputType = InputType.TYPE_CLASS_NUMBER
                 d.tilC1.hint = "Celular de " + m + " (9 dígitos)"
-                d.tilC2.hint = "Código de operación (6 dígitos)"
+                d.tilC2.hint = "Código de operación (3 dígitos)"
             }
             "Transferencia" -> {
                 d.etC1.soloDigitos(12)
@@ -128,7 +128,10 @@ fun AppCompatActivity.mostrarPago(
         val c1 = d.etC1.text.toString()
         val c2 = d.etC2.text.toString()
         val ok = when (metodo()) {
-            "Yape", "Plin" -> listOf(d.tilC1.err(Validar.celularPago(c1)), d.tilC2.err(Validar.codigo(c2, 6, 6)))
+            "Yape", "Plin" -> listOf(
+                d.tilC1.err(Validar.celularPago(c1)),
+                d.tilC2.err(Validar.codigo(c2, 3, 3))
+            )
             "Transferencia" -> listOf(d.tilC1.err(Validar.codigo(c1, 6, 12)))
             else -> listOf(
                 d.tilC1.err(Validar.tarjeta(c1)),

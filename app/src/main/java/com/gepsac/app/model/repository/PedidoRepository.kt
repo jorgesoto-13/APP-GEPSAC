@@ -1,3 +1,4 @@
+
 package com.gepsac.app.model.repository
 
 import com.gepsac.app.model.NuevoPedido
@@ -6,31 +7,31 @@ import com.gepsac.app.model.Usuario
 import kotlinx.coroutines.flow.Flow
 
 interface PedidoRepository {
-    /** Todos los pedidos (administrador). */
     fun observarTodos(): Flow<List<Pedido>>
 
-    /** Solo los pedidos de un cliente. */
     fun observarDeCliente(clienteId: String): Flow<List<Pedido>>
 
-    /** Un pedido; emite null si se elimina o no existe. */
     fun observar(id: String): Flow<Pedido?>
 
-    /**
-     * Crea el pedido con el siguiente número. Si lo crea el administrador entra "Registrado",
-     * si lo crea el cliente entra "Por registrar". Devuelve el número asignado.
-     */
     suspend fun crear(nuevo: NuevoPedido, creador: Usuario): Result<Long>
 
     suspend fun avanzar(id: String): Result<Unit>
 
     suspend fun retroceder(id: String): Result<Unit>
 
-    /**
-     * Registra el pago de un pedido "Registrado" y lo pasa a "Pagado".
-     * [comprobante] es la captura del pago en Base64 (opcional, vacío si no hay).
-     */
-    suspend fun pagar(id: String, metodo: String, referencia: String, comprobante: String = ""): Result<Unit>
+    /** Registra o reenvía un pago. Queda pendiente de revisión administrativa. */
+    suspend fun pagar(
+        id: String,
+        metodo: String,
+        referencia: String,
+        comprobante: String = ""
+    ): Result<Unit>
 
-    /** Solo se puede eliminar un pedido que aún no está pagado. */
+    /** El administrador aprueba el pago y mueve el pedido a "Pagado". */
+    suspend fun aprobarPago(id: String): Result<Unit>
+
+    /** El administrador observa el pago indicando el motivo. */
+    suspend fun observarPago(id: String, motivo: String): Result<Unit>
+
     suspend fun eliminar(id: String): Result<Unit>
 }
