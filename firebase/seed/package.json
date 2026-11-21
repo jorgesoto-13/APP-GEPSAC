@@ -3,7 +3,8 @@
   "private": true,
   "description": "Crea los datos iniciales de GEPSAC en Firebase (contador, administrador y productos de ejemplo)",
   "scripts": {
-    "seed": "node seed.js"
+    "seed": "node seed.js",
+    "exportar": "node exportar-modelo.js"
   },
   "dependencies": {
     "firebase-admin": "^14.5.1"
