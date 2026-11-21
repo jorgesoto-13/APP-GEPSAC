@@ -3,6 +3,9 @@
 Es el modelo que implementa la app (`model/firebase/`). Las reglas de seguridad están en
 [`firebase/firestore.rules`](../firebase/firestore.rules) y los pasos de configuración en [`firebase/README.md`](../firebase/README.md).
 
+> **Modelo físico en JSON:** [`modelo_fisico_firestore.json`](modelo_fisico_firestore.json) describe cada colección
+> (ruta, campos, tipos, reglas) y trae un documento de ejemplo real de cada una, más las relaciones entre ellas.
+
 ## 1. Decisiones de diseño
 
 | Tema | Decisión | Motivo |
@@ -26,6 +29,7 @@ Es el modelo que implementa la app (`model/firebase/`). Las reglas de seguridad 
 | email | string | igual al de Auth |
 | telefono | string | `^9\d{8}`, **sin espacios** |
 | rol | string | `"cliente"` o `"admin"` |
+| direcciones | array de string (opcional) | hasta 5 direcciones de entrega guardadas, la más reciente primero |
 | creadoEn | timestamp | |
 
 El registro desde la app solo permite `cliente`. El primer admin se crea a mano en la consola.
@@ -49,14 +53,15 @@ El registro desde la app solo permite `cliente`. El primer admin se crea a mano 
 | clienteNombre, clienteEmail | string | copia del momento (el admin los ve sin leer `usuarios`) |
 | creadoPor | string | uid de quien lo creó (cliente o admin) |
 | telefono | string | `^9\d{8}`, sin espacios |
-| direccion | string | 8 a 120 |
-| fechaEntrega | timestamp | hoy o futura (se valida en la app) |
+| direccion | string | 8 a 120, con nombre de calle |
+| latitud, longitud | number (opcionales) | punto de entrega marcado en el mapa (-90 a 90 y -180 a 180) |
+| fechaEntrega | timestamp | desde hoy hasta un año adelante (se valida en la app) |
 | observacion | string | hasta 150 |
 | items | array de mapas | `{productoId, nombre, precio, cantidad}`, cantidad de 1 a 100 |
 | total | number | suma de `precio * cantidad` |
 | estado | int | 0 a 5 (índice de `ESTADOS`) |
 | tiempos | map | `{ "0": ts, "1": ts, ... }`, una clave por etapa alcanzada |
-| pago | map (opcional) | `{metodo, monto, referencia, fecha}` |
+| pago | map (opcional) | `{metodo, monto, referencia, fecha, comprobante}`; `comprobante` es la captura del pago en Base64 (obligatoria con Yape, Plin y transferencia; máx. 250 000 caracteres) |
 | creadoEn | timestamp | |
 
 **No se guarda nunca** número de tarjeta, vencimiento ni CVV. De `PagoDialog` solo se conserva el método, el monto y la

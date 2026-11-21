@@ -1,0 +1,314 @@
+{
+  "modelo": "Modelo físico de la base de datos GEPSAC",
+  "motor": "Cloud Firestore (NoSQL orientado a documentos, plan Spark gratuito)",
+  "autenticacion": "Firebase Authentication (correo y contraseña). Las contraseñas no se guardan en la base de datos.",
+  "version": "2026-11-21",
+  "nota": "En Firestore no hay tablas: cada 'colección' agrupa documentos JSON. Los documentos se crean al guardar el primer dato desde la app; no existe un script de estructura como en SQL.",
+  "colecciones": {
+    "usuarios": {
+      "ruta": "usuarios/{uid}",
+      "descripcion": "Perfil de cada usuario. El id del documento es el uid de Firebase Authentication.",
+      "campos": {
+        "nombre": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "3 a 50 caracteres; solo letras y espacios"
+        },
+        "email": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "igual al correo de Authentication"
+        },
+        "telefono": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "9 dígitos, empieza con 9, sin espacios (^9[0-9]{8}$)"
+        },
+        "rol": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "'cliente' o 'admin'"
+        },
+        "direcciones": {
+          "tipo": "array<string>",
+          "obligatorio": false,
+          "regla": "hasta 5 direcciones de entrega guardadas; la más reciente primero"
+        },
+        "creadoEn": {
+          "tipo": "timestamp",
+          "obligatorio": true,
+          "regla": "lo pone el servidor"
+        }
+      },
+      "ejemplo": {
+        "nombre": "Leopoldo Brito",
+        "email": "cliente@correo.com",
+        "telefono": "984351959",
+        "rol": "cliente",
+        "direcciones": [
+          "Av. Larco 345, Miraflores, Lima",
+          "Jr. de la Unión 120, Cercado de Lima"
+        ],
+        "creadoEn": "2026-11-17T22:05:45Z"
+      }
+    },
+    "productos": {
+      "ruta": "productos/{id}",
+      "descripcion": "Catálogo de cafés. La foto se guarda en Base64 dentro del documento (Firebase Storage exige plan de pago).",
+      "campos": {
+        "nombre": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "3 a 40 caracteres"
+        },
+        "marca": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "'Caffe' o 'Kaphiy'"
+        },
+        "presentacion": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "1 a 20 caracteres (ej. '250 gr')"
+        },
+        "precio": {
+          "tipo": "number",
+          "obligatorio": true,
+          "regla": "mayor a 0 y hasta 9999, con máximo 2 decimales"
+        },
+        "activo": {
+          "tipo": "boolean",
+          "obligatorio": true,
+          "regla": "si es true se muestra a los clientes"
+        },
+        "imagen": {
+          "tipo": "string",
+          "obligatorio": false,
+          "regla": "JPEG en Base64; vacío si no hay foto; máximo 300 000 caracteres"
+        },
+        "actualizadoEn": {
+          "tipo": "timestamp",
+          "obligatorio": true,
+          "regla": "lo pone el servidor"
+        }
+      },
+      "ejemplo": {
+        "nombre": "Café Caffe Blend",
+        "marca": "Caffe",
+        "presentacion": "250 gr",
+        "precio": 12,
+        "activo": true,
+        "imagen": "<JPEG en Base64>",
+        "actualizadoEn": "2026-11-18T10:00:00Z"
+      }
+    },
+    "pedidos": {
+      "ruta": "pedidos/{id}",
+      "descripcion": "Un pedido con sus ítems, sus fechas por etapa y su pago. Los ítems y el pago van dentro del documento (relaciones 1:N y 1:1 incrustadas).",
+      "campos": {
+        "numero": {
+          "tipo": "number (entero)",
+          "obligatorio": true,
+          "regla": "viene del contador contadores/pedidos; nunca se repite"
+        },
+        "clienteId": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "uid del cliente (referencia a usuarios/{uid})"
+        },
+        "clienteNombre": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "copia del nombre al momento del pedido"
+        },
+        "clienteEmail": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "copia del correo al momento del pedido"
+        },
+        "creadoPor": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "uid de quien lo creó (el cliente o un administrador)"
+        },
+        "telefono": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "9 dígitos, empieza con 9"
+        },
+        "direccion": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "8 a 120 caracteres, con nombre de calle"
+        },
+        "latitud": {
+          "tipo": "number",
+          "obligatorio": false,
+          "regla": "-90 a 90; punto de entrega marcado en el mapa"
+        },
+        "longitud": {
+          "tipo": "number",
+          "obligatorio": false,
+          "regla": "-180 a 180; punto de entrega marcado en el mapa"
+        },
+        "fechaEntrega": {
+          "tipo": "timestamp",
+          "obligatorio": true,
+          "regla": "desde hoy hasta un año adelante"
+        },
+        "observacion": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "hasta 150 caracteres (puede ser vacío)"
+        },
+        "items": {
+          "tipo": "array<map>",
+          "obligatorio": true,
+          "regla": "1 a 50 elementos {productoId, nombre, precio, cantidad}; cantidad de 1 a 100; nombre y precio copiados al comprar"
+        },
+        "total": {
+          "tipo": "number",
+          "obligatorio": true,
+          "regla": "suma de precio por cantidad; mayor a 0"
+        },
+        "estado": {
+          "tipo": "number (entero)",
+          "obligatorio": true,
+          "regla": "0 Por registrar, 1 Registrado, 2 Pagado, 3 En preparación, 4 Despachado, 5 Entregado"
+        },
+        "tiempos": {
+          "tipo": "map<string, timestamp>",
+          "obligatorio": true,
+          "regla": "una clave por etapa alcanzada: '0', '1', '2'..."
+        },
+        "pago": {
+          "tipo": "map",
+          "obligatorio": false,
+          "regla": "{metodo, monto, referencia, fecha, comprobante}; existe desde que el pedido está Pagado"
+        },
+        "creadoEn": {
+          "tipo": "timestamp",
+          "obligatorio": true,
+          "regla": "lo pone el servidor"
+        }
+      },
+      "campos_de_pago": {
+        "metodo": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "'Yape', 'Plin', 'Transferencia' o 'Tarjeta'"
+        },
+        "monto": {
+          "tipo": "number",
+          "obligatorio": true,
+          "regla": "igual al total del pedido"
+        },
+        "referencia": {
+          "tipo": "string",
+          "obligatorio": true,
+          "regla": "código de operación, N° de operación o 'Tarjeta ****1234'. Nunca se guarda el número completo de la tarjeta, el vencimiento ni el CVV"
+        },
+        "fecha": {
+          "tipo": "timestamp",
+          "obligatorio": true,
+          "regla": "lo pone el servidor"
+        },
+        "comprobante": {
+          "tipo": "string",
+          "obligatorio": false,
+          "regla": "captura del pago en Base64 (JPEG); obligatoria con Yape, Plin y Transferencia; máximo 250 000 caracteres"
+        }
+      },
+      "ejemplo": {
+        "numero": 100003,
+        "clienteId": "jHUcA5Dz2XMQHxmGhZNoTFwgv3J2",
+        "clienteNombre": "Leopoldo Brito",
+        "clienteEmail": "cliente@correo.com",
+        "creadoPor": "jHUcA5Dz2XMQHxmGhZNoTFwgv3J2",
+        "telefono": "984351959",
+        "direccion": "Av. Larco 345, Miraflores, Lima",
+        "latitud": -12.12186,
+        "longitud": -77.03005,
+        "fechaEntrega": "2026-11-25T00:00:00Z",
+        "observacion": "Tocar el timbre dos veces",
+        "items": [
+          {
+            "productoId": "p1",
+            "nombre": "Café Caffe Blend 250 gr",
+            "precio": 12,
+            "cantidad": 2
+          },
+          {
+            "productoId": "p3",
+            "nombre": "Café Kaphiy Blend 500 gr",
+            "precio": 27,
+            "cantidad": 1
+          }
+        ],
+        "total": 51,
+        "estado": 2,
+        "tiempos": {
+          "0": "2026-11-20T09:00:00Z",
+          "1": "2026-11-20T09:30:00Z",
+          "2": "2026-11-20T10:15:00Z"
+        },
+        "pago": {
+          "metodo": "Yape",
+          "monto": 51,
+          "referencia": "482915",
+          "fecha": "2026-11-20T10:15:00Z",
+          "comprobante": "<captura en Base64>"
+        },
+        "creadoEn": "2026-11-20T09:00:00Z"
+      }
+    },
+    "contadores": {
+      "ruta": "contadores/pedidos",
+      "descripcion": "Un único documento que reparte el número correlativo de los pedidos (equivale a una SEQUENCE de SQL). Se incrementa dentro de la misma transacción que crea el pedido.",
+      "campos": {
+        "ultimo": {
+          "tipo": "number (entero)",
+          "obligatorio": true,
+          "regla": "último número entregado; se crea a mano con 100000"
+        }
+      },
+      "ejemplo": {
+        "ultimo": 100003
+      }
+    }
+  },
+  "relaciones": [
+    {
+      "de": "pedidos.clienteId",
+      "a": "usuarios/{uid}",
+      "tipo": "N a 1 (por referencia)"
+    },
+    {
+      "de": "pedidos.creadoPor",
+      "a": "usuarios/{uid}",
+      "tipo": "N a 1 (por referencia)"
+    },
+    {
+      "de": "pedidos.items[].productoId",
+      "a": "productos/{id}",
+      "tipo": "N a 1 (referencia; nombre y precio se copian)"
+    },
+    {
+      "de": "pedidos.items",
+      "a": "pedido",
+      "tipo": "1 a N incrustada (array dentro del documento)"
+    },
+    {
+      "de": "pedidos.pago",
+      "a": "pedido",
+      "tipo": "1 a 1 incrustada (mapa dentro del documento)"
+    },
+    {
+      "de": "pedidos.tiempos",
+      "a": "pedido",
+      "tipo": "1 a N incrustada (historial de etapas)"
+    }
+  ],
+  "indices": "Ninguno: las consultas son por un solo campo (clienteId, rol) y la app ordena las listas.",
+  "reglas_de_seguridad": "firebase/firestore.rules"
+}
