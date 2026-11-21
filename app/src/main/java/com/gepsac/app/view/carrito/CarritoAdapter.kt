@@ -9,7 +9,10 @@ import com.gepsac.app.view.common.AnimadorLista
 import com.gepsac.app.view.common.soles
 import com.gepsac.app.view.common.mostrarProducto
 
-class CarritoAdapter(private val onCambio: (String, Int) -> Unit) : RecyclerView.Adapter<CarritoAdapter.VH>() {
+class CarritoAdapter(
+    private val onCambio: (String, Int) -> Unit,
+    private val onEliminar: (String) -> Unit
+) : RecyclerView.Adapter<CarritoAdapter.VH>() {
     private var data = listOf<ItemPedido>()
     private val animador = AnimadorLista()
     fun submit(l: List<ItemPedido>) { data = l; notifyDataSetChanged() }
@@ -30,6 +33,9 @@ class CarritoAdapter(private val onCambio: (String, Int) -> Unit) : RecyclerView
             img.mostrarProducto(item.imagen)
             btnMas.setOnClickListener { onCambio(item.productoId, 1) }
             btnMenos.setOnClickListener { onCambio(item.productoId, -1) }
+            btnEliminar.setOnClickListener {
+                onEliminar(item.productoId)
+            }
         }
         animador.animar(h.itemView, i)
     }

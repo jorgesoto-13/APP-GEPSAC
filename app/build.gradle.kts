@@ -55,6 +55,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.4")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 
     // Firebase (las versiones las fija el BoM).
     // 34.12.0 y no uno más nuevo: desde BoM 34.13 las libs se compilan con metadata de Kotlin 2.3+ (35.x: 2.4)

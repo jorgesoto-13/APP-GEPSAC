@@ -95,6 +95,19 @@ class CarritoViewModel(
         return true
     }
 
+    fun eliminar(productoId: String) {
+        local.guardar(
+            local.items.value.filterNot {
+                it.productoId == productoId
+            }
+        )
+    }
+
+
+    fun vaciar() {
+        local.guardar(emptyList())
+    }
+
     /** Guarda [dir] entre las direcciones del cliente (sin repetir, la más reciente primero, máximo 5). */
     fun guardarDireccion(dir: String) {
         val u = auth.usuarioActual ?: return

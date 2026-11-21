@@ -78,10 +78,20 @@ class CarritoFragment : Fragment() {
     }
 
     override fun onViewCreated(v: View, s: Bundle?) {
-        adapter = CarritoAdapter { id, delta ->
-            if (!vm.cambiarCantidad(id, delta))
-                Toast.makeText(requireContext(), "Máximo " + Validar.MAX_CANT + " unidades por producto", Toast.LENGTH_SHORT).show()
-        }
+        adapter = CarritoAdapter(
+            onCambio = { id, delta ->
+                if (!vm.cambiarCantidad(id, delta)) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Máximo ${Validar.MAX_CANT} unidades por producto",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            },
+            onEliminar = { id ->
+                confirmarEliminar(id)
+            }
+        )
         b.rv.layoutManager = LinearLayoutManager(requireContext())
         b.rv.adapter = adapter
         vm.carrito.observe(viewLifecycleOwner) { l ->
@@ -97,6 +107,40 @@ class CarritoFragment : Fragment() {
         }
         vm.error.observarEvento(viewLifecycleOwner) { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
         b.btnConfirmar.setOnClickListener { checkout() }
+        b.btnVaciar.setOnClickListener {
+            confirmarVaciar()
+        }
+    }
+
+    private fun confirmarEliminar(id: String) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Eliminar producto")
+            .setMessage("¿Deseas eliminar este producto del carrito?")
+            .setNegativeButton("Cancelar", null)
+            .setPositiveButton("Eliminar") { _, _ ->
+                vm.eliminar(id)
+            }
+            .show()
+    }
+
+    private fun confirmarVaciar() {
+        if (vm.carrito.value.orEmpty().isEmpty()) {
+            Toast.makeText(
+                requireContext(),
+                "El carrito ya está vacío",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Vaciar carrito")
+            .setMessage("¿Deseas eliminar todos los productos?")
+            .setNegativeButton("Cancelar", null)
+            .setPositiveButton("Vaciar") { _, _ ->
+                vm.vaciar()
+            }
+            .show()
     }
 
     private fun actualizarBoton() {
