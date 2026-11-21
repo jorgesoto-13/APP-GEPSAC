@@ -1,3 +1,4 @@
+
 package com.gepsac.app.model
 
 val ESTADOS = listOf("Por registrar", "Registrado", "Pagado", "En preparación", "Despachado", "Entregado")
@@ -8,19 +9,32 @@ val ULTIMO_ESTADO = ESTADOS.size - 1
 
 val METODOS_PAGO = listOf("Yape", "Plin", "Transferencia", "Tarjeta")
 
-/** Línea del pedido. Guarda nombre y precio del momento: si luego cambia el producto, el pedido no se altera. */
-data class ItemPedido(val productoId: String, val nombre: String, val precio: Double, val cantidad: Int, val imagen: String="")
+const val PAGO_PENDIENTE = "Pendiente"
+const val PAGO_APROBADO = "Aprobado"
+const val PAGO_OBSERVADO = "Observado"
+
+/** Línea del pedido. Guarda nombre y precio del momento. */
+data class ItemPedido(
+    val productoId: String,
+    val nombre: String,
+    val precio: Double,
+    val cantidad: Int,
+    val imagen: String = ""
+)
 
 /**
- * Pago (simulado). Nunca incluye datos de tarjeta: solo método, monto y una referencia.
- * [comprobante] es la captura de pantalla del Yape/Plin/transferencia (JPEG reducido en Base64); vacío si no se adjuntó.
+ * Información del pago y su revisión administrativa.
+ * Nunca guarda los datos completos de tarjeta.
  */
 data class Pago(
     val metodo: String,
     val monto: Double,
     val referencia: String,
     val fecha: Long,
-    val comprobante: String = ""
+    val comprobante: String = "",
+    val estadoRevision: String = PAGO_PENDIENTE,
+    val observacionAdmin: String = "",
+    val fechaRevision: Long = 0L
 )
 
 data class Pedido(
@@ -37,7 +51,7 @@ data class Pedido(
     val items: List<ItemPedido>,
     val total: Double,
     val estado: Int,
-    /** Una posición por etapa (mismo orden que [ESTADOS]). 0L = etapa aún no alcanzada. */
+    /** Una posición por etapa. 0L = etapa aún no alcanzada. */
     val tiempos: List<Long>,
     val pago: Pago? = null,
     val creadoPor: String = "",
@@ -50,16 +64,24 @@ data class Pedido(
     val estadoSeguro: Int get() = estado.coerceIn(0, ULTIMO_ESTADO)
     val metodoPago: String get() = pago?.metodo.orEmpty()
 
-    // ---- Reglas del flujo (las mismas que aplican las reglas de seguridad de Firestore) ----
+    /** Desde "Registrado" no se avanza hasta que el pago sea aprobado. */
+    val puedeAvanzar: Boolean
+        get() = estado != ESTADO_REGISTRADO && estado < ULTIMO_ESTADO
 
-    /** Desde "Registrado" no se avanza: hay que esperar el pago del cliente. */
-    val puedeAvanzar: Boolean get() = estado != ESTADO_REGISTRADO && estado < ULTIMO_ESTADO
+    /** Desde "Pagado" no se retrocede. */
+    val puedeRetroceder: Boolean
+        get() = estado > ESTADO_POR_REGISTRAR && estado != ESTADO_PAGADO
 
-    /** Desde "Pagado" no se retrocede (anularía el pago). */
-    val puedeRetroceder: Boolean get() = estado > ESTADO_POR_REGISTRAR && estado != ESTADO_PAGADO
+    /** El cliente puede pagar si aún no envió el pago o si fue observado. */
+    val puedePagar: Boolean
+        get() = estado == ESTADO_REGISTRADO &&
+                (pago == null || pago.estadoRevision == PAGO_OBSERVADO)
 
-    val puedePagar: Boolean get() = estado == ESTADO_REGISTRADO
+    /** El administrador puede revisar un pago pendiente. */
+    val puedeRevisarPago: Boolean
+        get() = estado == ESTADO_REGISTRADO &&
+                pago?.estadoRevision == PAGO_PENDIENTE
 
-    /** Solo se elimina un pedido que aún no se pagó. */
+    /** Solo se elimina un pedido que aún no está pagado. */
     val puedeEliminar: Boolean get() = estado < ESTADO_PAGADO
 }
