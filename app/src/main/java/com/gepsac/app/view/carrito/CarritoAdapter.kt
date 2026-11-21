@@ -28,7 +28,7 @@ class CarritoAdapter(
         val item = data[i]
         with(h.b) {
             tvNombre.text = item.nombre
-            tvSub.text = item.precio.soles() + " c/u · " + (item.precio * item.cantidad).soles()
+            tvSub.text = "Subtotal: " + (item.precio * item.cantidad).soles()
             tvCant.text = item.cantidad.toString()
             img.mostrarProducto(item.imagen)
             btnMas.setOnClickListener { onCambio(item.productoId, 1) }

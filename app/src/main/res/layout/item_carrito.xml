@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:layout_marginStart="8dp" android:layout_marginEnd="8dp" android:layout_marginTop="6dp" android:layout_marginBottom="6dp"
-    app:cardBackgroundColor="@color/surface" app:cardCornerRadius="18dp" app:cardElevation="0dp"
-    app:strokeColor="@color/line" app:strokeWidth="1dp">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:gravity="center_vertical" android:orientation="horizontal" android:padding="12dp">
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
+    app:cardBackgroundColor="@color/surface"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/line"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <!-- Imagen del producto: se conserva su configuración -->
         <ImageView
             android:id="@+id/img"
             android:layout_width="64dp"
@@ -14,34 +30,87 @@
             android:scaleType="fitCenter"
             android:src="@drawable/ic_image"
             android:importantForAccessibility="no" />
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-            android:layout_marginStart="12dp" android:layout_marginEnd="8dp" android:orientation="vertical">
-            <TextView android:id="@+id/tvNombre" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:textColor="@color/ink" android:textStyle="bold" android:fontFamily="sans-serif-medium" />
-            <TextView android:id="@+id/tvSub" style="@style/Etiqueta" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+        <!-- Nombre y subtotal -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/ink"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvSub"
+                style="@style/Etiqueta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp" />
+
         </LinearLayout>
-        <!-- Selector de cantidad: botones de 44dp para que sean fáciles de tocar -->
-        <com.google.android.material.button.MaterialButton android:id="@+id/btnMenos" style="@style/Boton.Contorno"
-            android:layout_width="44dp" android:layout_height="44dp" android:minWidth="0dp" android:minHeight="0dp"
-            android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp" android:text="−" android:textSize="18sp"
-            android:contentDescription="Quitar uno" />
-        <TextView android:id="@+id/tvCant" android:layout_width="32dp" android:layout_height="wrap_content"
-            android:gravity="center" android:textColor="@color/ink" android:textSize="16sp" android:textStyle="bold" />
-        <com.google.android.material.button.MaterialButton android:id="@+id/btnMas" style="@style/Boton.Contorno"
-            android:layout_width="44dp" android:layout_height="44dp" android:minWidth="0dp" android:minHeight="0dp"
-            android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp" android:text="+" android:textSize="18sp"
-            android:contentDescription="Agregar uno" />
+
+        <!-- Disminuir cantidad -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnEliminar"
-            android:layout_width="44dp"
+            android:id="@+id/btnMenos"
+            style="@style/Boton.Contorno"
+            android:layout_width="40dp"
             android:layout_height="44dp"
             android:minWidth="0dp"
             android:minHeight="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:padding="0dp"
-            android:text="🗑️"
-            android:textSize="17sp"
+            android:text="−"
+            android:textSize="18sp"
+            android:contentDescription="Quitar uno" />
+
+        <!-- Cantidad -->
+        <TextView
+            android:id="@+id/tvCant"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/ink"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- Aumentar cantidad -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMas"
+            style="@style/Boton.Contorno"
+            android:layout_width="40dp"
+            android:layout_height="44dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:text="+"
+            android:textSize="18sp"
+            android:contentDescription="Agregar uno" />
+
+        <!-- Eliminar producto -->
+        <ImageButton
+            android:id="@+id/btnEliminar"
+            android:layout_width="40dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="10dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_eliminar"
+            android:scaleType="fitCenter"
+            android:padding="10dp"
             android:contentDescription="Eliminar producto"
-            app:backgroundTint="#FCE4E4"
-            app:cornerRadius="12dp" />
+            app:tint="@color/brown" />
+
     </LinearLayout>
+
 </com.google.android.material.card.MaterialCardView>
