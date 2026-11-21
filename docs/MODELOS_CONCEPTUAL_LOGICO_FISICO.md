@@ -19,6 +19,7 @@ El modelo lógico detallado, al estilo Oracle Data Modeler, está en [`MODELO_LO
 
 | Relación | Cardinalidad | Por qué |
 |---|---|---|
+| usuario **guarda** dirección_guardada | 1 : 0..5 | Máximo 5 direcciones por usuario (la más reciente primero) |
 | usuario **realiza** pedido (cliente) | 1 : 0..N | Un pedido tiene un solo `clienteId`; un usuario puede no tener pedidos |
 | usuario **registra** pedido (creador) | 1 : 0..N | `creadoPor`: el cliente o el administrador; siempre uno |
 | etapa **actual de** pedido | 1 : 0..N | Cada pedido tiene un `estado`; una etapa puede no tener pedidos |
@@ -27,9 +28,9 @@ El modelo lógico detallado, al estilo Oracle Data Modeler, está en [`MODELO_LO
 | producto **aparece en** detalle_pedido | 1 : 0..N | Un producto puede estar en muchos pedidos o en ninguno |
 | pedido **pasa por** historial_etapa | 1 : **1..N** | Al crearse ya tiene al menos la etapa 0 en `tiempos` |
 | etapa **registrada en** historial_etapa | 1 : 0..N | |
-| pedido **se paga con** pago | 1 : **0..1** | Un pedido sin pagar no tiene pago; pagado, exactamente uno |
+| pedido **se paga con** pago | 1 : **0..1** | Un pedido sin pagar no tiene pago; pagado, exactamente uno (con su comprobante si no es Tarjeta) |
 
-En el diagrama, las relaciones hacia `detalle_pedido` e `historial_etapa` van con **línea sólida** (identificadoras: esas entidades se identifican por su pedido), y las demás con **línea punteada** (no identificadoras).
+En el diagrama, las relaciones hacia `direccion_guardada`, `detalle_pedido` e `historial_etapa` van con **línea sólida** (identificadoras: esas entidades dependen de su dueño), y las demás con **línea punteada** (no identificadoras).
 
 Scripts SQL del físico relacional: [`sql/modelo_fisico_oracle.sql`](sql/modelo_fisico_oracle.sql) (Oracle 12c) y [`sql/modelo_fisico_postgresql.sql`](sql/modelo_fisico_postgresql.sql).
 Detalle de campos y reglas del físico de Firestore: [`MODELO_FIRESTORE.md`](MODELO_FIRESTORE.md).
@@ -42,11 +43,11 @@ Detalle de campos y reglas del físico de Firestore: [`MODELO_FIRESTORE.md`](MOD
 
 | Entidad | Atributos | Descripción |
 |---|---|---|
-| **USUARIO** | nombre, correo, teléfono, rol | Persona con cuenta. El rol es *cliente* o *administrador* |
+| **USUARIO** | nombre, correo, teléfono, rol, *direcciones guardadas* (multivaluado, opcional, máx. 5) | Persona con cuenta. El rol es *cliente* o *administrador* |
 | **PRODUCTO** | nombre, presentación, precio, activo, imagen | Café que se vende (ej. "Caffe Blend 250 gr") |
 | **MARCA** | nombre | Caffe o Kaphiy |
-| **PEDIDO** | número, dirección, teléfono, fecha de entrega, observación, total, fecha de creación | Compra de un cliente |
-| **PAGO** | método, monto, referencia, fecha | Pago del pedido (Yape, Plin, Transferencia, Tarjeta) |
+| **PEDIDO** | número, dirección, teléfono, fecha de entrega, observación, total, fecha de creación, *ubicación en el mapa* (compuesto opcional: latitud y longitud) | Compra de un cliente. La ubicación es el punto que el cliente marca en el mapa (OpenStreetMap) |
+| **PAGO** | método, monto, referencia, fecha, *comprobante* (opcional) | Pago del pedido (Yape, Plin, Transferencia, Tarjeta). El comprobante es la captura del pago: obligatorio salvo con Tarjeta; el administrador lo revisa |
 | **ETAPA** | nombre, orden | Por registrar, Registrado, Pagado, En preparación, Despachado, Entregado |
 
 ### Relaciones
@@ -64,19 +65,23 @@ Detalle de campos y reglas del físico de Firestore: [`MODELO_FIRESTORE.md`](MOD
 Las entidades van en rectángulos naranjas, los atributos en óvalos grises (el identificador va **subrayado**), y cada relación
 es un **rombo verde** entre las dos entidades, con su cardinalidad (1, N, M) en cada extremo. Los atributos de una relación
 (cantidad y precio al comprar en *contiene*, fecha en *pasa por*) se unen al rombo y no a una entidad. **Pago** es una
-*entidad débil* (doble borde): no se identifica por sí sola, depende del pedido.
+*entidad débil* (doble borde): no se identifica por sí sola, depende del pedido. Los atributos **opcionales** van con
+línea punteada y el **multivaluado** (direcciones guardadas) con doble borde.
 
 **Reglas de negocio** (no se ven en el diagrama):
 - Un pedido nace en *Por registrar* (si lo crea el cliente) o en *Registrado* (si lo crea el administrador).
 - Desde *Registrado* no se avanza hasta que el cliente paga. Desde *Pagado* no se retrocede.
 - Solo se elimina un pedido que aún no está pagado.
 - Cantidad por producto: 1 a 100. Precio: mayor a 0 y hasta 9999.
+- Teléfono: exactamente 9 dígitos y empieza en 9. El cliente puede guardar hasta 5 direcciones.
+- Con Yape, Plin o Transferencia el cliente **debe adjuntar el comprobante**; el administrador lo revisa y recién ahí aprueba el pago.
+- No son parte de la base de datos: el carrito, el tema claro/oscuro y los avisos (viven en el teléfono).
 
 ---
 
 ## 2. Modelo lógico (relacional, 3FN)
 
-Se resuelven las relaciones M:N con tablas intermedias (`detalle_pedido` e `historial_etapa`) y se separa cada dato en su tabla.
+Se resuelven las relaciones M:N con tablas intermedias (`detalle_pedido` e `historial_etapa`), el atributo multivaluado *direcciones guardadas* pasa a su propia tabla (`direccion_guardada`) y se separa cada dato en su tabla.
 
 **Diagrama:** página 2 del [`.drawio`](MODELOS_CONCEPTUAL_LOGICO_FISICO.drawio), al estilo de Oracle SQL Developer Data Modeler. Cada
 entidad muestra solo sus atributos propios (`#` identificador único, `*` obligatorio, `o` opcional) y las relaciones se dibujan con
@@ -86,16 +91,18 @@ físico (página 3). La tabla de abajo sí las lista, para que se vea cómo qued
 | Tabla | Columnas | Claves y restricciones |
 |---|---|---|
 | **usuario** | id_usuario, nombre, email, telefono, rol, creado_en | PK id_usuario · UK email · rol ∈ {cliente, admin} · telefono ^9\d{8}$ |
+| **direccion_guardada** | id_direccion, id_usuario, direccion | PK id_direccion · FK id_usuario → usuario (ON DELETE CASCADE) · UK (id_usuario, direccion) · largo ≥ 8 · máx. 5 por usuario (lo aplica la app) |
 | **marca** | id_marca, nombre | PK id_marca · UK nombre |
 | **producto** | id_producto, id_marca, nombre, presentacion, precio, activo, imagen, actualizado_en | PK id_producto · FK id_marca → marca · UK (id_marca, nombre, presentacion) · 0 < precio ≤ 9999 |
 | **etapa** | id_etapa, nombre | PK id_etapa (0 a 5) · UK nombre |
-| **pedido** | id_pedido, numero, id_cliente, id_creador, telefono, direccion, fecha_entrega, observacion, total, id_etapa_actual, creado_en | PK id_pedido · UK numero · FK id_cliente → usuario · FK id_creador → usuario · FK id_etapa_actual → etapa |
+| **pedido** | id_pedido, numero, id_cliente, id_creador, telefono, direccion, latitud, longitud, fecha_entrega, observacion, total, id_etapa_actual, creado_en | PK id_pedido · UK numero · FK id_cliente → usuario · FK id_creador → usuario · FK id_etapa_actual → etapa · latitud y longitud opcionales, pero juntas y válidas (−90..90 / −180..180) |
 | **detalle_pedido** | id_pedido, id_producto, nombre_producto, precio_unitario, cantidad | PK (id_pedido, id_producto) · FK id_pedido → pedido · FK id_producto → producto · 1 ≤ cantidad ≤ 100 |
 | **historial_etapa** | id_pedido, id_etapa, fecha | PK (id_pedido, id_etapa) · FK id_pedido → pedido · FK id_etapa → etapa |
-| **pago** | id_pago, id_pedido, metodo, monto, referencia, fecha | PK id_pago · UK id_pedido (1 pago por pedido) · FK id_pedido → pedido · metodo ∈ {Yape, Plin, Transferencia, Tarjeta} |
+| **pago** | id_pago, id_pedido, metodo, monto, referencia, comprobante, fecha | PK id_pago · UK id_pedido (1 pago por pedido) · FK id_pedido → pedido · metodo ∈ {Yape, Plin, Transferencia, Tarjeta} · comprobante obligatorio si metodo ≠ Tarjeta |
 
 ```mermaid
 erDiagram
+  USUARIO ||--o{ DIRECCION_GUARDADA : "id_usuario"
   USUARIO ||--o{ PEDIDO : "id_cliente"
   USUARIO ||--o{ PEDIDO : "id_creador"
   MARCA ||--|{ PRODUCTO : "id_marca"
@@ -111,6 +118,11 @@ erDiagram
     texto email UK
     texto telefono
     texto rol
+  }
+  DIRECCION_GUARDADA {
+    entero id_direccion PK
+    texto id_usuario FK
+    texto direccion
   }
   MARCA {
     entero id_marca PK
@@ -137,6 +149,8 @@ erDiagram
     entero id_etapa_actual FK
     texto telefono
     texto direccion
+    decimal latitud
+    decimal longitud
     fecha fecha_entrega
     texto observacion
     decimal total
@@ -159,6 +173,7 @@ erDiagram
     texto metodo
     decimal monto
     texto referencia
+    texto comprobante
     fecha fecha
   }
 ```
@@ -182,6 +197,7 @@ diagrama son de **Oracle** (`VARCHAR2`, `NUMBER`), como el ejemplo de clase; el 
 | Tabla | Clave primaria | Claves foráneas | Únicas |
 |---|---|---|---|
 | usuario | id_usuario | | email |
+| direccion_guardada | id_direccion | id_usuario → usuario | (id_usuario, direccion) |
 | marca | id_marca | | nombre |
 | producto | id_producto | id_marca → marca | (id_marca, nombre, presentacion) |
 | etapa | id_etapa | | nombre |
@@ -192,7 +208,7 @@ diagrama son de **Oracle** (`VARCHAR2`, `NUMBER`), como el ejemplo de clase; el 
 
 - **Scripts:** [`sql/modelo_fisico_oracle.sql`](sql/modelo_fisico_oracle.sql) y [`sql/modelo_fisico_postgresql.sql`](sql/modelo_fisico_postgresql.sql).
   **Ninguno se ha ejecutado en una base real**; probarlos antes de entregar.
-- **Diferencias entre motores:** Oracle no tiene `BOOLEAN` (se usa `NUMBER(1)`), guarda la cadena vacía como `NULL` (por eso `observacion` e `imagen` aceptan `NULL`) y no tiene `ON DELETE RESTRICT` (es el comportamiento por defecto).
+- **Diferencias entre motores:** Oracle no tiene `BOOLEAN` (se usa `NUMBER(1)`), guarda la cadena vacía como `NULL` (por eso `observacion`, `imagen` y `comprobante` aceptan `NULL`) y no tiene `ON DELETE RESTRICT` (es el comportamiento por defecto).
 - **Reglas de cambio de etapa** (no avanzar desde *Registrado*, no retroceder desde *Pagado*): en SQL harían falta un `TRIGGER`; en la app las aplican el código y las reglas de Firestore.
 
 ### 3B. Físico en Cloud Firestore (el que usa la app)
@@ -202,22 +218,23 @@ Página 4 del `.drawio`. Firestore es NoSQL de documentos: no tiene tablas, join
 | Modelo lógico | Implementación en Firestore | Decisión |
 |---|---|---|
 | usuario | colección `usuarios/{uid}` | El id es el `uid` de Firebase Auth. La contraseña vive en Auth, no aquí |
+| direccion_guardada | **arreglo `direcciones`** dentro del usuario (máx. 5) | Siempre se leen con el usuario; la más reciente va primero |
 | producto | colección `productos/{id}` | La imagen va en Base64 dentro del documento (evita Firebase Storage) |
 | marca | valor `marca` (texto) en el producto | Lista cerrada de 2 valores; las reglas validan "Caffe" o "Kaphiy" |
 | etapa | constante `ESTADOS` en la app y número `estado` (0 a 5) en el pedido | Lista cerrada de 6 valores |
 | pedido | colección `pedidos/{id}` | Copia `clienteNombre` y `clienteEmail` para que el administrador no lea `usuarios` |
 | detalle_pedido | **arreglo `items`** dentro del pedido | Siempre se leen juntos; es la foto del momento de compra |
 | historial_etapa | **mapa `tiempos`** dentro del pedido (clave "0" a "5") | Retroceder borra la clave de la etapa |
-| pago | **mapa `pago`** dentro del pedido | Relación 1 a 1 |
+| pago | **mapa `pago`** dentro del pedido | Relación 1 a 1. El `comprobante` es una imagen JPEG reducida en Base64 (evita Firebase Storage) |
 | (secuencia de `numero`) | colección `contadores/pedidos` con `{ultimo}` | Se incrementa en una transacción al crear el pedido, así no se repite |
 
 ```
-usuarios/{uid}      nombre, email, telefono, rol, creadoEn
+usuarios/{uid}      nombre, email, telefono, rol, creadoEn, direcciones[ string, máx. 5 ]
 productos/{id}      nombre, marca, presentacion, precio, activo, imagen, actualizadoEn
 pedidos/{id}        numero, clienteId, creadoPor, clienteNombre, clienteEmail, telefono, direccion,
-                    fechaEntrega, observacion, total, estado, creadoEn,
+                    latitud?, longitud?, fechaEntrega, observacion, total, estado, creadoEn,
                     tiempos{ "0".."5": timestamp },
-                    pago{ metodo, monto, referencia, fecha },
+                    pago{ metodo, monto, referencia, fecha, comprobante? },
                     items[ {productoId, nombre, precio, cantidad} ]
 contadores/pedidos  ultimo
 ```

@@ -8,46 +8,49 @@ graph conceptual {
   bgcolor=white
   node [fontname="Segoe UI", fixedsize=true]
   edge [fontname="Segoe UI", color="#7EA6D8", penwidth=2, fontsize=14, labelfontcolor="#1F1F1F", labeldistance=2.4, labelangle=-30]
-  usu [label="Usuario", shape=box, style=filled, fillcolor="#FAD7A0", color="#E59866", penwidth=2, fontsize=16, width=1.60, height=0.46, pos="3.80,7.00!"]
-  ped [label="Pedido", shape=box, style=filled, fillcolor="#FAD7A0", color="#E59866", penwidth=2, fontsize=16, width=1.60, height=0.46, pos="9.00,7.00!"]
-  pro [label="Producto", shape=box, style=filled, fillcolor="#FAD7A0", color="#E59866", penwidth=2, fontsize=16, width=1.60, height=0.46, pos="17.00,7.00!"]
-  mar [label="Marca", shape=box, style=filled, fillcolor="#FAD7A0", color="#E59866", penwidth=2, fontsize=16, width=1.60, height=0.46, pos="17.00,11.00!"]
-  pag [label="Pago", shape=box, style=filled, fillcolor="#FAD7A0", color="#E59866", penwidth=2, fontsize=16, width=1.60, height=0.46, pos="9.00,3.00!", peripheries=2]
-  eta [label="Etapa", shape=box, style=filled, fillcolor="#FAD7A0", color="#E59866", penwidth=2, fontsize=16, width=1.60, height=0.46, pos="9.00,11.00!"]
-  r_realiza [label="realiza
-(cliente)", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="6.40,7.90!"]
-  r_registra [label="registra
-(creador)", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="6.40,6.10!"]
-  r_contiene [label="contiene", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="13.00,7.00!"]
-  r_agrupa [label="agrupa", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="17.00,9.00!"]
+  usu [label="Usuario", shape=box, style=filled, fillcolor="#FAD7A0", color="#E59866", penwidth=2, fontsize=16, width=1.60, height=0.46, pos="3.80,8.00!"]
+  ped [label="Pedido", shape=box, style=filled, fillcolor="#FAD7A0", color="#E59866", penwidth=2, fontsize=16, width=1.60, height=0.46, pos="9.00,8.00!"]
+  pro [label="Producto", shape=box, style=filled, fillcolor="#FAD7A0", color="#E59866", penwidth=2, fontsize=16, width=1.60, height=0.46, pos="17.00,8.00!"]
+  mar [label="Marca", shape=box, style=filled, fillcolor="#FAD7A0", color="#E59866", penwidth=2, fontsize=16, width=1.60, height=0.46, pos="17.00,12.00!"]
+  pag [label="Pago", shape=box, style=filled, fillcolor="#FAD7A0", color="#E59866", penwidth=2, fontsize=16, width=1.60, height=0.46, pos="9.00,2.00!", peripheries=2]
+  eta [label="Etapa", shape=box, style=filled, fillcolor="#FAD7A0", color="#E59866", penwidth=2, fontsize=16, width=1.60, height=0.46, pos="9.00,12.00!"]
+  r_realiza [label="realiza\n(cliente)", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="6.40,8.90!"]
+  r_registra [label="registra\n(creador)", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="6.40,7.10!"]
+  r_contiene [label="contiene", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="13.00,8.00!"]
+  r_agrupa [label="agrupa", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="17.00,10.00!"]
   r_paga [label="se paga con", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="9.00,5.00!"]
-  r_pasa [label="pasa por", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="9.00,9.00!"]
-  a_usu_0 [label="nombre", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="2.50,8.40!"]
-  a_usu_1 [label=<<U>correo</U>>, shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="1.20,7.50!"]
-  a_usu_2 [label="teléfono", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="1.20,6.50!"]
-  a_usu_3 [label="rol", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="2.50,5.50!"]
-  a_eta_0 [label="nombre", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="7.00,12.30!"]
-  a_eta_1 [label=<<U>orden</U>>, shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="11.00,12.30!"]
-  a_mar_0 [label=<<U>nombre</U>>, shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="19.00,11.40!"]
-  a_pro_0 [label=<<U>nombre</U>>, shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="19.30,8.10!"]
-  a_pro_1 [label=<<U>presentación</U>>, shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.28, height=0.44, pos="19.60,7.10!"]
-  a_pro_2 [label="precio", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="19.20,6.10!"]
-  a_pro_3 [label="activo", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="17.90,5.30!"]
-  a_pro_4 [label="imagen", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="16.20,5.30!"]
-  a_pag_0 [label="método", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="6.70,3.50!"]
-  a_pag_1 [label="monto", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="6.90,2.30!"]
-  a_pag_2 [label="referencia", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.12, height=0.44, pos="9.00,1.50!"]
-  a_pag_3 [label="fecha", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="11.10,2.30!"]
-  a_ped_0 [label="dirección", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.04, height=0.44, pos="12.86,8.04!"]
-  a_ped_1 [label="teléfono", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="12.39,9.12!"]
-  a_ped_2 [label="fecha de entrega", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.60, height=0.44, pos="11.62,10.02!"]
-  a_ped_3 [label="fecha de creación", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.68, height=0.44, pos="10.97,10.70!"]
-  a_ped_4 [label="total", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="10.90,6.00!"]
-  a_ped_5 [label="observación", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.20, height=0.44, pos="10.70,5.10!"]
-  a_ped_6 [label=<<U>número</U>>, shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="7.35,8.95!"]
-  ar_contiene_0 [label="cantidad", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="12.30,5.20!"]
-  ar_contiene_1 [label="precio al comprar", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.68, height=0.44, pos="14.00,5.20!"]
-  ar_pasa_0 [label="fecha", shape=ellipse, style=filled, fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="7.30,9.95!"]
+  r_pasa [label="pasa por", shape=diamond, style=filled, fillcolor="#E2F0D0", color="#A9D18E", penwidth=1.5, fontsize=11, width=1.50, height=0.80, pos="9.00,10.00!"]
+  a_usu_0 [label="nombre", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="2.50,9.40!"]
+  a_usu_1 [label=<<U>correo</U>>, shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="1.20,8.50!"]
+  a_usu_2 [label="teléfono", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="1.20,7.50!"]
+  a_usu_3 [label="rol", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="2.50,6.50!"]
+  a_usu_4 [label="direcciones guardadas", shape=ellipse, style="filled,dashed", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=2.00, height=0.44, pos="3.80,5.80!", peripheries=2]
+  a_eta_0 [label="nombre", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="7.00,13.30!"]
+  a_eta_1 [label=<<U>orden</U>>, shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="11.00,13.30!"]
+  a_mar_0 [label=<<U>nombre</U>>, shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="19.00,12.40!"]
+  a_pro_0 [label=<<U>nombre</U>>, shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="19.30,9.10!"]
+  a_pro_1 [label=<<U>presentación</U>>, shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.28, height=0.44, pos="19.60,8.10!"]
+  a_pro_2 [label="precio", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="19.20,7.10!"]
+  a_pro_3 [label="activo", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="17.90,6.30!"]
+  a_pro_4 [label="imagen", shape=ellipse, style="filled,dashed", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="16.20,6.30!"]
+  a_a_ped_7_0 [label="latitud", shape=ellipse, style="filled,dashed", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="5.70,4.30!"]
+  a_a_ped_7_1 [label="longitud", shape=ellipse, style="filled,dashed", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="7.40,3.90!"]
+  a_pag_0 [label="método", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="6.70,2.50!"]
+  a_pag_1 [label="monto", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="6.90,1.30!"]
+  a_pag_2 [label="referencia", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.12, height=0.44, pos="9.00,0.50!"]
+  a_pag_3 [label="fecha", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="11.10,1.30!"]
+  a_pag_4 [label="comprobante", shape=ellipse, style="filled,dashed", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.20, height=0.44, pos="11.60,2.50!"]
+  a_ped_0 [label="dirección", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.04, height=0.44, pos="12.86,9.04!"]
+  a_ped_1 [label="teléfono", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="12.39,10.12!"]
+  a_ped_2 [label="fecha de entrega", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.60, height=0.44, pos="11.62,11.02!"]
+  a_ped_3 [label="fecha de creación", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.68, height=0.44, pos="10.97,11.70!"]
+  a_ped_4 [label="total", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="10.90,7.00!"]
+  a_ped_5 [label="observación", shape=ellipse, style="filled,dashed", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.20, height=0.44, pos="10.70,6.10!"]
+  a_ped_6 [label=<<U>número</U>>, shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="7.35,9.95!"]
+  a_ped_7 [label="ubicación en el mapa", shape=ellipse, style="filled,dashed", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.92, height=0.44, pos="7.00,5.40!"]
+  ar_contiene_0 [label="cantidad", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="12.30,6.20!"]
+  ar_contiene_1 [label="precio al comprar", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.68, height=0.44, pos="14.00,6.20!"]
+  ar_pasa_0 [label="fecha", shape=ellipse, style="filled", fillcolor="#DCDCDC", color="#9A9A9A", fontsize=11, width=1.00, height=0.44, pos="7.30,10.95!"]
   usu -- r_realiza [taillabel="1"]
   r_realiza -- ped [headlabel="N"]
   usu -- r_registra [taillabel="1"]
@@ -65,6 +68,7 @@ graph conceptual {
   usu -- a_usu_1
   usu -- a_usu_2
   usu -- a_usu_3
+  usu -- a_usu_4
   eta -- a_eta_0
   eta -- a_eta_1
   mar -- a_mar_0
@@ -73,10 +77,13 @@ graph conceptual {
   pro -- a_pro_2
   pro -- a_pro_3
   pro -- a_pro_4
+  a_ped_7 -- a_a_ped_7_0
+  a_ped_7 -- a_a_ped_7_1
   pag -- a_pag_0
   pag -- a_pag_1
   pag -- a_pag_2
   pag -- a_pag_3
+  pag -- a_pag_4
   ped -- a_ped_0
   ped -- a_ped_1
   ped -- a_ped_2
@@ -84,6 +91,7 @@ graph conceptual {
   ped -- a_ped_4
   ped -- a_ped_5
   ped -- a_ped_6
+  ped -- a_ped_7
   r_contiene -- ar_contiene_0
   r_contiene -- ar_contiene_1
   r_pasa -- ar_pasa_0

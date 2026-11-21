@@ -31,6 +31,13 @@ entity "USUARIO" as usuario {
   * creado_en : fecha y hora
 }
 
+entity "DIRECCION_GUARDADA" as direccion {
+  * id_direccion : entero <<PK>>
+  --
+  * id_usuario : texto <<FK>>
+  * direccion : texto (única por usuario, máx. 5)
+}
+
 entity "MARCA" as marca {
   * id_marca : entero <<PK>>
   --
@@ -60,6 +67,8 @@ entity "PEDIDO" as pedido {
   * numero : entero <<único>>
   * telefono : texto
   * direccion : texto
+  latitud : decimal (opcional)
+  longitud : decimal (opcional)
   * fecha_entrega : fecha
   observacion : texto
   * total : decimal
@@ -88,10 +97,12 @@ entity "PAGO" as pago {
   * metodo : texto (Yape, Plin, Transferencia, Tarjeta)
   * monto : decimal
   * referencia : texto
+  comprobante : texto (captura Base64; obligatorio salvo Tarjeta)
   * fecha : fecha y hora
 }
 
 ' --- Relaciones no identificadoras (línea punteada) ---
+usuario ||--o{ direccion : "guarda (máx. 5)"
 usuario ||..o{ pedido : "realiza (cliente)"
 usuario ||..o{ pedido : "registra (creador)"
 etapa ||..o{ pedido : "etapa actual"
@@ -114,5 +125,8 @@ legend right
   Línea sólida: relación identificadora
   Línea punteada: relación no identificadora
   *  atributo obligatorio
+  ----
+  El carrito, el tema claro/oscuro y los avisos
+  viven en el teléfono, no en la base de datos
 endlegend
 @enduml

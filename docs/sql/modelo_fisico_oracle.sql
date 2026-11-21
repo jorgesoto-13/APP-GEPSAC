@@ -3,7 +3,8 @@
 -- Se deriva del modelo lógico (docs/MODELOS_CONCEPTUAL_LOGICO_FISICO.md).
 -- NOTA: la app real usa Cloud Firestore; este script es el equivalente relacional.
 -- NO se ejecutó en una base Oracle real: probarlo antes de entregarlo.
--- Oracle guarda la cadena vacía '' como NULL, por eso observacion e imagen admiten NULL.
+-- Oracle guarda la cadena vacía '' como NULL, por eso observacion, imagen y comprobante admiten NULL.
+-- Lo que NO es parte de la base de datos: el carrito, el tema claro/oscuro y los avisos (viven en el teléfono).
 -- ============================================================================
 
 CREATE TABLE usuario (
@@ -20,6 +21,17 @@ ALTER TABLE usuario ADD CONSTRAINT usuario_email_uk UNIQUE ( email );
 ALTER TABLE usuario ADD CONSTRAINT usuario_rol_ck CHECK ( rol IN ( 'cliente', 'admin' ) );
 ALTER TABLE usuario ADD CONSTRAINT usuario_telefono_ck CHECK ( REGEXP_LIKE ( telefono, '^9[0-9]{8}$' ) );
 ALTER TABLE usuario ADD CONSTRAINT usuario_nombre_ck CHECK ( LENGTH ( nombre ) >= 3 );
+
+-- Direcciones de entrega guardadas por el cliente (en Firestore: arreglo 'direcciones' del usuario). Máximo 5 por usuario.
+CREATE TABLE direccion_guardada (
+    id_direccion  NUMBER(19) GENERATED ALWAYS AS IDENTITY,
+    id_usuario    VARCHAR2(40)   NOT NULL,
+    direccion     VARCHAR2(120)  NOT NULL
+);
+
+ALTER TABLE direccion_guardada ADD CONSTRAINT direccion_guardada_pk PRIMARY KEY ( id_direccion );
+ALTER TABLE direccion_guardada ADD CONSTRAINT direccion_guardada_uk UNIQUE ( id_usuario, direccion );
+ALTER TABLE direccion_guardada ADD CONSTRAINT direccion_guardada_largo_ck CHECK ( LENGTH ( direccion ) >= 8 );
 
 CREATE TABLE marca (
     id_marca  NUMBER(3) GENERATED ALWAYS AS IDENTITY,
@@ -64,6 +76,8 @@ CREATE TABLE pedido (
     id_etapa_actual  NUMBER(1)      DEFAULT 0 NOT NULL,
     telefono         CHAR(9)        NOT NULL,
     direccion        VARCHAR2(120)  NOT NULL,
+    latitud          NUMBER(9,6),
+    longitud         NUMBER(9,6),
     fecha_entrega    DATE           NOT NULL,
     observacion      VARCHAR2(150),
     total            NUMBER(10,2)   NOT NULL,
@@ -75,6 +89,10 @@ ALTER TABLE pedido ADD CONSTRAINT pedido_numero_uk UNIQUE ( numero );
 ALTER TABLE pedido ADD CONSTRAINT pedido_telefono_ck CHECK ( REGEXP_LIKE ( telefono, '^9[0-9]{8}$' ) );
 ALTER TABLE pedido ADD CONSTRAINT pedido_direccion_ck CHECK ( LENGTH ( direccion ) >= 8 );
 ALTER TABLE pedido ADD CONSTRAINT pedido_total_ck CHECK ( total > 0 );
+-- El punto del mapa es opcional, pero si se marca deben venir las dos coordenadas y ser válidas.
+ALTER TABLE pedido ADD CONSTRAINT pedido_ubicacion_ck CHECK (
+    ( latitud IS NULL AND longitud IS NULL )
+    OR ( latitud BETWEEN -90 AND 90 AND longitud BETWEEN -180 AND 180 ) );
 
 CREATE TABLE detalle_pedido (
     id_pedido        VARCHAR2(40)  NOT NULL,
@@ -102,6 +120,7 @@ CREATE TABLE pago (
     metodo      VARCHAR2(15)  NOT NULL,
     monto       NUMBER(10,2)  NOT NULL,
     referencia  VARCHAR2(30)  NOT NULL,
+    comprobante CLOB,
     fecha       TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL
 );
 
@@ -109,10 +128,15 @@ ALTER TABLE pago ADD CONSTRAINT pago_pk PRIMARY KEY ( id_pago );
 ALTER TABLE pago ADD CONSTRAINT pago_pedido_uk UNIQUE ( id_pedido );
 ALTER TABLE pago ADD CONSTRAINT pago_metodo_ck CHECK ( metodo IN ( 'Yape', 'Plin', 'Transferencia', 'Tarjeta' ) );
 ALTER TABLE pago ADD CONSTRAINT pago_monto_ck CHECK ( monto > 0 );
+-- La captura del pago (JPEG en Base64) es obligatoria con Yape, Plin y Transferencia; con Tarjeta no lleva.
+ALTER TABLE pago ADD CONSTRAINT pago_comprobante_ck CHECK ( metodo = 'Tarjeta' OR comprobante IS NOT NULL );
 
 -- ---------------------------------------------------------------------------
 -- Claves foráneas
 -- ---------------------------------------------------------------------------
+ALTER TABLE direccion_guardada ADD CONSTRAINT direccion_guardada_usuario_fk
+    FOREIGN KEY ( id_usuario ) REFERENCES usuario ( id_usuario ) ON DELETE CASCADE;
+
 ALTER TABLE producto ADD CONSTRAINT producto_marca_fk
     FOREIGN KEY ( id_marca ) REFERENCES marca ( id_marca );
 

@@ -3,6 +3,7 @@
 -- Se deriva del modelo lógico (docs/MODELOS_CONCEPTUAL_LOGICO_FISICO.md).
 -- NOTA: la app real usa Cloud Firestore; este script es el equivalente relacional.
 -- NO se ejecutó en una base PostgreSQL real: probarlo (por ejemplo en pgAdmin) antes de entregarlo.
+-- Lo que NO es parte de la base de datos: el carrito, el tema claro/oscuro y los avisos (viven en el teléfono).
 -- ============================================================================
 
 CREATE TABLE usuario (
@@ -12,6 +13,14 @@ CREATE TABLE usuario (
     telefono    CHAR(9)      NOT NULL CHECK (telefono ~ '^9[0-9]{8}$'),
     rol         VARCHAR(10)  NOT NULL DEFAULT 'cliente' CHECK (rol IN ('cliente', 'admin')),
     creado_en   TIMESTAMPTZ  NOT NULL DEFAULT now()
+);
+
+-- Direcciones de entrega guardadas por el cliente (en Firestore: arreglo 'direcciones' del usuario). Máximo 5 por usuario.
+CREATE TABLE direccion_guardada (
+    id_direccion  BIGSERIAL     PRIMARY KEY,
+    id_usuario    VARCHAR(40)   NOT NULL REFERENCES usuario (id_usuario) ON DELETE CASCADE,
+    direccion     VARCHAR(120)  NOT NULL CHECK (char_length(direccion) >= 8),
+    UNIQUE (id_usuario, direccion)
 );
 
 CREATE TABLE marca (
@@ -46,10 +55,16 @@ CREATE TABLE pedido (
     id_etapa_actual  SMALLINT      NOT NULL DEFAULT 0 REFERENCES etapa (id_etapa),
     telefono         CHAR(9)       NOT NULL CHECK (telefono ~ '^9[0-9]{8}$'),
     direccion        VARCHAR(120)  NOT NULL CHECK (char_length(direccion) >= 8),
+    latitud          NUMERIC(9,6),
+    longitud         NUMERIC(9,6),
     fecha_entrega    DATE          NOT NULL,
     observacion      VARCHAR(150)  NOT NULL DEFAULT '',
     total            NUMERIC(10,2) NOT NULL CHECK (total > 0),
-    creado_en        TIMESTAMPTZ   NOT NULL DEFAULT now()
+    creado_en        TIMESTAMPTZ   NOT NULL DEFAULT now(),
+    -- El punto del mapa es opcional, pero si se marca deben venir las dos coordenadas y ser válidas.
+    CONSTRAINT pedido_ubicacion_ck CHECK (
+        (latitud IS NULL AND longitud IS NULL)
+        OR (latitud BETWEEN -90 AND 90 AND longitud BETWEEN -180 AND 180))
 );
 
 CREATE TABLE detalle_pedido (
@@ -74,7 +89,10 @@ CREATE TABLE pago (
     metodo      VARCHAR(15)   NOT NULL CHECK (metodo IN ('Yape', 'Plin', 'Transferencia', 'Tarjeta')),
     monto       NUMERIC(10,2) NOT NULL CHECK (monto > 0),
     referencia  VARCHAR(30)   NOT NULL,
-    fecha       TIMESTAMPTZ   NOT NULL DEFAULT now()
+    comprobante TEXT,
+    fecha       TIMESTAMPTZ   NOT NULL DEFAULT now(),
+    -- La captura del pago (JPEG en Base64) es obligatoria con Yape, Plin y Transferencia; con Tarjeta no lleva.
+    CONSTRAINT pago_comprobante_ck CHECK (metodo = 'Tarjeta' OR comprobante IS NOT NULL)
 );
 
 -- Datos fijos (catálogos)
