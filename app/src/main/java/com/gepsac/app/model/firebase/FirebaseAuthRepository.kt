@@ -52,7 +52,9 @@ class FirebaseAuthRepository(
                 auth.cerrarSesion()
                 throw e
             }
-            usuario = nuevo
+            auth.cerrarSesion()
+            usuario = null
+
             nuevo
         }
 

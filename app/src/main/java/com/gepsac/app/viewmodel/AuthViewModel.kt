@@ -1,3 +1,4 @@
+
 package com.gepsac.app.viewmodel
 
 import androidx.lifecycle.LiveData
@@ -13,58 +14,94 @@ sealed interface AuthEstado {
     data object Inactivo : AuthEstado
     data object Cargando : AuthEstado
     data class Listo(val usuario: Usuario) : AuthEstado
+    data object RegistroExitoso : AuthEstado
     data class Fallo(val mensaje: String) : AuthEstado
 }
 
 class AuthViewModel(private val repo: AuthRepository) : ViewModel() {
+
     private val _estado = MutableLiveData<AuthEstado>(AuthEstado.Inactivo)
     val estado: LiveData<AuthEstado> = _estado
 
     val usuario: Usuario? get() = repo.usuarioActual
 
-    /** Al abrir la app: si Firebase ya tiene una sesión guardada, entra directo al panel. */
+    /** Restaura una sesión existente al abrir la aplicación. */
     fun restaurarSesion() {
         if (_estado.value != AuthEstado.Inactivo) return
+
         _estado.value = AuthEstado.Cargando
+
         viewModelScope.launch {
             val u = repo.restaurarSesion()
-            _estado.value = if (u != null) AuthEstado.Listo(u) else AuthEstado.Inactivo
+            _estado.value =
+                if (u != null) AuthEstado.Listo(u)
+                else AuthEstado.Inactivo
         }
     }
 
+    /** Inicio de sesión normal. */
     fun ingresar(email: String, pass: String) {
         _estado.value = AuthEstado.Cargando
+
         viewModelScope.launch {
             repo.ingresar(email, pass).fold(
-                onSuccess = { _estado.value = AuthEstado.Listo(it) },
-                onFailure = { _estado.value = AuthEstado.Fallo(it.message ?: "No se pudo ingresar") }
+                onSuccess = {
+                    _estado.value = AuthEstado.Listo(it)
+                },
+                onFailure = {
+                    _estado.value = AuthEstado.Fallo(
+                        it.message ?: "No se pudo ingresar"
+                    )
+                }
             )
         }
     }
 
-    fun registrar(nombre: String, tel: String, email: String, pass: String) {
+    /** Registro: crea la cuenta, pero no abre el panel. */
+    fun registrar(
+        nombre: String,
+        tel: String,
+        email: String,
+        pass: String
+    ) {
         _estado.value = AuthEstado.Cargando
+
         viewModelScope.launch {
-            repo.registrar(nombre.trim(), tel.trim(), email, pass).fold(
-                onSuccess = { _estado.value = AuthEstado.Listo(it) },
-                onFailure = { _estado.value = AuthEstado.Fallo(it.message ?: "No se pudo crear la cuenta") }
+            repo.registrar(
+                nombre.trim(),
+                tel.trim(),
+                email,
+                pass
+            ).fold(
+                onSuccess = {
+                    _estado.value = AuthEstado.RegistroExitoso
+                },
+                onFailure = {
+                    _estado.value = AuthEstado.Fallo(
+                        it.message ?: "No se pudo crear la cuenta"
+                    )
+                }
             )
         }
     }
 
     private val _recuperacion = MutableLiveData<Evento<String>>()
-
-    /** Resultado de «Olvidé mi contraseña»: mensaje listo para mostrar al usuario. */
     val recuperacion: LiveData<Evento<String>> = _recuperacion
 
     fun recuperarContrasena(email: String) {
         viewModelScope.launch {
             repo.recuperarContrasena(email).fold(
                 onSuccess = {
-                    _recuperacion.value =
-                        Evento("Si el correo está registrado, te enviamos un enlace para cambiar tu contraseña. Revisa también el spam.")
+                    _recuperacion.value = Evento(
+                        "Si el correo está registrado, te enviamos un enlace " +
+                                "para cambiar tu contraseña. Revisa también el spam."
+                    )
                 },
-                onFailure = { _recuperacion.value = Evento(it.message ?: "No se pudo enviar el correo") }
+                onFailure = {
+                    _recuperacion.value = Evento(
+                        it.message ?: "No se pudo enviar el correo"
+                    )
+                }
             )
         }
     }

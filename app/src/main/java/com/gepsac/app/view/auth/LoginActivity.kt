@@ -66,14 +66,40 @@ class LoginActivity : AppCompatActivity() {
             b.form.aparecer(220)
         }
 
+
         vm.estado.observe(this) { estado ->
             cargando(estado == AuthEstado.Cargando)
+
             when (estado) {
-                is AuthEstado.Listo -> irAPanel(estado.usuario)
-                is AuthEstado.Fallo -> mostrarError(estado.mensaje)
-                AuthEstado.Cargando, AuthEstado.Inactivo -> {}
+                is AuthEstado.Listo -> {
+                    irAPanel(estado.usuario)
+                }
+
+                AuthEstado.RegistroExitoso -> {
+                    // Volver al formulario de inicio de sesión.
+                    registro = false
+                    actualizarUI()
+
+                    // Mantener el correo para que el usuario pueda ingresar.
+                    b.etPass.text?.clear()
+                    b.etPass2.text?.clear()
+
+                    Toast.makeText(
+                        this,
+                        "¡Registrado correctamente! Ahora inicia sesión.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+                is AuthEstado.Fallo -> {
+                    mostrarError(estado.mensaje)
+                }
+
+                AuthEstado.Cargando,
+                AuthEstado.Inactivo -> {}
             }
         }
+
         vm.restaurarSesion()
     }
 
