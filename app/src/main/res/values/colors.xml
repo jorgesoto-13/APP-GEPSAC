@@ -27,4 +27,7 @@
     <color name="danger">#B33A2E</color>
     <color name="aviso_bg">#FFF1D6</color>
     <color name="aviso_text">#6B4A00</color>
+
+    <color name="tracking_olive">#65734B</color>
+    <color name="tracking_beige">#DDB17D</color>
 </resources>

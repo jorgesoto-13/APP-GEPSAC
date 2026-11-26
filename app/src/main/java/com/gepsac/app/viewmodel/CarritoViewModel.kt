@@ -1,3 +1,4 @@
+
 package com.gepsac.app.viewmodel
 
 import androidx.lifecycle.LiveData
@@ -24,9 +25,10 @@ import kotlinx.coroutines.flow.map as mapFlow
 import kotlinx.coroutines.launch
 
 /**
- * Carrito del cliente. Se comparte entre el Catálogo (agrega) y el Carrito (confirma),
- * por eso las pantallas lo piden con activityViewModels. El contenido vive en [CarritoLocal]:
- * se conserva al cerrar la app y lo comparten también otras pantallas (por ejemplo «volver a pedir»).
+ * Carrito compartido entre Catálogo y Carrito.
+ *
+ * El contenido se conserva localmente y se comparte
+ * entre las pantallas que utilizan activityViewModels.
  */
 class CarritoViewModel(
     private val pedidos: PedidoRepository,
@@ -36,66 +38,151 @@ class CarritoViewModel(
 ) : ViewModel() {
 
     init {
-        auth.usuarioActual?.let { local.abrir(it.id) }
+        auth.usuarioActual?.let {
+            local.abrir(it.id)
+        }
     }
 
-    val carrito: LiveData<List<ItemPedido>> = local.items.asLiveData()
-    val total: LiveData<Double> = carrito.map { l -> l.sumOf { it.precio * it.cantidad } }
+    val carrito: LiveData<List<ItemPedido>> =
+        local.items.asLiveData()
 
-    /** Cantidad total de unidades (para el globo de la pestaña Carrito). */
-    val cantidadTotal: LiveData<Int> = carrito.map { l -> l.sumOf { it.cantidad } }
+    val total: LiveData<Double> =
+        carrito.map { lista ->
+            lista.sumOf { it.precio * it.cantidad }
+        }
+
+    /** Cantidad total de unidades del carrito. */
+    val cantidadTotal: LiveData<Int> =
+        carrito.map { lista ->
+            lista.sumOf { it.cantidad }
+        }
 
     private val _enviando = MutableLiveData(false)
     val enviando: LiveData<Boolean> = _enviando
 
-    /** Número del pedido recién enviado. */
-    private val _pedidoEnviado = MutableLiveData<Evento<Long>>()
-    val pedidoEnviado: LiveData<Evento<Long>> = _pedidoEnviado
+    /** Número del pedido recién creado. */
+    private val _pedidoEnviado =
+        MutableLiveData<Evento<Long>>()
 
-    private val _error = MutableLiveData<Evento<String>>()
+    val pedidoEnviado: LiveData<Evento<Long>> =
+        _pedidoEnviado
+
+    private val _error =
+        MutableLiveData<Evento<String>>()
+
     val error: LiveData<Evento<String>> = _error
 
-    val telefonoUsuario: String get() = auth.usuarioActual?.telefono.orEmpty()
+    val telefonoUsuario: String
+        get() = auth.usuarioActual?.telefono.orEmpty()
 
-    /** Direcciones de entrega guardadas del cliente, en tiempo real. */
+    /** Direcciones guardadas del cliente. */
     val direcciones: LiveData<List<String>> = run {
+
         val usuario = auth.usuarioActual
-        val origen: Flow<Usuario?> = if (usuario != null) usuarios.observarUsuario(usuario.id) else flowOf(null)
-        origen.mapFlow { it?.direcciones.orEmpty() }
+
+        val origen: Flow<Usuario?> =
+            if (usuario != null) {
+                usuarios.observarUsuario(usuario.id)
+            } else {
+                flowOf(null)
+            }
+
+        origen
+            .mapFlow { it?.direcciones.orEmpty() }
             .catch { emit(emptyList()) }
             .asLiveData()
     }
 
-    /** false si ya se alcanzó el máximo por producto. */
+    // --------------------------------------------------
+    // Agregar producto
+    // --------------------------------------------------
+
     fun agregar(p: Producto): Boolean {
-        val l = local.items.value
-        val e = l.find { it.productoId == p.id }
-        if (e != null && e.cantidad >= Validar.MAX_CANT) return false
+
+        val lista = local.items.value
+
+        val existente = lista.find {
+            it.productoId == p.id
+        }
+
+        if (
+            existente != null &&
+            existente.cantidad >= Validar.MAX_CANT
+        ) {
+            return false
+        }
+
         local.guardar(
-            if (e != null) l.map { if (it.productoId == p.id) it.copy(cantidad = it.cantidad + 1) else it }
-            else l + ItemPedido(
-                productoId = p.id,
-                nombre = p.nombreCompleto,
-                precio = p.precio,
-                cantidad = 1,
-                imagen = p.imagen
-            )
+            if (existente != null) {
+                lista.map {
+                    if (it.productoId == p.id) {
+                        it.copy(
+                            cantidad = it.cantidad + 1
+                        )
+                    } else {
+                        it
+                    }
+                }
+            } else {
+                lista + ItemPedido(
+                    productoId = p.id,
+                    nombre = p.nombreCompleto,
+                    precio = p.precio,
+                    cantidad = 1,
+                    imagen = p.imagen
+                )
+            }
         )
+
         return true
     }
 
-    fun cambiarCantidad(productoId: String, delta: Int): Boolean {
-        val l = local.items.value
-        val e = l.find { it.productoId == productoId }
-        if (e != null && delta > 0 && e.cantidad >= Validar.MAX_CANT) return false
+    // --------------------------------------------------
+    // Cambiar cantidad
+    // --------------------------------------------------
+
+    fun cambiarCantidad(
+        productoId: String,
+        delta: Int
+    ): Boolean {
+
+        val lista = local.items.value
+
+        val existente = lista.find {
+            it.productoId == productoId
+        }
+
+        if (
+            existente != null &&
+            delta > 0 &&
+            existente.cantidad >= Validar.MAX_CANT
+        ) {
+            return false
+        }
+
         local.guardar(
-            l.map { if (it.productoId == productoId) it.copy(cantidad = it.cantidad + delta) else it }
-                .filter { it.cantidad > 0 }
+            lista.map {
+                if (it.productoId == productoId) {
+                    it.copy(
+                        cantidad = it.cantidad + delta
+                    )
+                } else {
+                    it
+                }
+            }.filter {
+                it.cantidad > 0
+            }
         )
+
         return true
     }
+
+    // --------------------------------------------------
+    // Eliminar producto
+    // --------------------------------------------------
 
     fun eliminar(productoId: String) {
+
         local.guardar(
             local.items.value.filterNot {
                 it.productoId == productoId
@@ -103,39 +190,178 @@ class CarritoViewModel(
         )
     }
 
+    // --------------------------------------------------
+    // Vaciar carrito
+    // --------------------------------------------------
 
     fun vaciar() {
         local.guardar(emptyList())
     }
 
-    /** Guarda [dir] entre las direcciones del cliente (sin repetir, la más reciente primero, máximo 5). */
+    // --------------------------------------------------
+    // Guardar dirección
+    // --------------------------------------------------
+
     fun guardarDireccion(dir: String) {
-        val u = auth.usuarioActual ?: return
+
+        val usuario = auth.usuarioActual ?: return
         val limpia = dir.trim()
+
         if (limpia.isEmpty()) return
-        val nuevas = (listOf(limpia) + direcciones.value.orEmpty()).distinct().take(Usuario.MAX_DIRECCIONES)
-        viewModelScope.launch { usuarios.guardarDirecciones(u.id, nuevas) }
+
+        val nuevas = (
+                listOf(limpia) +
+                        direcciones.value.orEmpty()
+                )
+            .distinct()
+            .take(Usuario.MAX_DIRECCIONES)
+
+        viewModelScope.launch {
+            usuarios.guardarDirecciones(
+                usuario.id,
+                nuevas
+            )
+        }
     }
 
-    fun confirmarPedido(dir: String, tel: String, fecha: String, obs: String, latitud: Double? = null, longitud: Double? = null) {
+    // --------------------------------------------------
+    // Confirmar pedido con pago
+    // --------------------------------------------------
+
+    fun confirmarPedido(
+        dir: String,
+        tel: String,
+        fecha: String,
+        obs: String,
+        metodoPago: String,
+        referenciaPago: String,
+        comprobante: String = "",
+        latitud: Double? = null,
+        longitud: Double? = null
+    ) {
+
         val items = local.items.value
         val usuario = auth.usuarioActual
-        if (items.isEmpty() || usuario == null || _enviando.value == true) return
-        val fechaMs = Fechas.leerDia(fecha) ?: run {
-            _error.value = Evento("Fecha de entrega no válida")
+
+        if (_enviando.value == true) return
+
+        if (items.isEmpty()) {
+            _error.value = Evento(
+                "Tu carrito está vacío."
+            )
             return
         }
-        _enviando.value = true
-        viewModelScope.launch {
-            val nuevo = NuevoPedido(usuario, items, dir.trim(), tel.replace(" ", ""), fechaMs, obs.trim(), latitud, longitud)
-            pedidos.crear(nuevo, usuario).fold(
-                onSuccess = { numero ->
-                    local.guardar(emptyList())
-                    _pedidoEnviado.value = Evento(numero)
-                },
-                onFailure = { _error.value = Evento(it.message ?: "No se pudo enviar el pedido") }
+
+        if (usuario == null) {
+            _error.value = Evento(
+                "Debes iniciar sesión para realizar tu pedido."
             )
-            _enviando.value = false
+            return
+        }
+
+        if (dir.trim().isEmpty()) {
+            _error.value = Evento(
+                "Ingresa una dirección de entrega."
+            )
+            return
+        }
+
+        if (tel.trim().isEmpty()) {
+            _error.value = Evento(
+                "Ingresa un teléfono de contacto."
+            )
+            return
+        }
+
+        if (metodoPago.trim().isEmpty()) {
+            _error.value = Evento(
+                "Selecciona un método de pago."
+            )
+            return
+        }
+
+        if (referenciaPago.trim().isEmpty()) {
+            _error.value = Evento(
+                "Ingresa la referencia del pago."
+            )
+            return
+        }
+
+        if (
+            metodoPago != "Tarjeta" &&
+            comprobante.trim().isEmpty()
+        ) {
+            _error.value = Evento(
+                "Adjunta el comprobante de pago."
+            )
+            return
+        }
+
+        val fechaMs = Fechas.leerDia(fecha)
+            ?: run {
+                _error.value = Evento(
+                    "Fecha de entrega no válida."
+                )
+                return
+            }
+
+        _enviando.value = true
+
+        viewModelScope.launch {
+
+            try {
+
+                val nuevo = NuevoPedido(
+                    usuario,
+                    items,
+                    dir.trim(),
+                    tel.replace(" ", ""),
+                    fechaMs,
+                    obs.trim(),
+                    latitud,
+                    longitud
+                )
+
+                pedidos.crearConPago(
+                    nuevo = nuevo,
+                    creador = usuario,
+                    metodo = metodoPago,
+                    referencia = referenciaPago,
+                    comprobante = comprobante
+                ).fold(
+
+                    onSuccess = { numero ->
+
+                        // El carrito se vacía únicamente
+                        // después de crear correctamente
+                        // el pedido en Firebase.
+
+                        local.guardar(emptyList())
+
+                        _pedidoEnviado.value =
+                            Evento(numero)
+                    },
+
+                    onFailure = { error ->
+
+                        _error.value = Evento(
+                            error.message
+                                ?: "No se pudo registrar el pedido."
+                        )
+                    }
+                )
+
+            } catch (e: Exception) {
+
+                _error.value = Evento(
+                    e.message
+                        ?: "Ocurrió un error al confirmar el pedido."
+                )
+
+            } finally {
+
+                _enviando.value = false
+            }
         }
     }
 }

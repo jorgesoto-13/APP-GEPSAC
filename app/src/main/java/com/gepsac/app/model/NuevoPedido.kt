@@ -1,17 +1,20 @@
 package com.gepsac.app.model
 
-/** Datos que hacen falta para crear un pedido. El número, las fechas y el estado los define el repositorio. */
+/**
+ * Datos necesarios para crear un pedido.
+ * El número, estado y fechas de registro los define Firebase.
+ */
 data class NuevoPedido(
     val cliente: Usuario,
     val items: List<ItemPedido>,
     val direccion: String,
     val telefono: String,
-    /** Fecha de entrega solicitada, en milisegundos. */
     val fechaEntrega: Long,
     val observacion: String,
-    /** Punto de entrega marcado en el mapa (opcional): permite abrirlo exacto en la app de mapas. */
     val latitud: Double? = null,
     val longitud: Double? = null
 ) {
-    val total: Double get() = items.sumOf { it.precio * it.cantidad }
+
+    val total: Double
+        get() = items.sumOf { it.precio * it.cantidad }
 }
